@@ -1,0 +1,81 @@
+<template>
+    <router-view v-if="$route.name === 'login'"/>
+    <div v-if="$route.name !== 'login'">
+        <header-component />
+        <router-view v-slot="{ Component }" >
+            <keep-alive>
+                <component :is="Component" :key="$route.meta.key" v-if="$route.meta.keepAlive"/>
+            </keep-alive>
+            <component :is="Component" :key="$route.meta.key" v-if="!$route.meta.keepAlive"/>
+        </router-view>
+    </div>
+</template>
+
+<script>
+import { verifyUser } from './hooks/apis'
+import headerComponent from './components/header.vue'
+
+export default {
+    components: {
+        headerComponent
+    },
+    setup(){
+        const local = inject('local')
+        const serve = inject('serve')
+        const user = inject('user')
+        const shop = inject('shop')
+        const router = useRouter()
+
+        const initSet = () => {
+            if(localStorage.getItem('lang')){
+                local.name = localStorage.getItem('lang')
+                document.documentElement.lang = local.name
+            }
+            if(localStorage.getItem('user')){
+                user.inform = JSON.stringify(localStorage.getItem('user'))
+            }
+            if(localStorage.getItem('store')){
+                shop.store = localStorage.getItem('store')
+            }
+            if(localStorage.getItem('brand')){
+                shop.brand = localStorage.getItem('brand')
+            }
+        }
+        const loginVerify = () => {
+            user.status = 'verify'
+            
+            verifyUser(serve)
+            .then(res => {
+                user.inform = res.user
+                user.status = 'loged'
+                localStorage.setItem('user', JSON.stringify(res.user))
+
+                let message = {
+                    zh: '欢迎回来！',
+                    en: 'Welcome Back! '
+                }
+                MessagePlugin.success(message[local.name] + res.user.nickname)
+            })
+            .catch(() => {
+                let message = {
+                    zh: '用户未登录或登录已经失效',
+                    en: 'User not logged in or login has expired'
+                }
+                MessagePlugin.info(message[local.name])
+
+                user.status = 'unlog'
+                router.replace('/login')
+            })
+        }
+
+        onMounted(() => {
+            initSet()
+            loginVerify()
+        })
+    }
+}
+</script>
+
+<style>
+
+</style>
