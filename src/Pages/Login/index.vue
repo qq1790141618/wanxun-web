@@ -80,6 +80,7 @@
 
 <script>
 import localString from './local'
+import moreLang from './moreLang'
 import { sendCode, translate, verifyUser } from '../../hooks/apis'
 import headerComponent from '../../components/header.vue'
 import { watch } from 'vue'
@@ -89,6 +90,12 @@ export default {
         headerComponent
     },
     setup(){
+        for (const lang in moreLang) {
+            for (const key in moreLang[lang]) {
+                localString[key][lang] = moreLang[lang][key]
+            }
+        }
+        
         const serve = inject('serve')
         const local = inject('local')
         const lang = ref('zh')

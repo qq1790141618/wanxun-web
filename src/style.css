@@ -56,7 +56,46 @@ body {
     -webkit-font-smoothing: antialiased;
     padding: 0;
     margin: 0;
+    background: transparent url('./assets/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg') no-repeat fixed center;
+    background-size: cover;
+    overflow-x: hidden;
 }
 img, div, span{
     vertical-align: middle;
+}
+[class^='clamp']{
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+}
+.clamp-1{
+    -webkit-line-clamp:1;
+}
+.clamp-2{
+    -webkit-line-clamp:2;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    width: 6px;
+    background: rgba(#101F1C, 0.1);
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(144,147,153,.5);
+    background-clip: padding-box;
+    min-height: 28px;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+    transition: background-color .3s;
+    cursor: pointer;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(144,147,153,.3);
 }

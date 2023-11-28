@@ -6,7 +6,7 @@
                 {{ localString.websiteName[lang] }}
             </span>
         </div>
-        <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'">
+        <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'" style="background-color: transparent;">
             <t-menu-item value="1">
                 <template #icon>
                     <t-icon name="home" />
@@ -63,10 +63,17 @@
                 </template>
                 {{ localString.import[lang] }}
             </t-menu-item>
+            <t-menu-item value="5">
+                <template #icon>
+                    <t-icon name="verify" />
+                </template>
+                {{ localString.userCenter[lang] }}
+            </t-menu-item>
         </t-head-menu>
         <div class="operations-container">
             <t-auto-complete
             v-if="$route.name !== 'login'"
+            class="search-box"
             ref="searchBox"
             v-model="searchValue"
             :placeholder="localString.search[lang]"
@@ -146,6 +153,39 @@
                         </template>
                     </t-button>
                 </t-tooltip>
+                <t-dropdown
+                placement="bottom"
+                :min-column-width="130"
+                v-if="user.status == 'loged'"
+                >
+                    <t-button variant="text">
+                        <template #icon>
+                            <t-image :src="user.inform.headsrc" shape="circle" style="width: 28px;" />
+                        </template>
+                        &nbsp;
+                        {{ user.inform.nickname }}
+                    </t-button>
+                    <t-dropdown-menu>
+                        <t-dropdown-item @click="user.avatarView = true">
+                            <t-icon name="browse" style="margin-right: 5px;" />
+                            {{ localString.viewAvatar[lang] }}
+                        </t-dropdown-item>
+                        <t-dropdown-item @click="$router.push('/user-center')">
+                            <t-icon name="verify" style="margin-right: 5px;" />
+                            {{ localString.userCenter[lang] }}
+                        </t-dropdown-item>
+                        <t-dropdown-item @click="user.logout">
+                            <t-icon name="logout" style="margin-right: 5px;" />
+                            {{ localString.logout[lang] }}
+                        </t-dropdown-item>
+                    </t-dropdown-menu>
+                </t-dropdown>
+                <t-image-viewer
+                v-if="user.status == 'loged'"
+                :images="[ user.inform.headsrc ]"
+                v-model:visible="user.avatarView"
+                >
+                </t-image-viewer>
             </t-space>
         </div>
     </header>
@@ -213,10 +253,17 @@
 
 <script>
 import localString from './local'
+import moreLang from './moreLang'
 import { copy } from '../hooks/apis'
 
 export default {
     setup(){
+        for (const lang in moreLang) {
+            for (const key in moreLang[lang]) {
+                localString[key][lang] = moreLang[lang][key]
+            }
+        }
+        
         const local = inject('local')
         const lang = ref('zh')
         lang.value = local.name
@@ -225,6 +272,9 @@ export default {
             lang.value = item.value
             localStorage.setItem('lang', item.value)
         }
+        watch(() => local.name, () => {
+            lang.value = local.name
+        })
 
         const downloadClient = () => {
             window.open('https://cdn.fixeam.com/tw/application/windows/2023110715/version_1.0.4_release_miaostreet_sales_analysis_wanxun.exe')
@@ -247,16 +297,16 @@ export default {
         const searchWidth = ref(200)
         const searchOptions = ref([])
         const searchStyleNumber = async (value) => {
-            let params = value ? '?keyword=' + value : ''
+            if(!value){
+                return []
+            }
+            let params = '?keyword=' + value
             return fetch(serve + '/goods/sty' + params)
             .then(response => {
                 return Promise.resolve(response.json())
             })
         }
         const getGoods = async (stylenumbers) => {
-            if(stylenumbers.length == 0){
-                return { data: [] }
-            }
             return fetch(serve + '/goods/mul/get', {
                 method: 'post',
                 headers: {
@@ -265,7 +315,9 @@ export default {
                 body: JSON.stringify({
                     'store-id': shop.store,
                     brand: shop.brand,
-                    condition: JSON.stringify({
+                    start: 0,
+                    number: 30,
+                    condition: stylenumbers.length == 0 ? false : JSON.stringify({
                         stylenumber: stylenumbers
                     })
                 })
@@ -296,7 +348,7 @@ export default {
             searchOptions.value = options
 
             let styleNumbers = await searchStyleNumber(value)
-            styleNumbers = styleNumbers.map(obj => obj.stylenumber)
+            styleNumbers = styleNumbers.length == 0 ? [] : styleNumbers.map(obj => obj.stylenumber)
             let goods = await getGoods(styleNumbers)
             for (let i = 0; i < goods.data.length; i++) {
                 options.push({
@@ -333,6 +385,8 @@ export default {
             window.open('https://old-work.fixeam.com/')
         }
 
+        const user = inject('user')
+
         return {
             local,
             lang,
@@ -356,7 +410,9 @@ export default {
             search,
 
             settings,
-            saveOptions
+            saveOptions,
+
+            user
         }
     }
 }
@@ -364,6 +420,11 @@ export default {
 
 <style>
 .header{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
     padding: 0 var(--td-comp-paddingLR-xl);
     display: flex;
     justify-content: space-between;
@@ -377,7 +438,7 @@ export default {
     margin: 0 10px;
     height: 100%;
     line-height: 56px;
-    min-width: 200px;
+    min-width: 220px;
 }
 .logo-image{
     margin: 4px;
@@ -412,5 +473,8 @@ export default {
 }
 .t-autocomplete-option-list .custom-option .description {
     color: var(--td-gray-color-9);
+}
+.search-box .t-input{
+    background-color: transparent;
 }
 </style>

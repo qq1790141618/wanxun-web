@@ -52,14 +52,20 @@ export default {
 
                 let message = {
                     zh: '欢迎回来！',
-                    en: 'Welcome Back! '
+                    en: 'Welcome Back!',
+                    kor: '안녕하세요',
+                    jp: 'いらっしゃい',
+                    th: 'สวัสดี'
                 }
                 MessagePlugin.success(message[local.name] + res.user.nickname)
             })
             .catch(() => {
                 let message = {
                     zh: '用户未登录或登录已经失效',
-                    en: 'User not logged in or login has expired'
+                    en: 'User not logged in or login has expired',
+                    kor: '사용자 로그인 하거나 로그인 만료',
+                    jp: 'ユーザーが未登録か、登録が古いです',
+                    th: 'ผู้ใช้ไม่ได้เข้าสู่ระบบไร่ หรือ เข้าระบบไม่เยอะ'
                 }
                 MessagePlugin.info(message[local.name])
 

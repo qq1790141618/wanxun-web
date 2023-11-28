@@ -12,7 +12,10 @@ export function sendCode(serve, target, lang = 'zh'){
         if(!pattern.phone.test(target) && !pattern.mail.test(target)){
             const targetFail = {
                 zh: '请输入正确的手机号或邮箱',
-                en: 'Please enter a valid phone number or email address'
+                en: 'Please enter a valid phone number or email address',
+                kor: '请 입력 맞는 핸드폰 번호 또는 이메일',
+                jp: '请 入力 正确的 電話番号 か 電子メール',
+                th: '请 输入 正确的 电话号码 或 电子邮件'
             }
             return reject(targetFail[lang])
         }
@@ -24,7 +27,10 @@ export function sendCode(serve, target, lang = 'zh'){
         .catch(() => {
             const httpFail = {
                 zh: '验证码发送失败::服务器请求错误',
-                en: 'Verification code sending failed: Server request error'
+                en: 'Verification code sending failed: Server request error',
+                kor: '인증 코드 전송 실패::서버 요청 오류',
+                jp: '認証コード送信失敗::サーバーリクエストエラー',
+                th: 'ข้อความยืนยันอีเมล์หรือเบอร์โทรศ'
             }
             return reject(httpFail[lang])
         })
@@ -68,7 +74,37 @@ export async function copy(value, lang = 'zh') {
     await toClipboard(value)
     let message = {
         zh: '复制成功',
-        en: 'Copied'
-    }
+        en: 'Copied',
+        kor: '복사 성공',
+        jp: 'コピー 成功',
+        th: 'สร้าง เสร็จ'
+     }
     MessagePlugin.success(message[lang])
+}
+
+export function sort(val, sortArray, defaultSort = { sortBy: 'salesCount', descending: true }) {
+    if(!val){
+        val = defaultSort
+    }
+
+    for (let i = 0; i < sortArray.length; i++) {
+        for (let t = i + 1; t < sortArray.length; t++) {
+            if(val.descending){
+                if(sortArray[i][val.sortBy] < sortArray[t][val.sortBy]){
+                    let tp1 = sortArray[i]
+                    sortArray[i] = sortArray[t]
+                    sortArray[t] = tp1
+                }
+            }
+            if(!val.descending){
+                if(sortArray[i][val.sortBy] > sortArray[t][val.sortBy]){
+                    let tp2 = sortArray[i]
+                    sortArray[i] = sortArray[t]
+                    sortArray[t] = tp2
+                }
+            }
+        }
+    }
+
+    return sortArray
 }

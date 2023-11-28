@@ -9,7 +9,7 @@ import user from './user'
 
 createApp(App)
 .provide('local', reactive({
-    name: 'zh',
+    name: 'en',
     options: [
         {
             content: '简体中文',
@@ -18,6 +18,18 @@ createApp(App)
         {
             content: 'English',
             value: 'en'
+        },
+        {
+            content: '한국어',
+            value: 'kor'
+        },
+        {
+            content: '日本語',
+            value: 'jp'
+        },
+        {
+            content: 'ภาษาไทย',
+            value: 'th'
         }
     ]
 }))

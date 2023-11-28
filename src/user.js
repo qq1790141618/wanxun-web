@@ -3,8 +3,6 @@ export default reactive({
     inform: false,
     logout: () => {
         localStorage.removeItem('access_token')
-        const router = useRouter()
-        router.push('/login')
-        console.log(this)
+        location.href = location.origin + '/login'
     }
 })

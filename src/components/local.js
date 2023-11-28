@@ -1,23 +1,38 @@
 export default {
     websiteName: {
         zh: '喵街数据汇总分析',
-        en: 'MSSA Console'
+        en: 'MSSA Console',
+        kor: '냅잇 데이터 합계 분석',
+        jp: 'MSSA コンソール',
+        th: 'นัตยการ พื้นฐ เทียบ พานัน'
     },
     windows: {
         zh: 'Windows客户端',
-        en: 'Windows Client'
+        en: 'Windows Client',
+        kor: 'Windows 클라이언트',
+        jp: 'Windows クライアント',
+        th: 'Windows ตัว'
     },
     mobile: {
         zh: '手机Web端',
-        en: 'Mobile Web'
+        en: 'Mobile Web',
+        kor: '모바일 Web',
+        jp: 'Mobile Web',
+        th: 'Mobile Web'
     },
     android: {
         zh: '安卓客户端',
-        en: 'Android Application'
+        en: 'Android Application',
+        kor: 'Android 앱',
+        jp: 'Android アプリ',
+        th: 'Android ซอฟ'
     },
     downloadApk: {
         zh: '直接下载APK文件',
-        en: 'Download APK'
+        en: 'Download APK',
+        kor: 'APK 파일 다운로드',
+        jp: 'APK ファイル ダウンロード',
+        th: 'APK ไฟล์ 下载'
     },
     scanToDownload: {
         zh: '扫描二维码下载软件包',
@@ -90,5 +105,17 @@ export default {
     brand: {
         zh: '品牌', 
         en: 'Brand'
+    },
+    viewAvatar: {
+        zh: '查看头像', 
+        en: 'View Avatar'
+    },
+    logout: {
+        zh: '退出登录', 
+        en: 'Logout'
+    },
+    userCenter: {
+        zh: '个人中心', 
+        en: 'User Center'
     },
 }
