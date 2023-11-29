@@ -74,9 +74,35 @@ export default {
             })
         }
 
+        const route = useRoute()
+        const historyRecord = () => {
+            if(route.path == '/login' || route.path == '/'){
+                return
+            }
+            let history = JSON.parse(localStorage.getItem('history')) || []
+
+            for (let i = 0; i < history.length; i++) {
+                if(history[i].path == route.path){
+                    history.splice(i, 1)
+                    history.unshift(route)
+                    localStorage.setItem('history', JSON.stringify(history))
+                    return
+                }
+            }
+
+            history.unshift(route)
+            localStorage.setItem('history', JSON.stringify(history))
+        }
+        watch(() => route.name, () => {
+            historyRecord()
+        })
+
         onMounted(() => {
             initSet()
             loginVerify()
+            setTimeout(() => {
+                historyRecord()
+            }, 1000)
         })
     }
 }

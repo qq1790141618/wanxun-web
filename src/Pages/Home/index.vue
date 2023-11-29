@@ -111,7 +111,6 @@
                             }
                         ]"
                         :bordered="false"
-                        :pagination="false"
                         @sort-change="(val) => {
                             sortValue[item] = val
                             data[item] = sort(val, data[item], { sortBy: 'salesCount', descending: true })
@@ -119,6 +118,7 @@
                         :sort="sortValue[item]"
                         show-sort-column-bg-color
                         height="450px"
+                        :row-key="item == 'goods' ? 'stylenumber' : 'supplier'"
                         ></t-table>
                     </t-card>
                 </t-col>
@@ -130,13 +130,55 @@
                     <t-icon name="work-history"></t-icon>
                     {{ localString.recent[local.name] }}
                 </template>
+                <div style="text-align: center;" v-if="history.length == 0">
+                    {{ localString.none[local.name] }}{{ localString.recent[local.name] }}~
+                </div>
+                <t-space break-line size="10px" :key="history">
+                    <t-tag
+                    v-for="item in history"
+                    :key="item.name"
+                    @click="$router.push(item.path)"
+                    size="large"
+                    style="cursor: pointer;"
+                    variant="outline"
+                    >
+                        <template #icon>
+                            <img :src="item.meta.avatar" height="20" >
+                        </template>
+                        {{ item.meta.title[local.name] }} ( {{ item.path }} )
+                    </t-tag>
+                </t-space>
+            </t-card>
+            <t-card :bordered="false" style="margin-top: 12px;">
+                <template #title>
+                    <t-icon name="star"></t-icon>
+                    {{ localString.collection[local.name] }}
+                </template>
+                <div style="text-align: center;" v-if="collectionPath.length == 0">
+                    {{ localString.none[local.name] }}{{ localString.collection[local.name] }}~
+                </div>
+                <t-space break-line size="10px" :key="collectionPath">
+                    <t-tag
+                    v-for="item in collectionPath"
+                    :key="item.name"
+                    @click="$router.push(item.path)"
+                    size="large"
+                    style="cursor: pointer;"
+                    variant="outline"
+                    >
+                        <template #icon>
+                            <img :src="item.meta.avatar" height="20" >
+                        </template>
+                        {{ item.meta.title[local.name] }} ( {{ item.path }} )
+                    </t-tag>
+                </t-space>
             </t-card>
             <t-card :bordered="false" style="margin-top: 12px;">
                 <template #title>
                     <t-icon name="shop"></t-icon>
                     {{ localString.recommend[local.name] }}
                 </template>
-                <t-tabs :default-value="shop.brand" size="small">
+                <t-tabs :default-value="shop.brand">
                     <t-tab-panel
                     v-for="item, index in shop.brandOptions"
                     :key="index"
@@ -289,9 +331,6 @@ export default {
             .then(res => {
                 data.value.famousWord = res.trans_result[0].dst
             })
-            .catch(() => {
-                MessagePlugin.error(response.error)
-            })
             percent.value = 25
 
             data.value.day = await daySales()
@@ -392,19 +431,26 @@ export default {
         }
         
 
+        const sortValue = ref({
+            'goods': null,
+            'supplier': null
+        })
+        const history = ref([])
+        const collectionPath = ref([])
+
         onMounted(() => {
             initData()
+
+            setInterval(() => {
+                history.value = JSON.parse(localStorage.getItem('history')) || []
+                collectionPath.value = JSON.parse(localStorage.getItem('collection')) || []
+            }, 500)
         })
         watch(() => shop.store, () => {
             initData()
         })
         watch(() => shop.brand, () => {
             initData()
-        })
-
-        const sortValue = ref({
-            'goods': null,
-            'supplier': null
         })
 
         return{
@@ -417,7 +463,9 @@ export default {
             localString,
             mainChart,
             sort,
-            sortValue
+            sortValue,
+            history,
+            collectionPath
         }
     }
 }

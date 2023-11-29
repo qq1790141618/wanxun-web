@@ -93,5 +93,19 @@ export default {
         kor: '최근 액세스',
         jp: '最近のアクセス',
         th: 'เข้าชมล่าสุด'
+    },
+    collection: {
+        zh: '收藏',
+        en: 'Collection',
+        kor: '모음집',
+        jp: 'コレクション',
+        th: 'คอลเลกชัน'
+    },
+    none: {
+        zh: '暂无',
+        en: 'None ',
+        kor: '잠시 없다 ',
+        jp: 'しばらく ',
+        th: 'ไม่มี'
     }
 }

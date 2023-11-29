@@ -7,68 +7,91 @@
             </span>
         </div>
         <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'" style="background-color: transparent;">
-            <t-menu-item value="1">
-                <template #icon>
-                    <t-icon name="home" />
-                </template>
-                {{ localString.home[lang] }}
-            </t-menu-item>
-            <t-menu-item value="2">
-                <template #icon>
-                    <t-icon name="shop" />
-                </template>
-                {{ localString.goods[lang] }}
-            </t-menu-item>
-            <t-submenu value="3">
-                <template #icon>
-                    <t-icon name="chart" />
-                </template>
-                <template #title>
-                    <span>{{ localString.data[lang] }}</span>
-                </template>
-                <t-menu-item value="3-1">
+            <template
+            v-for="item in routes"
+            :key="item.name"
+            >
+                <t-menu-item
+                v-if="(!item.children || item.children.length == 0) && item.meta.menuShow"
+                :value="item.meta.key"
+                @click="$router.push(item.path)"
+                >
                     <template #icon>
-                        <t-icon name="table" />
+                        <t-icon :name="item.meta.icon" />
                     </template>
-                    {{ localString.data1[lang] }}
+                    {{ item.meta.title[lang] }}
+                    <t-button
+                    size="small"
+                    variant="text"
+                    shape="round"
+                    @click.stop="collection(item, true)"
+                    v-if="!collectionPath.map(obj => obj.meta.key).includes(item.meta.key) && item.path !== '/'"
+                    class="cl-button"
+                    >
+                        <template #icon>
+                            <t-icon name="star" />
+                        </template>
+                    </t-button>
+                    <t-button
+                    size="small"
+                    variant="text"
+                    shape="round"
+                    @click.stop="collection(item, false)"
+                    v-if="collectionPath.map(obj => obj.meta.key).includes(item.meta.key)"
+                    class="cl-button"
+                    >
+                        <template #icon>
+                            <t-icon name="star-filled" />
+                        </template>
+                    </t-button>
                 </t-menu-item>
-                <t-menu-item value="3-2">
+                <t-submenu
+                v-if="item.children && item.children.length > 0 && item.meta.menuShow"
+                :value="item.meta.key"
+                >
                     <template #icon>
-                        <t-icon name="chart-bubble" />
+                        <t-icon :name="item.meta.icon" />
                     </template>
-                    {{ localString.data2[lang] }}
-                </t-menu-item>
-                <t-menu-item value="3-3">
-                    <template #icon>
-                        <t-icon name="chart-colum" />
+                    <template #title>
+                        <span>{{ item.meta.title[lang] }}</span>
                     </template>
-                    {{ localString.data3[lang] }}
-                </t-menu-item>
-                <t-menu-item value="3-4">
-                    <template #icon>
-                        <t-icon name="chart-ring" />
-                    </template>
-                    {{ localString.data4[lang] }}
-                </t-menu-item>
-                <t-menu-item value="3-5">
-                    <template #icon>
-                        <t-icon name="calculation" />
-                    </template>
-                    {{ localString.data5[lang] }}
-                </t-menu-item>
-            </t-submenu>
-            <t-menu-item value="4">
-                <template #icon>
-                    <t-icon name="upload" />
-                </template>
-                {{ localString.import[lang] }}
-            </t-menu-item>
-            <t-menu-item value="5">
-                <template #icon>
-                    <t-icon name="verify" />
-                </template>
-                {{ localString.userCenter[lang] }}
-            </t-menu-item>
+                    <t-menu-item
+                    v-for="subitem in item.children"
+                    :key="subitem.name"
+                    :value="subitem.meta.key"
+                    @click="$router.push(subitem.path)"
+                    >
+                        <template #icon>
+                            <t-icon :name="subitem.meta.icon" />
+                        </template>
+                        {{ subitem.meta.title[lang] }}
+                        <t-button
+                        size="small"
+                        variant="text"
+                        shape="round"
+                        @click.stop="collection(subitem, true)"
+                        v-if="!collectionPath.map(obj => obj.meta.key).includes(subitem.meta.key)"
+                        class="cl-button"
+                        >
+                            <template #icon>
+                                <t-icon name="star" />
+                            </template>
+                        </t-button>
+                        <t-button
+                        size="small"
+                        variant="text"
+                        shape="round"
+                        @click.stop="collection(subitem, false)"
+                        v-if="collectionPath.map(obj => obj.meta.key).includes(subitem.meta.key)"
+                        class="cl-button"
+                        >
+                            <template #icon>
+                                <t-icon name="star-filled" />
+                            </template>
+                        </t-button>
+                    </t-menu-item>
+                </t-submenu>
+            </template>
         </t-head-menu>
         <div class="operations-container">
             <t-auto-complete
@@ -290,7 +313,13 @@ export default {
         const settings = ref(false)
         const route = useRoute()
         const router = useRouter()
+        let routes = router.getRoutes()
+
         const activeMenu = ref('1')
+        watch(() => route.path, () => {
+            activeMenu.value = route.meta.key
+        })
+
 
         const searchBox = ref(null)
         const searchValue = ref(null)
@@ -361,6 +390,27 @@ export default {
             searchOptions.value = options
         }
 
+        const saveOptions = () => {
+            localStorage.setItem('store', shop.store)
+            localStorage.setItem('brand', shop.brand)
+        }
+
+        const backToOldVersion = () => {
+            window.open('https://old-work.fixeam.com/')
+        }
+
+        const user = inject('user')
+        const collectionPath = ref([])
+        const collection = (route, status = true) => {
+            if(status){
+                collectionPath.value.push(route)
+                localStorage.setItem('collection', JSON.stringify(collectionPath.value))
+            } else {
+                collectionPath.value = collectionPath.value.filter(item => item.path !== route.path)
+                localStorage.setItem('collection', JSON.stringify(collectionPath.value))
+            }
+        }
+
         onMounted(() => {
             setTimeout(() => {
                 activeMenu.value = route.meta.key
@@ -374,18 +424,8 @@ export default {
             })
 
             search()
+            collectionPath.value = JSON.parse(localStorage.getItem('collection')) || []
         })
-
-        const saveOptions = () => {
-            localStorage.setItem('store', shop.store)
-            localStorage.setItem('brand', shop.brand)
-        }
-
-        const backToOldVersion = () => {
-            window.open('https://old-work.fixeam.com/')
-        }
-
-        const user = inject('user')
 
         return {
             local,
@@ -412,7 +452,10 @@ export default {
             settings,
             saveOptions,
 
-            user
+            user,
+            collection,
+            collectionPath,
+            routes
         }
     }
 }
@@ -476,5 +519,9 @@ export default {
 }
 .search-box .t-input{
     background-color: transparent;
+}
+.cl-button{
+    position: relative;
+    top: -1px;
 }
 </style>
