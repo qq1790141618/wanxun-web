@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 
-import './style.css'
 import 'tdesign-vue-next/es/style/index.css'
+import './style.css'
 import App from './App.vue'
 
 import router from './router'
@@ -13,23 +13,28 @@ createApp(App)
     options: [
         {
             content: '简体中文',
-            value: 'zh'
+            value: 'zh',
+            disabled: false
         },
         {
             content: 'English',
-            value: 'en'
+            value: 'en',
+            disabled: false
         },
         {
             content: '한국어',
-            value: 'kor'
+            value: 'kor',
+            disabled: false
         },
         {
             content: '日本語',
-            value: 'jp'
+            value: 'jp',
+            disabled: false
         },
         {
             content: 'ภาษาไทย',
-            value: 'th'
+            value: 'th',
+            disabled: false
         }
     ]
 }))
@@ -69,7 +74,16 @@ createApp(App)
             label: 'DR 111862',
             value: 'DR'
         }
-    ]
+    ],
+    counter: {
+        'HZ13KCOR': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000053629&spm=a320s.12912863.0.0',
+        'HZ13兔皇': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000065204&spm=a320s.12912863.0.0',
+        'HZ13NT': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000055164&spm=a320s.12912863.0.0',
+        'HZ20DR': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000064613&spm=a320s.12912863.0.0',
+        '132KCOR': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000061335&spm=a320s.12912863.0.0',
+        '132兔皇': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000061335&spm=a320s.12912863.0.0',
+        '132NT': 'https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=store-poi&wh_weex=true&wx_navbar_hidden=true&shopId=1000000061604&spm=a320s.12912863.0.0'
+    }
 }))
 .use(router)
 .mount('#app')

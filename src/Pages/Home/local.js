@@ -107,5 +107,19 @@ export default {
         kor: '잠시 없다 ',
         jp: 'しばらく ',
         th: 'ไม่มี'
+    },
+    menus: {
+        zh: '菜单', 
+        en: 'Menu',
+        kor: '메뉴',
+        jp: '菜单',
+        th: 'เมนู'
+    },
+    goods: {
+        zh: '商品', 
+        en: 'Goods',
+        kor: '상품',
+        jp: '商品',
+        th: 'สินค้า'
     }
 }

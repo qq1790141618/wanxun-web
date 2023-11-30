@@ -81,7 +81,7 @@
 <script>
 import localString from './local'
 import moreLang from './moreLang'
-import { sendCode, translate, verifyUser } from '../../hooks/apis'
+import { sendCode, translate, verifyUser } from '../../hooks'
 import headerComponent from '../../components/header.vue'
 import { watch } from 'vue'
 

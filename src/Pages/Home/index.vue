@@ -40,7 +40,9 @@
             <t-card :bordered="false" style="margin-top: 12px;">
                 <template #title>
                     <t-icon name="chart"></t-icon>
-                    {{ localString.recentData[local.name] }}
+                    <span style="vertical-align: middle; margin-left: 8px;">
+                        {{ localString.recentData[local.name] }}
+                    </span>
                 </template>
                 <div ref="mainChart" style="width: 100%; height: 450px;"></div>
             </t-card>
@@ -54,7 +56,9 @@
                         <template #title>
                             <span>
                                 <t-icon name="chart-bubble"></t-icon>
-                                {{ item == 'goods' ? localString.stylenumber[local.name] : localString.supplier[local.name] }} {{ localString.rank[local.name] }}
+                                <span style="vertical-align: middle; margin-left: 8px;">
+                                    {{ item == 'goods' ? localString.stylenumber[local.name] : localString.supplier[local.name] }} {{ localString.rank[local.name] }}
+                                </span>
                             </span>
                             <t-tooltip :content="localString.tip1[local.name]">
                                 <t-icon name="help-circle" :style="{
@@ -128,37 +132,68 @@
             <t-card :bordered="false">
                 <template #title>
                     <t-icon name="work-history"></t-icon>
-                    {{ localString.recent[local.name] }}
+                    <span style="vertical-align: middle; margin-left: 8px;">
+                        {{ localString.recent[local.name] }}
+                    </span>
                 </template>
-                <div style="text-align: center;" v-if="history.length == 0">
+                <template #actions>
+                    <t-button variant="text" theme="primary" size="small" @click="clearHistory">
+                        <template #icon>
+                            <t-icon name="clear"></t-icon>
+                        </template>
+                    </t-button>
+                </template>
+                <div style="text-align: center;" v-if="history.menus.length == 0 && history.goods.length == 0">
                     {{ localString.none[local.name] }}{{ localString.recent[local.name] }}~
                 </div>
-                <t-space break-line size="10px" :key="history">
-                    <t-tag
-                    v-for="item in history"
-                    :key="item.name"
-                    @click="$router.push(item.path)"
-                    size="large"
-                    style="cursor: pointer;"
-                    variant="outline"
+                <t-tabs default-value="menus" v-if="history.menus.length != 0 || history.goods.length != 0">
+                    <t-tab-panel
+                    v-for="gruop, index in ['menus', 'goods']"
+                    :key="index"
+                    :value="gruop"
+                    :label="localString[gruop][local.name]"
+                    :disabled="!history[gruop] || history[gruop].length == 0"
                     >
-                        <template #icon>
-                            <img :src="item.meta.avatar" height="20" >
-                        </template>
-                        {{ item.meta.title[local.name] }} ( {{ item.path }} )
-                    </t-tag>
-                </t-space>
+                        <t-space break-line size="10px" style="margin-top: 10px;" :key="history[gruop]" v-if="history[gruop] && history[gruop].length > 0">
+                            <t-check-tag
+                            v-for="item in history[gruop]"
+                            :key="item.name"
+                            @click="() => {
+                                if(item.path){
+                                    $router.push(item.path)
+                                } else {
+                                    miaostreetGoodsLink(item)
+                                }
+                            }"
+                            size="large"
+                            style="cursor: pointer;"
+                            variant="outline"
+                            >
+                                <img v-if="gruop == 'menus'" :src="item.meta.avatar" height="20" style="margin-right: 5px;" >
+                                <span v-if="gruop == 'menus'">
+                                    {{ item.meta.title[local.name] }} ( {{ item.path }} )
+                                </span>
+                                <img v-if="gruop == 'goods'" :src="item['main-image'] == null ? '' : JSON.parse(item['main-image'])[0]" height="20" style="margin-right: 5px;" >
+                                <span v-if="gruop == 'goods'">
+                                    {{ item.brand + ': ' + item.stylenumber }}
+                                </span>
+                            </t-check-tag>
+                        </t-space>
+                    </t-tab-panel>
+                </t-tabs>
             </t-card>
             <t-card :bordered="false" style="margin-top: 12px;">
                 <template #title>
                     <t-icon name="star"></t-icon>
-                    {{ localString.collection[local.name] }}
+                    <span style="vertical-align: middle; margin-left: 8px;">
+                        {{ localString.collection[local.name] }}
+                    </span>
                 </template>
                 <div style="text-align: center;" v-if="collectionPath.length == 0">
                     {{ localString.none[local.name] }}{{ localString.collection[local.name] }}~
                 </div>
                 <t-space break-line size="10px" :key="collectionPath">
-                    <t-tag
+                    <t-check-tag
                     v-for="item in collectionPath"
                     :key="item.name"
                     @click="$router.push(item.path)"
@@ -166,17 +201,17 @@
                     style="cursor: pointer;"
                     variant="outline"
                     >
-                        <template #icon>
-                            <img :src="item.meta.avatar" height="20" >
-                        </template>
+                        <img :src="item.meta.avatar" height="20" style="margin-right: 5px;" >
                         {{ item.meta.title[local.name] }} ( {{ item.path }} )
-                    </t-tag>
+                    </t-check-tag>
                 </t-space>
             </t-card>
             <t-card :bordered="false" style="margin-top: 12px;">
                 <template #title>
                     <t-icon name="shop"></t-icon>
-                    {{ localString.recommend[local.name] }}
+                    <span style="vertical-align: middle; margin-left: 8px;">
+                        {{ localString.recommend[local.name] }}
+                    </span>
                 </template>
                 <t-tabs :default-value="shop.brand">
                     <t-tab-panel
@@ -189,35 +224,34 @@
                             <t-card
                             :bordered="false"
                             class="next-good-item"
-                            v-for="goods in data.ranks"
+                            v-for="goods in data.ranks[item.value]"
                             :key="goods.stylenumber"
-                            v-show="goods.brand == item.value"
                             @contextmenu.prevent.stop="createContextMenu($event, item)"
                             shadow
                             >
                                 <t-image
                                 class="next-good-item-image"
                                 :src="goods['main-image'] == null ? '' : JSON.parse(goods['main-image'])[0]"
+                                lazy
                                 >
+                                    <template #error>
+                                        <img src="../../assets/loadfail.png" style="height: 70%; margin-bottom: 15%;">
+                                    </template>
                                 </t-image>
                                 <div class="next-good-item-info">
-                                    <div class="prev-good-item-info-name" style="font-size: 13px; line-height: 15px;">
+                                    <div class="prev-good-item-info-name" style="font-size: 14px; line-height: 15px;">
                                         <t-tag
                                         size="small"
                                         theme="primary"
                                         variant="light"
                                         >
-                                            {{ goods['store-id'] }}
+                                            {{ shop.storeOptions.filter(item => item.value === goods['store-id'])[0].label }}
                                         </t-tag>
                                         <t-tooltip :content="goods.name">
                                             {{ goods.name }}
                                         </t-tooltip>
                                     </div>
-                                    <div
-                                    :style="{
-                                        margin: '10px 0'
-                                    }"
-                                    >
+                                    <div style="margin: 10px 0;">
                                         <span class="number-show">
                                             {{ goods.salesCount }}
                                         </span>
@@ -231,7 +265,8 @@
                                     <t-button
                                     v-if="goods['miaostreet-id'] != null"
                                     size="small"
-                                    @click.stop="() => {}"
+                                    shape="round"
+                                    @click.stop="miaostreetGoodsLink(goods)"
                                     >
                                         <template #icon>
                                             <t-icon name="browse"></t-icon>
@@ -253,7 +288,7 @@ import localString from './local'
 import moreLang from './moreLang'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
-import { translate, sort } from '../../hooks/apis'
+import { translate, sort, miaostreetGoodsLink } from '../../hooks'
 
 export default {
     setup(){
@@ -275,11 +310,16 @@ export default {
             week: [],
             goods: [],
             supplier: [],
-            ranks: [],
+            ranks: {
+                kcor: [],
+                nt: [],
+                '兔皇': [],
+                dr: []
+            },
             year: {}
         })
         const mainChart = ref(null)
-        let charts
+        let charts = false
 
         const famousWord = async () => {
             return fetch(serve + "/famous-word")
@@ -353,7 +393,16 @@ export default {
             data.value.goods = ao.ms.product
             percent.value = 75
 
-            data.value.ranks = await goodsRanks()
+            let ranks = await goodsRanks()
+            data.value.ranks = {
+                KCOR: [],
+                NT: [],
+                '兔皇': [],
+                DR: []
+            }
+            for (let i = 0; i < ranks.length; i++) {
+                data.value.ranks[ranks[i].brand].push(ranks[i])
+            }
             percent.value = 1
 
             loading.value = false
@@ -435,16 +484,31 @@ export default {
             'goods': null,
             'supplier': null
         })
-        const history = ref([])
+        const historyStructure = {
+            menus: [],
+            goods: []
+        }
+        const history = ref({})
         const collectionPath = ref([])
+        const clearHistory = () => {
+            for (const key in history.value) {
+                history.value[key] = []
+            }
+            localStorage.removeItem('history')
+        }
 
         onMounted(() => {
             initData()
 
             setInterval(() => {
-                history.value = JSON.parse(localStorage.getItem('history')) || []
+                history.value = JSON.parse(localStorage.getItem('history')) || historyStructure
                 collectionPath.value = JSON.parse(localStorage.getItem('collection')) || []
             }, 500)
+        })
+        onActivated(() => {
+            if(charts){
+                charts.resize()
+            }
         })
         watch(() => shop.store, () => {
             initData()
@@ -465,7 +529,9 @@ export default {
             sort,
             sortValue,
             history,
-            collectionPath
+            collectionPath,
+            miaostreetGoodsLink,
+            clearHistory
         }
     }
 }

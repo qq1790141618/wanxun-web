@@ -118,4 +118,11 @@ export default {
         zh: '个人中心', 
         en: 'User Center'
     },
+    viewCounter: {
+        zh: '查看专柜',
+        en: 'View Counter',
+        kor: '매장 보기',
+        jp: 'コーナーの表示',
+        th: 'ดูเคาน์เตอร์'
+    }
 }

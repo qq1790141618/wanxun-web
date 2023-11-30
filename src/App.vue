@@ -1,19 +1,26 @@
 <template>
-    <router-view v-if="$route.name === 'login'"/>
-    <div v-if="$route.name !== 'login'">
-        <header-component />
-        <router-view v-slot="{ Component }" >
-            <keep-alive>
-                <component :is="Component" :key="$route.meta.key" v-if="$route.meta.keepAlive"/>
-            </keep-alive>
-            <component :is="Component" :key="$route.meta.key" v-if="!$route.meta.keepAlive"/>
-        </router-view>
-    </div>
+    <t-config-provider :global-config="globalConfig">
+        <router-view v-if="$route.name === 'login'"/>
+        <div v-if="$route.name !== 'login'">
+            <header-component />
+            <router-view v-slot="{ Component }" >
+                <keep-alive>
+                    <component :is="Component" :key="$route.meta.key" v-if="$route.meta.keepAlive"/>
+                </keep-alive>
+                <component :is="Component" :key="$route.meta.key" v-if="!$route.meta.keepAlive"/>
+            </router-view>
+        </div>
+    </t-config-provider>
 </template>
 
 <script>
-import { verifyUser } from './hooks/apis'
+import { verifyUser } from './hooks'
 import headerComponent from './components/header.vue'
+import merge from 'lodash/merge'
+import zhConfig from 'tdesign-vue-next/es/locale/zh_CN'
+import enConfig from 'tdesign-vue-next/es/locale/en_US'
+import korConfig from 'tdesign-vue-next/es/locale/ko_KR'
+import jpConfig from 'tdesign-vue-next/es/locale/ja_JP'
 
 export default {
     components: {
@@ -31,6 +38,7 @@ export default {
                 local.name = localStorage.getItem('lang')
                 document.documentElement.lang = local.name
             }
+            initLangConfig(local.name)
             if(localStorage.getItem('user')){
                 user.inform = JSON.stringify(localStorage.getItem('user'))
             }
@@ -79,22 +87,57 @@ export default {
             if(route.path == '/login' || route.path == '/'){
                 return
             }
-            let history = JSON.parse(localStorage.getItem('history')) || []
+            let history = JSON.parse(localStorage.getItem('history')) || {
+                menus: [],
+                goods: []
+            }
 
-            for (let i = 0; i < history.length; i++) {
-                if(history[i].path == route.path){
-                    history.splice(i, 1)
-                    history.unshift(route)
+            for (let i = 0; i < history.menus.length; i++) {
+                if(history.menus[i].path == route.path){
+                    history.menus.splice(i, 1)
+                    history.menus.unshift(route)
                     localStorage.setItem('history', JSON.stringify(history))
                     return
                 }
             }
 
-            history.unshift(route)
+            history.menus.unshift(route)
             localStorage.setItem('history', JSON.stringify(history))
         }
         watch(() => route.name, () => {
             historyRecord()
+        })
+
+        let globalConfig = merge(zhConfig)
+        const initLangConfig = (lang) => {
+            switch (lang) {
+                case 'zh':
+                    globalConfig = merge(zhConfig)
+                    break
+
+                case 'en':
+                    globalConfig = merge(enConfig)
+                    break
+
+                case 'jp':
+                    globalConfig = merge(jpConfig)
+                    break
+
+                case 'kor':
+                    globalConfig = merge(korConfig)
+                    break
+
+                case 'th':
+                    globalConfig = merge(enConfig)
+                    break
+            
+                default:
+                    globalConfig = merge(zhConfig)
+                    break
+            }
+        }
+        watch(() => local.name, (newValue) => {
+            initLangConfig(newValue)
         })
 
         onMounted(() => {
@@ -104,6 +147,10 @@ export default {
                 historyRecord()
             }, 1000)
         })
+
+        return {
+            globalConfig
+        }
     }
 }
 </script>

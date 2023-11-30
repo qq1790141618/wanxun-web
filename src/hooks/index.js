@@ -108,3 +108,44 @@ export function sort(val, sortArray, defaultSort = { sortBy: 'salesCount', desce
 
     return sortArray
 }
+
+export function miaostreetGoodsLink(item) {
+    if(!item['miaostreet-id'] || item['miaostreet-id'] == null){
+        return
+    }
+    window.open('https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=goods-detail&wx_navbar_transparent=true&wh_weex=true&itemId=' + item['miaostreet-id'], "newwindow","height=800, width=420, top=120, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+
+    let history = JSON.parse(localStorage.getItem('history')) || {
+        menus: [],
+        goods: []
+    }
+    if(!history.goods){
+        history.goods = []
+    }
+    
+    for (let i = 0; i < history.goods.length; i++) {
+        if(history.goods[i].stylenumber === item.stylenumber){
+            history.goods.splice(i, 1)
+            history.goods.unshift(item)
+            localStorage.setItem('history', JSON.stringify(history))
+            return
+        }
+    }
+
+    history.goods.unshift(item)
+    localStorage.setItem('history', JSON.stringify(history))
+}
+
+export async function getCategoryOptions(serve) {
+    return fetch(serve + '/goods/category/get')
+    .then(res => {
+        return Promise.resolve(res.json())
+    })
+}
+
+export async function getSupplierOptions(serve) {
+    return fetch(serve + '/goods/supplier/get')
+    .then(res => {
+        return Promise.resolve(res.json())
+    })
+}

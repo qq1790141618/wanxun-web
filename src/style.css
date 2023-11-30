@@ -43,16 +43,23 @@
     font-family: 'HYWenHei-45W';
     src: url('https://cdn.fixeam.com/font/hanyiwenhei/HYWenHei-45W-5.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'HYWenHei-55W';
+    src: url('https://cdn.fixeam.com/font/hanyiwenhei/HYWenHei-55W-4.ttf') format('truetype');
+}
 * {
     box-sizing: border-box;
 }
 header {
     display: block;
 }
+:root {
+    --td-font-family: 'Rubik', 'HYWenHei-45W', 'Pingfang SC Medium', Microsoft YaHei, Arial Regular;
+}
 body {
     color: var(--td-text-color-secondary);
     font: var(--td-font-body-medium);
-    font-family: -apple-system, BlinkMacSystemFont, 'Rubik', 'HYWenHei-45W', 'Pingfang SC Medium', var(--td-font-family);
+    font-family: -apple-system, BlinkMacSystemFont, var(--td-font-family);
     -webkit-font-smoothing: antialiased;
     padding: 0;
     margin: 0;

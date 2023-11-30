@@ -270,6 +270,9 @@
             :options="shop.brandOptions"
             @change="saveOptions"
             ></t-select>
+            <t-link theme="primary" @click="viewCounter" v-if="shop.counter[shop.store + shop.brand]">
+                {{ localString.viewCounter[lang] }}>>
+            </t-link>
         </t-space>
     </t-dialog>
 </template>
@@ -277,7 +280,7 @@
 <script>
 import localString from './local'
 import moreLang from './moreLang'
-import { copy } from '../hooks/apis'
+import { copy } from '../hooks'
 
 export default {
     setup(){
@@ -410,6 +413,9 @@ export default {
                 localStorage.setItem('collection', JSON.stringify(collectionPath.value))
             }
         }
+        const viewCounter = () => {
+            window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+        }
 
         onMounted(() => {
             setTimeout(() => {
@@ -440,6 +446,7 @@ export default {
 
             copy,
             shop,
+            viewCounter,
 
             activeMenu,
 
@@ -476,6 +483,10 @@ export default {
     backdrop-filter: blur(10px);
     color: var(--td-text-color-primary);
     height: var(--td-comp-size-xxxl);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--td-border-level-2-color);
+    box-sizing: border-box;
 }
 .logo{
     margin: 0 10px;
