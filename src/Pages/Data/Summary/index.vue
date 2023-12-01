@@ -15,7 +15,7 @@
         :loading-props="{
             text: localString.loading[local.name]
         }"
-        max-height="calc(100vh - 270px)"
+        max-height="calc(100vh - 300px)"
         @sort-change="sortConfig.done"
         :sort="sortConfig.value"
         :foot-data="footData"
@@ -24,7 +24,7 @@
         >
         </t-table>
         <template #footer>
-            <div style="margin-bottom: 20px; text-align: center;">
+            <div style="margin-bottom: 10px; text-align: center;">
                 <t-button
                 variant="outline"
                 shape="square" @click="useMonth = dayjs(useMonth).subtract(1, 'month').format('YYYY-MM')"

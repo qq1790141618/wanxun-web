@@ -3,6 +3,18 @@
         <router-view v-if="$route.name === 'login'"/>
         <div v-if="$route.name !== 'login'">
             <header-component />
+            <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;">
+                <t-breadcrumbItem
+                v-for="item in $route.matched"
+                :key="item.meta.key"
+                to="/vue-next/components/menu"
+                >
+                    <template #icon>
+                        <t-icon :name="item.meta.icon" />
+                    </template>
+                    {{ item.meta.title[local.name] }}
+                </t-breadcrumbItem>
+            </t-breadcrumb>
             <router-view v-slot="{ Component }" >
                 <keep-alive>
                     <component :is="Component" :key="$route.meta.key" v-if="$route.meta.keepAlive"/>
@@ -149,6 +161,7 @@ export default {
         })
 
         return {
+            local,
             globalConfig
         }
     }

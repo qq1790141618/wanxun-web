@@ -170,11 +170,13 @@
                     </t-dropdown-menu>
                 </t-dropdown>
                 <t-tooltip :content="localString.setting[lang]" v-if="$route.name !== 'login'">
-                    <t-button variant="text" shape="square" @click="settings = true">
-                        <template #icon>
-                            <t-icon name="setting" />
-                        </template>
-                    </t-button>
+                    <t-badge :count="COUNT">
+                        <t-button variant="text" shape="square" @click="clickSet">
+                            <template #icon>
+                                <t-icon name="setting" />
+                            </template>
+                        </t-button>
+                    </t-badge>
                 </t-tooltip>
                 <t-dropdown
                 placement="bottom"
@@ -280,7 +282,7 @@
 <script>
 import localString from './local'
 import moreLang from './moreLang'
-import { copy } from '../hooks'
+import { copy, getGoods } from '../hooks'
 
 export default {
     setup(){
@@ -338,26 +340,6 @@ export default {
                 return Promise.resolve(response.json())
             })
         }
-        const getGoods = async (stylenumbers) => {
-            return fetch(serve + '/goods/mul/get', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify({
-                    'store-id': shop.store,
-                    brand: shop.brand,
-                    start: 0,
-                    number: 30,
-                    condition: stylenumbers.length == 0 ? false : JSON.stringify({
-                        stylenumber: stylenumbers
-                    })
-                })
-            })
-            .then(response => {
-                return Promise.resolve(response.json())
-            })
-        }
         const search = async (value) => {
             if(value == null || value == undefined){
                 value = false
@@ -381,7 +363,15 @@ export default {
 
             let styleNumbers = await searchStyleNumber(value)
             styleNumbers = styleNumbers.length == 0 ? [] : styleNumbers.map(obj => obj.stylenumber)
-            let goods = await getGoods(styleNumbers)
+            let goods = await getGoods(
+                shop.store,
+                shop.brand,
+                styleNumbers.length == 0 ? false : {
+                    stylenumber: styleNumbers
+                },
+                0,
+                20
+            )
             for (let i = 0; i < goods.data.length; i++) {
                 options.push({
                     label: goods.data[i].stylenumber,
@@ -416,6 +406,12 @@ export default {
         const viewCounter = () => {
             window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
         }
+        const COUNT = ref('')
+        const clickSet = () => {
+            localStorage.setItem('setting-button-attention', 'clicked')
+            COUNT.value = ''
+            settings = true
+        }
 
         onMounted(() => {
             setTimeout(() => {
@@ -431,6 +427,10 @@ export default {
 
             search()
             collectionPath.value = JSON.parse(localStorage.getItem('collection')) || []
+
+            if(!localStorage.getItem('setting-button-attention')){
+                COUNT.value = 'new'
+            }
         })
 
         return {
@@ -462,7 +462,10 @@ export default {
             user,
             collection,
             collectionPath,
-            routes
+            routes,
+
+            COUNT,
+            clickSet
         }
     }
 }

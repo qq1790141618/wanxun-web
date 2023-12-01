@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex;">
+    <div style="display: flex; position: relative;">
         <t-card
         class="condition-box"
         :bordered="false"
@@ -10,7 +10,7 @@
                     {{ localString.condition[local.name] }}
                 </span>
             </template>
-            <t-form label-width="0">
+            <t-form label-width="0" style="height: calc(100vh - 250px); overflow-y: auto;">
                 <t-form-item>
                     <t-select
                     v-model="condition.type"
@@ -116,43 +116,62 @@
                         </t-check-tag-group>
                     </div>
                 </t-form-item>
-                <t-form-item>
-                    <t-space size="8px">
-                        <t-button>
-                            {{ localString.confirm[local.name] }}
-                        </t-button>
-                        <t-button variant="outline" @click="condition = {
-                            type: 'stylenumber',
-                            content: null,
-                            unUpload: [],
-                            category: null,
-                            supplier: null
-                        }">
-                            {{ localString.reset[local.name] }}
-                        </t-button>
-                    </t-space>
-                </t-form-item>
             </t-form>
+            <t-space size="8px">
+                <t-button
+                @click="() => {
+                    pagination.current = 1;
+                    getSearchGoods()
+                }"
+                :disabled="loading"
+                :loading="loading"
+                >
+                    {{ localString.confirm[local.name] }}
+                </t-button>
+                <t-button variant="outline" @click="condition = {
+                    type: 'stylenumber',
+                    content: null,
+                    unUpload: [],
+                    category: null,
+                    supplier: null
+                }">
+                    {{ localString.reset[local.name] }}
+                </t-button>
+            </t-space>
         </t-card>
         <div class="content-box">
-            <t-alert style="padding: 5px;">
+            <t-alert style="padding: 5px; position: sticky; top: 65px;">
                 <template #icon><div></div></template>
                 <t-button variant="text" theme="primary">
                     Button
                 </t-button>
             </t-alert>
+            <div class="result-containter">
+
+            </div>
+            <t-pagination
+            size="small"
+            v-model:current="pagination.current"
+            v-model:page-size="pagination.pageSize"
+            :total="pagination.total"
+            :page-size-options="pagination.pageSizeOptions"
+            @current-change="getSearchGoods()"
+            @page-size-change="getSearchGoods()"
+            style="position: sticky; bottom: 10px;"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import { getCategoryOptions, getSupplierOptions } from '../../hooks'
+import { getCategoryOptions, getSupplierOptions, getGoods } from '../../hooks'
 import localString from './local'
 
 export default {
     setup(){
         const local = inject('local')
         const serve = inject('serve')
+        const shop = inject('shop')
 
         const condition = ref({
             type: 'stylenumber',
@@ -169,8 +188,50 @@ export default {
             supplierOptions.value.splice(0, 1)
         }
 
+        const loading = ref(false)
+        const data = ref([])
+        const pagination = ref({
+            total: 0,
+            current: 1,
+            pageSize: 10,
+            pageSizeOptions: [10, 20, 30, 50]
+        })
+        const getSearchGoods = async () => {
+            loading.value = true
+
+            let con = new Object
+            if(condition.value.content != null && condition.value.content != ''){
+                con[condition.value.type] = []
+                let content1 = condition.value.content.split(',')
+                for (let i = 0; i < content1.length; i++) {
+                    let content2 = content1[i].split('\n')
+                    con[condition.value.type] = con[condition.value.type].concat(content2)
+                }
+            }
+            if(condition.value.category != null && condition.value.category != ''){
+                con.category = condition.value.category
+            }
+            if(condition.value.supplier != null && condition.value.supplier != ''){
+                con.supplier = condition.value.supplier
+            }
+            if(condition.value.unUpload.length > 0){
+                for (let i = 0; i < condition.value.unUpload.length; i++) {
+                    con[condition.value.unUpload[i]] = null
+                }
+            }
+            
+            let start = (pagination.value.current - 1) * pagination.value.pageSize
+            let number = pagination.value.pageSize
+            let result = await getGoods(shop.store, shop.brand, con, start, number)
+            data.value = result.data
+            pagination.value.total = result.total
+            
+            loading.value = false
+        }
+
         onMounted(() => {
             getOptions()
+            getSearchGoods()
         })
 
         return {
@@ -178,7 +239,12 @@ export default {
             localString,
             condition,
             categoryOptions,
-            supplierOptions
+            supplierOptions,
+
+            getSearchGoods,
+            loading,
+            data,
+            pagination
         }
     }
 }
@@ -190,7 +256,7 @@ export default {
     top: 65px;
     left: 0;
     width: 300px;
-    height: calc(100vh - 77px);
+    height: calc(100vh - 110px);
     margin: 10px;
     background: #fff url('../../assets/search.png') no-repeat 75% 96%;
     background-origin: -10px -10px;

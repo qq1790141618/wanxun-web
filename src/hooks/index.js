@@ -1,6 +1,7 @@
 import md5 from 'md5'
 import fetchJSONP from 'fetch-jsonp'
 import useClipboard from 'vue-clipboard3'
+const serve = 'https://work-serve.fixeam.com/api'
 
 export function sendCode(serve, target, lang = 'zh'){
     return new Promise((resolve, reject) => {
@@ -147,5 +148,24 @@ export async function getSupplierOptions(serve) {
     return fetch(serve + '/goods/supplier/get')
     .then(res => {
         return Promise.resolve(res.json())
+    })
+}
+
+export async function getGoods(store, brand, condition, start, number) {
+    let s = start || 0
+    let num = number || 0
+    return fetch(serve + '/goods/mul/get?start=' + s + '&number=' + num, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({
+            'store-id': store,
+            brand,
+            condition: !condition ? false : JSON.stringify(condition)
+        })
+    })
+    .then(response => {
+        return Promise.resolve(response.json())
     })
 }
