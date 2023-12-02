@@ -114,7 +114,7 @@ export function miaostreetGoodsLink(item) {
     if(!item['miaostreet-id'] || item['miaostreet-id'] == null){
         return
     }
-    window.open('https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=goods-detail&wx_navbar_transparent=true&wh_weex=true&itemId=' + item['miaostreet-id'], "newwindow","height=800, width=420, top=120, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+    window.open('https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=goods-detail&wx_navbar_transparent=true&wh_weex=true&itemId=' + item['miaostreet-id'], "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
 
     let history = JSON.parse(localStorage.getItem('history')) || {
         menus: [],
@@ -151,13 +151,19 @@ export async function getSupplierOptions(serve) {
     })
 }
 
-export async function getGoods(store, brand, condition, start, number) {
+export async function getGoods(store, brand, condition, start, number, isExport) {
     let s = start || 0
     let num = number || 0
-    return fetch(serve + '/goods/mul/get?start=' + s + '&number=' + num, {
+    let url = serve + '/goods/mul/get?with-sales=cfdd&start=' + s + '&number=' + num
+
+    if(isExport){
+        url += '&export=export'
+    }
+    
+    return fetch(url, {
         method: 'post',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json; charset=utf-8'
         },
         body: JSON.stringify({
             'store-id': store,
@@ -166,6 +172,12 @@ export async function getGoods(store, brand, condition, start, number) {
         })
     })
     .then(response => {
+        if(isExport){
+            return Promise.resolve(response.text())
+        }
         return Promise.resolve(response.json())
+    })
+    .catch(error => {
+        return Promise.resolve(error)
     })
 }

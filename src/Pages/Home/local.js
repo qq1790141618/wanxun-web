@@ -121,5 +121,12 @@ export default {
         kor: '상품',
         jp: '商品',
         th: 'สินค้า'
+    },
+    viewGoods: {
+        zh: '查看商品', 
+        en: 'View Goods',
+        kor: '상품 보기',
+        jp: '商品を見る',
+        th: 'ดูสินค้า'
     }
 }

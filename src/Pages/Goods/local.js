@@ -118,4 +118,81 @@ export default {
         jp: 'リセット',
         th: 'รีเซ็ต'
     },
+    salesCount: {
+        zh: '销售数量',
+        en: 'Sales Count',
+        kor: '판매 수량',
+        jp: '販売 数',
+        th: 'ข้อมูลการขาย'
+    },
+    image: {
+        zh: '图片',
+        en: 'Image',
+        kor: '',
+        jp: '',
+        th: ''
+    },
+    goodName: {
+        zh: '商品名称',
+        en: 'Good Name',
+        kor: '',
+        jp: '',
+        th: ''
+    },
+    operate: {
+        zh: '操作',
+        en: 'Operate',
+        kor: '',
+        jp: '',
+        th: ''
+    },
+    edit: {
+        zh: '编辑',
+        en: 'Edit',
+        kor: '',
+        jp: '',
+        th: ''
+    },
+    copy: {
+        zh: '复制',
+        en: 'Copy ',
+        kor: '',
+        jp: '',
+        th: ''
+    },
+    viewGoods: {
+        zh: '查看商品', 
+        en: 'View Goods',
+        kor: '상품 보기',
+        jp: '商品を見る',
+        th: 'ดูสินค้า'
+    },
+    removeGoods: {
+        zh: '移除商品',
+        en: 'Remove Goods',
+        kor: '상품 제거',
+        jp: '商品を削除',
+        th: 'ลบสินค้า'
+    },
+    exportQueryGoods: {
+        zh: '导出查询商品',
+        en: 'Export Query Goods',
+        kor: '검색 상품 내보내기',
+        jp: '検索商品をエクスポート',
+        th: 'ส่งค้นหาสินค้า'
+    },
+    exporting: {
+        zh: '导出中',
+        en: 'Exporting',
+        kor: '내보내는 중',
+        jp: 'エクスポート中',
+        th: 'กำลังส่ง'
+    },
+    exportSuccess: {
+        zh: '导出成功',
+        en: 'Export Success',
+        kor: '내보내기 성공',
+        jp: 'エクスポート 成功',
+        th: 'ส่งสำเร็จ'
+    }
 }

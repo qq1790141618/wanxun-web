@@ -271,7 +271,7 @@
                                         <template #icon>
                                             <t-icon name="browse"></t-icon>
                                         </template>
-                                        查看商品
+                                        {{ localString.viewGoods[local.name] }}
                                     </t-button>
                                 </div>
                             </t-card>

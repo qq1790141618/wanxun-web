@@ -60,6 +60,7 @@ const routes = [
         path: '/datas',
         name: 'datas',
         component: () => import('./Pages/Data/index.vue'),
+        redirect: '/datas/summary',
         meta: {
             title: {
                 zh: '数据', 

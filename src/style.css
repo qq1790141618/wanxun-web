@@ -55,6 +55,7 @@ header {
 }
 :root {
     --td-font-family: 'Rubik', 'HYWenHei-45W', 'Pingfang SC Medium', Microsoft YaHei, Arial Regular;
+    --td-font-size-body-medium: 13px;
 }
 body {
     color: var(--td-text-color-secondary);

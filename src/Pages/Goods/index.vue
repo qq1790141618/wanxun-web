@@ -124,9 +124,9 @@
                     getSearchGoods()
                 }"
                 :disabled="loading"
-                :loading="loading"
+                :loading="loading || exportLoading"
                 >
-                    {{ localString.confirm[local.name] }}
+                    {{ confirmButton }}
                 </t-button>
                 <t-button variant="outline" @click="condition = {
                     type: 'stylenumber',
@@ -142,15 +142,80 @@
         <div class="content-box">
             <t-alert style="padding: 5px; position: sticky; top: 65px;">
                 <template #icon><div></div></template>
-                <t-button variant="text" theme="primary">
-                    Button
+                <t-button
+                variant="text"
+                theme="primary"
+                @click="exportToFiles"
+                :loading="loading || exportLoading"
+                >
+                    <template #icon>
+                        <t-icon name="file-export" />
+                    </template>
+                    {{ localString.exportQueryGoods[local.name] }}
                 </t-button>
             </t-alert>
             <div class="result-containter">
-
+                <t-table
+                size="small"
+                :data="data"
+                :columns="columns"
+                :loading="loading"
+                :loading-props="{
+                    text: localString.loading[local.name]
+                }"
+                max-height="calc(100vh - 200px)"
+                row-key="stylenumber"
+                >
+                    <template #image="{ row }">
+                        <t-image-viewer
+                        v-if="row['main-image'] !== null"
+                        :images="JSON.parse(row['main-image'])"
+                        close-on-overlay
+                        >
+                            <template #trigger="{ open }">
+                                <t-image
+                                :src="JSON.parse(row['main-image'])[0] || false"
+                                style="width: 90px; margin: 0 auto;"
+                                @click="open"
+                                shape="round"
+                                ></t-image>
+                            </template>
+                        </t-image-viewer>
+                    </template>
+                    <template #operate="{ row }">
+                        <t-space break-line size="5px">
+                            <t-button
+                            theme="primary"
+                            >
+                                {{ localString.edit[local.name] }}
+                            </t-button>
+                            <t-button
+                            variant="outline"
+                            theme="primary"
+                            v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
+                            @click="copy(row['miaostreet-id'])"
+                            >
+                                {{ localString.copy[local.name] }}{{ localString['miaostreet-id'][local.name] }}
+                            </t-button>
+                            <t-button
+                            variant="outline"
+                            v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
+                            @click="miaostreetGoodsLink(row)"
+                            >
+                                {{ localString.viewGoods[local.name] }}
+                            </t-button>
+                            <t-button
+                            theme="danger"
+                            >
+                                {{ localString.removeGoods[local.name] }}
+                            </t-button>
+                        </t-space>
+                    </template>
+                </t-table>
             </div>
             <t-pagination
             size="small"
+            :disabled="loading"
             v-model:current="pagination.current"
             v-model:page-size="pagination.pageSize"
             :total="pagination.total"
@@ -164,7 +229,8 @@
 </template>
 
 <script>
-import { getCategoryOptions, getSupplierOptions, getGoods } from '../../hooks'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink } from '../../hooks'
 import localString from './local'
 
 export default {
@@ -180,6 +246,7 @@ export default {
             category: null,
             supplier: null
         })
+        const frozenCondition = ref({})
         const categoryOptions = ref([])
         const supplierOptions = ref([])
         const getOptions = async () => {
@@ -190,47 +257,163 @@ export default {
 
         const loading = ref(false)
         const data = ref([])
+        const columns = [
+            {
+                title: localString.stylenumber[local.name],
+                colKey: 'stylenumber',
+                width: 120,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.image[local.name],
+                colKey: 'image',
+                width: 120,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.goodName[local.name],
+                colKey: 'name',
+                width: 260,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.category[local.name],
+                colKey: 'category',
+                width: 190,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString['miaostreet-id'][local.name],
+                colKey: 'miaostreet-id',
+                width: 120,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.salesCount[local.name],
+                colKey: 'sales-count',
+                width: 90,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.supplier[local.name],
+                colKey: 'supplier',
+                width: 100,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.supplier[local.name] + ' ' + localString.stylenumber[local.name],
+                colKey: 'supplier-id',
+                width: 120,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.price[local.name],
+                colKey: 'price',
+                width: 90,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.cost[local.name],
+                colKey: 'cost',
+                width: 90,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: localString.operate[local.name],
+                colKey: 'operate',
+                width: 180,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+        ]
         const pagination = ref({
             total: 0,
             current: 1,
-            pageSize: 10,
-            pageSizeOptions: [10, 20, 30, 50]
+            pageSize: 20,
+            pageSizeOptions: [20, 30, 50]
         })
-        const getSearchGoods = async () => {
-            loading.value = true
-
+        const getSearchGoods = async (isExport) => {
             let con = new Object
-            if(condition.value.content != null && condition.value.content != ''){
-                con[condition.value.type] = []
-                let content1 = condition.value.content.split(',')
+            let recon
+            if(!isExport){
+                loading.value = true
+                recon = condition.value
+            } else {
+                recon = frozenCondition.value
+            }
+
+            if(recon.content != null && recon.content != ''){
+                con[recon.type] = []
+                let content1 = recon.content.split(',')
                 for (let i = 0; i < content1.length; i++) {
                     let content2 = content1[i].split('\n')
-                    con[condition.value.type] = con[condition.value.type].concat(content2)
+                    con[recon.type] = con[recon.type].concat(content2)
                 }
             }
-            if(condition.value.category != null && condition.value.category != ''){
-                con.category = condition.value.category
+            if(recon.category != null && recon.category != ''){
+                con['category-id'] = recon.category
             }
-            if(condition.value.supplier != null && condition.value.supplier != ''){
-                con.supplier = condition.value.supplier
+            if(recon.supplier != null && recon.supplier != ''){
+                con.supplier = recon.supplier
             }
-            if(condition.value.unUpload.length > 0){
-                for (let i = 0; i < condition.value.unUpload.length; i++) {
-                    con[condition.value.unUpload[i]] = null
+            if(recon.unUpload.length > 0){
+                for (let i = 0; i < recon.unUpload.length; i++) {
+                    con[recon.unUpload[i]] = null
                 }
             }
             
             let start = (pagination.value.current - 1) * pagination.value.pageSize
             let number = pagination.value.pageSize
-            let result = await getGoods(shop.store, shop.brand, con, start, number)
+            let result = await getGoods(shop.store, shop.brand, con, start, number, isExport)
+
+            if(isExport){
+                return Promise.resolve(result)
+            } else {
+                frozenCondition.value = JSON.parse(JSON.stringify(condition.value))
+            }
+
             data.value = result.data
+            for (let i = 0; i < data.value.length; i++) {
+                if(!data.value[i]['sales-count']){
+                    data.value[i]['sales-count'] = 0
+                }
+            }
             pagination.value.total = result.total
             
             loading.value = false
         }
+        const confirmButton = ref(localString.confirm[local.name])
+        const exportLoading = ref(false)
+        const exportToFiles = async () => {
+            confirmButton.value = localString.exporting[local.name]
+            exportLoading.value = true
+
+            let res = await getSearchGoods(true)
+            MessagePlugin.success(localString.exportSuccess[local.name])
+            window.open(serve + '/download?filename=' + res)
+
+            confirmButton.value = localString.confirm[local.name]
+            exportLoading.value = false
+        }
 
         onMounted(() => {
             getOptions()
+            getSearchGoods()
+        })
+        watch(() => shop.store, () => {
+            getSearchGoods()
+        })
+        watch(() => shop.brand, () => {
             getSearchGoods()
         })
 
@@ -244,7 +427,15 @@ export default {
             getSearchGoods,
             loading,
             data,
-            pagination
+            columns,
+            pagination,
+
+            copy,
+            miaostreetGoodsLink,
+
+            confirmButton,
+            exportLoading,
+            exportToFiles
         }
     }
 }
@@ -268,5 +459,32 @@ export default {
     margin: 10px;
     margin-left: 0;
     box-sizing: border-box;
+}
+.result-containter{
+    margin: 10px 0;
+}
+.result-containter .t-table, .result-containter tr{
+    background-color: transparent;
+}
+.result-containter .t-table__header tr{
+    background-color: #fff;
+    border-radius: 5px;
+}
+.result-containter .t-table th{
+    color: #333;
+    border: none;
+}
+.result-containter .t-table th:first-child{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.result-containter .t-table th:last-child{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.goods-table-col{
+    background-color: #ffffff60!important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 </style>

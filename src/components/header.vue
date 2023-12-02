@@ -185,7 +185,11 @@
                 >
                     <t-button variant="text">
                         <template #icon>
-                            <t-image :src="user.inform.headsrc" shape="circle" style="width: 28px;" />
+                            <t-image :src="user.inform.headsrc" shape="circle" style="width: 28px;">
+                                <template #loading>
+                                    ...
+                                </template>
+                            </t-image>
                         </template>
                         &nbsp;
                         {{ user.inform.nickname }}
@@ -410,7 +414,7 @@ export default {
         const clickSet = () => {
             localStorage.setItem('setting-button-attention', 'clicked')
             COUNT.value = ''
-            settings = true
+            settings.value = true
         }
 
         onMounted(() => {

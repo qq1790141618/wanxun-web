@@ -7,7 +7,7 @@
                 <t-breadcrumbItem
                 v-for="item in $route.matched"
                 :key="item.meta.key"
-                to="/vue-next/components/menu"
+                :to="item.path"
                 >
                     <template #icon>
                         <t-icon :name="item.meta.icon" />
@@ -72,10 +72,10 @@ export default {
 
                 let message = {
                     zh: '欢迎回来！',
-                    en: 'Welcome Back!',
-                    kor: '안녕하세요',
-                    jp: 'いらっしゃい',
-                    th: 'สวัสดี'
+                    en: 'Welcome Back! ',
+                    kor: '안녕하세요！',
+                    jp: 'いらっしゃい！',
+                    th: 'สวัสดี! '
                 }
                 MessagePlugin.success(message[local.name] + res.user.nickname)
             })
@@ -151,9 +151,9 @@ export default {
         watch(() => local.name, (newValue) => {
             initLangConfig(newValue)
         })
+        initSet()
 
         onMounted(() => {
-            initSet()
             loginVerify()
             setTimeout(() => {
                 historyRecord()
