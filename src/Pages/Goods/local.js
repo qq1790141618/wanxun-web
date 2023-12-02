@@ -126,40 +126,40 @@ export default {
         th: 'ข้อมูลการขาย'
     },
     image: {
-        zh: '图片',
-        en: 'Image',
-        kor: '',
-        jp: '',
-        th: ''
-    },
-    goodName: {
-        zh: '商品名称',
-        en: 'Good Name',
-        kor: '',
-        jp: '',
-        th: ''
-    },
-    operate: {
-        zh: '操作',
-        en: 'Operate',
-        kor: '',
-        jp: '',
-        th: ''
-    },
-    edit: {
-        zh: '编辑',
-        en: 'Edit',
-        kor: '',
-        jp: '',
-        th: ''
-    },
-    copy: {
-        zh: '复制',
-        en: 'Copy ',
-        kor: '',
-        jp: '',
-        th: ''
-    },
+       zh: '图片',
+       en: 'Image',
+       kor: '사진',
+       jp: '画像',
+       th: 'รูปภาพ'
+   },
+   goodName: {
+       zh: '商品名称',
+       en: 'Good Name',
+       kor: '상품 이름',
+       jp: '商品名',
+       th: 'สินค้า ชื่อ'
+   },
+   operate: {
+       zh: '操作',
+       en: 'Operate',
+       kor: '작업',
+       jp: '操作',
+       th: 'การทำ'
+   },
+   edit: {
+       zh: '编辑',
+       en: 'Edit',
+       kor: '수정',
+       jp: '編集',
+       th: 'แก้ไข'
+   },
+   copy: {
+       zh: '复制',
+       en: 'Copy ',
+       kor: '복사',
+       jp: 'コピー',
+       th: 'ซักซื้อ'
+   },
     viewGoods: {
         zh: '查看商品', 
         en: 'View Goods',
@@ -182,11 +182,11 @@ export default {
         th: 'ส่งค้นหาสินค้า'
     },
     exporting: {
-        zh: '导出中',
-        en: 'Exporting',
-        kor: '내보내는 중',
-        jp: 'エクスポート中',
-        th: 'กำลังส่ง'
+        zh: '导出中...',
+        en: 'Exporting...',
+        kor: '내보내는 중...',
+        jp: 'エクスポート中...',
+        th: 'กำลังส่ง...'
     },
     exportSuccess: {
         zh: '导出成功',
@@ -194,5 +194,83 @@ export default {
         kor: '내보내기 성공',
         jp: 'エクスポート 成功',
         th: 'ส่งสำเร็จ'
+    },
+    selected: (number) => {
+        if(number == 0){
+            return {
+                zh: '未选择任何数据',
+                en: 'No data selected',
+                kor: '선택된 데이터가 없습니다',
+                jp: '選択されたデータはありません',
+                th: 'ไม่มีข้อมูล'
+            }
+        }
+        return {
+            zh: `已选择 ${number} 项数据`,
+            en: `Selected ${number} items`,
+            kor: `${number}개 선택됨`,
+            jp: `${number}件 選択されました`,
+            th: `เลือก ${number} รายการ`
+        }
+    },
+    batch: {
+        zh: '批量',
+        en: 'Batch ',
+        kor: '일괄 ',
+        jp: '一括処理',
+        th: 'หนึ่งล็อต'
+    },
+    miaostreetListingStatus: {
+        zh: '喵街上架状态',
+        en: 'Miaostreet Listing Status',
+        kor: '마이오스트리트 상태',
+        jp: 'マイオストリート ステータス',
+        th: 'สถานะของมายอสตรีเทรด'
+    },
+    tmallListingStatus: {
+        zh: '天猫上架状态',
+        en: 'TMall Listing Status',
+        kor: 'TMall 상태',
+        jp: 'TMall ステータス',
+        th: 'สถานะของเมทอล'
+    },
+    listing: {
+        zh: '上架',
+        en: 'Listing',
+        kor: '상태',
+        jp: 'ステータス',
+        th: 'เข้าร้าน'
+    },
+    unlist: {
+        zh: '下架',
+        en: 'Unlist',
+        kor: '미상',
+        jp: 'アンダフレーム',
+        th: 'ออกจากร้าน'
+    },
+    cancel: {
+        zh: '取消',
+        en: 'Cancel',
+        kor: '취소',
+        jp: 'キャンセル',
+        th: 'ยกเลิก'
+    },
+    batchEdited: (number) => {
+        if(number == 0){
+            return {
+                zh: '未修改任何数据',
+                en: 'No data edited',
+                kor: '수정된 데이터가 없습니다',
+                jp: '編集されたデータはありません',
+                th: 'ไม่มีข้อมูลที่แก้ไข'
+            }
+        }
+        return {
+            zh: `已修改 ${number} 个SKU`,
+            en: `Edited ${number} SKU`,
+            kor: `${number}개의 SKU 수정됨`,
+            jp: `${number}個のSKU 編集されました`,
+            th: `แก้ไขข้อมูล ${number} รายการ SKU`
+        }
     }
 }

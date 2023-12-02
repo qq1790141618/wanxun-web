@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex; position: relative;">
+    <div style="display: flex; position: relative;" id="goods-list">
         <t-card
         class="condition-box"
         :bordered="false"
@@ -120,13 +120,14 @@
             <t-space size="8px">
                 <t-button
                 @click="() => {
-                    pagination.current = 1;
+                    pagination.current = 1
+                    selectKey = []
                     getSearchGoods()
                 }"
-                :disabled="loading"
-                :loading="loading || exportLoading"
+                :disabled="loading || exportLoading"
+                :loading="loading"
                 >
-                    {{ confirmButton }}
+                    {{ localString.confirm[local.name] }}
                 </t-button>
                 <t-button variant="outline" @click="condition = {
                     type: 'stylenumber',
@@ -140,19 +141,40 @@
             </t-space>
         </t-card>
         <div class="content-box">
-            <t-alert style="padding: 5px; position: sticky; top: 65px;">
+            <t-alert style="padding: 5px 12px; position: sticky; top: 65px;">
                 <template #icon><div></div></template>
-                <t-button
-                variant="text"
-                theme="primary"
-                @click="exportToFiles"
-                :loading="loading || exportLoading"
-                >
-                    <template #icon>
-                        <t-icon name="file-export" />
-                    </template>
-                    {{ localString.exportQueryGoods[local.name] }}
-                </t-button>
+                <t-space size="12px">
+                    <span style="line-height: 32px;">
+                        <t-icon name="check-rectangle" />
+                        {{ localString.selected(selectKey.length)[local.name] }}
+                    </span>
+                    <t-button
+                    variant="text"
+                    theme="primary"
+                    @click="exportToFiles"
+                    :disabled="loading || exportLoading"
+                    :loading="exportLoading"
+                    >
+                        <template #icon>
+                            <t-icon name="file-export" />
+                        </template>
+                        {{ confirmButton }}
+                    </t-button>
+                    <t-button
+                    variant="text"
+                    theme="primary"
+                    @click="() => {
+                        batchEdit.data = {}
+                        batchEdit.visible = true
+                    }"
+                    :disabled="selectKey.length == 0"
+                    >
+                        <template #icon>
+                            <t-icon name="edit" />
+                        </template>
+                        {{ localString.batch[local.name] }}{{ localString.edit[local.name] }}
+                    </t-button>
+                </t-space>
             </t-alert>
             <div class="result-containter">
                 <t-table
@@ -165,6 +187,7 @@
                 }"
                 max-height="calc(100vh - 200px)"
                 row-key="stylenumber"
+                v-model:selected-row-keys="selectKey"
                 >
                     <template #image="{ row }">
                         <t-image-viewer
@@ -176,7 +199,7 @@
                                 <t-image
                                 :src="JSON.parse(row['main-image'])[0] || false"
                                 style="width: 90px; margin: 0 auto;"
-                                @click="open"
+                                @click.stop="open"
                                 shape="round"
                                 ></t-image>
                             </template>
@@ -184,16 +207,16 @@
                     </template>
                     <template #operate="{ row }">
                         <t-space break-line size="5px">
-                            <t-button
+                            <!-- <t-button
                             theme="primary"
                             >
                                 {{ localString.edit[local.name] }}
-                            </t-button>
+                            </t-button> -->
                             <t-button
                             variant="outline"
                             theme="primary"
                             v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
-                            @click="copy(row['miaostreet-id'])"
+                            @click="copy(row['miaostreet-id'], local.name)"
                             >
                                 {{ localString.copy[local.name] }}{{ localString['miaostreet-id'][local.name] }}
                             </t-button>
@@ -203,11 +226,6 @@
                             @click="miaostreetGoodsLink(row)"
                             >
                                 {{ localString.viewGoods[local.name] }}
-                            </t-button>
-                            <t-button
-                            theme="danger"
-                            >
-                                {{ localString.removeGoods[local.name] }}
                             </t-button>
                         </t-space>
                     </template>
@@ -226,10 +244,119 @@
             />
         </div>
     </div>
+    <t-dialog
+    :close-btn="false"
+    :visible="batchEdit.visible"
+    :close-on-esc-keydown="false"
+    :close-on-overlay-click="false"
+    :footer="false"
+    width="600px"
+    attach="#goods-list"
+    show-in-attached-element
+    >
+        <template #header>
+            <t-icon name="edit" style="margin-right: 5px;" />
+            {{ localString.batch[local.name] }}{{ localString.edit[local.name] }}
+        </template>
+        <t-row :gutter="[12, 12]" style="width: 100%;">
+            <t-col :span="6">
+                <t-auto-complete
+                v-model="batchEdit.data.supplier"
+                :options="supplierOptions.map(obj => obj.value)"
+                :input-props="{
+                    label: localString.supplier[local.name] + ': '
+                }"
+                >
+                </t-auto-complete>
+            </t-col>
+            <t-col :span="6">
+                <t-cascader
+                v-model="batchEdit.data['category-id']"
+                :options="categoryOptions"
+                clearable
+                filterable
+                :label="localString.category[local.name] + ': '"
+                :placeholder="localString.choose[local.name] + localString.category[local.name]"
+                >
+                </t-cascader>
+            </t-col>
+            <t-col :span="6">
+                <t-select
+                v-model="batchEdit.data['miaostreet-listing-status']"
+                :options="[
+                    {
+                        label: localString.listing[local.name],
+                        value: 1
+                    },
+                    {
+                        label: localString.unlist[local.name],
+                        value: 0
+                    }
+                ]"
+                clearable
+                filterable
+                :label="localString.miaostreetListingStatus[local.name] + ': '"
+                >
+                </t-select>
+            </t-col>
+            <t-col :span="6">
+                <t-select
+                v-model="batchEdit.data['tmall-listing-status']"
+                :options="[
+                    {
+                        label: localString.listing[local.name],
+                        value: 1
+                    },
+                    {
+                        label: localString.unlist[local.name],
+                        value: 0
+                    }
+                ]"
+                clearable
+                filterable
+                :label="localString.tmallListingStatus[local.name] + ': '"
+                >
+                </t-select>
+            </t-col>
+            <t-col :span="8">
+                <t-space size="13px">
+                    <span style="line-height: 32px;">
+                        {{ localString.firstListingTime[local.name] + ': ' }}
+                    </span>
+                    <t-date-picker
+                    v-model="batchEdit.data['first-listing-time']"
+                    :disable-date="(current) => dayjs(current).isAfter(dayjs())"
+                    >
+                    </t-date-picker>
+                </t-space>
+            </t-col>
+            <t-col :span="12">
+                <t-space size="8px">
+                    <t-button
+                    @click="batchEdit.done"
+                    :disabled="batchEdit.loading"
+                    :loading="batchEdit.loading"
+                    >
+                        {{ localString.confirm[local.name] }}
+                    </t-button>
+                    <t-button theme="danger" @click="() => {
+                        batchEdit.visible = false
+                        batchEdit.loading = false
+                        batchEdit.data = {}
+                    }">
+                        {{ localString.cancel[local.name] }}
+                    </t-button>
+                    <t-button variant="outline" @click="batchEdit.data = {}">
+                        {{ localString.reset[local.name] }}
+                    </t-button>
+                </t-space>
+            </t-col>
+        </t-row>
+    </t-dialog>
 </template>
 
 <script>
-import { MessagePlugin } from 'tdesign-vue-next'
+import dayjs from 'dayjs'
 import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink } from '../../hooks'
 import localString from './local'
 
@@ -258,6 +385,11 @@ export default {
         const loading = ref(false)
         const data = ref([])
         const columns = [
+            {
+                colKey: 'row-select',
+                type: 'multiple',
+                width: 50
+            },
             {
                 title: localString.stylenumber[local.name],
                 colKey: 'stylenumber',
@@ -340,7 +472,7 @@ export default {
             total: 0,
             current: 1,
             pageSize: 20,
-            pageSizeOptions: [20, 30, 50]
+            pageSizeOptions: [20, 30, 50, 100]
         })
         const getSearchGoods = async (isExport) => {
             let con = new Object
@@ -348,6 +480,7 @@ export default {
             if(!isExport){
                 loading.value = true
                 recon = condition.value
+                data.value = []
             } else {
                 recon = frozenCondition.value
             }
@@ -392,7 +525,7 @@ export default {
             
             loading.value = false
         }
-        const confirmButton = ref(localString.confirm[local.name])
+        const confirmButton = ref(localString.exportQueryGoods[local.name])
         const exportLoading = ref(false)
         const exportToFiles = async () => {
             confirmButton.value = localString.exporting[local.name]
@@ -402,9 +535,64 @@ export default {
             MessagePlugin.success(localString.exportSuccess[local.name])
             window.open(serve + '/download?filename=' + res)
 
-            confirmButton.value = localString.confirm[local.name]
+            confirmButton.value = localString.exportQueryGoods[local.name]
             exportLoading.value = false
         }
+        
+        const selectKey = ref([])
+        const batchEdit = ref({
+            visible: false,
+            data: {},
+            loading: false,
+            uploadData: async (stylenumbers, content) => {
+                return fetch(serve + '/goods/batch-edit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'store-id': shop.store,
+                        brand: shop.brand,
+                        stylenumbers,
+                        content
+                    })
+                })
+                .then(res => {
+                    return Promise.resolve(res.json())
+                })
+                .catch(() => {
+                    MessagePlugin.error(localString.httpFail[local.name])
+                })
+            },
+            done: async () => {
+                if(JSON.stringify(batchEdit.value.data) == "{}"){
+                    batchEdit.value.visible = false
+                    return
+                }
+
+                batchEdit.value.loading = true
+                let stylenumber = selectKey.value
+                let content = {}
+
+                for (const key in batchEdit.value.data) {
+                    if (batchEdit.value.data[key] !== null && batchEdit.value.data[key] !== '') {
+                        content[key] = batchEdit.value.data[key]
+                    }
+                }
+
+                let res = await batchEdit.value.uploadData(stylenumber, content)
+                console.log(res)
+                if(res.result){
+                    MessagePlugin.success(localString.batchEdited(res.vol)[local.name])
+                } else {
+                    MessagePlugin.info(localString.batchEdited(0)[local.name])
+                }
+
+                batchEdit.value.loading = false
+                batchEdit.value.visible = false
+                batchEdit.value.data = {}
+            }
+        })
 
         onMounted(() => {
             getOptions()
@@ -418,6 +606,8 @@ export default {
         })
 
         return {
+            dayjs,
+
             local,
             localString,
             condition,
@@ -435,7 +625,10 @@ export default {
 
             confirmButton,
             exportLoading,
-            exportToFiles
+            exportToFiles,
+
+            batchEdit,
+            selectKey
         }
     }
 }
