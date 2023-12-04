@@ -124,5 +124,26 @@ export default {
         kor: '매장 보기',
         jp: 'コーナーの表示',
         th: 'ดูเคาน์เตอร์'
-    }
+    },
+    confirm: {
+        zh: '确认',
+        en: 'Confirm',
+        kor: '확인',
+        jp: '確認',
+        th: 'ยืนยัน'
+    },
+    cancel: {
+        zh: '取消',
+        en: 'Cancel',
+        kor: '취소',
+        jp: 'キャンセル',
+        th: 'ยกเลิก'
+    },
+    reset: {
+        zh: '重置',
+        en: 'Reset',
+        kor: '초기화',
+        jp: 'リセット',
+        th: 'รีเซ็ต'
+    },
 }

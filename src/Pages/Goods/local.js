@@ -272,5 +272,75 @@ export default {
             jp: `${number}個のSKU 編集されました`,
             th: `แก้ไขข้อมูล ${number} รายการ SKU`
         }
+    },
+    viewMiaostreetLink: {
+        zh: '查看喵街链接',
+        en: 'View Miaostreet link',
+        kor: 'Miaostreet 링크 보기',
+        jp: 'Miaostreet リンクを表示',
+        th: 'ดูลิงค์ Miaostreet'
+    },
+    mapping: {
+        zh: '映射',
+        en: ' Mapping',
+        kor: ' 매핑',
+        jp: 'マッピング',
+        th: 'แปลง'
+    },
+    informationImport: {
+        zh: '导入信息',
+        en: 'Import information',
+        kor: ' 정보 가져오기',
+        jp: '情報をインポート',
+        th: 'นำเข้าข้อมูล'
+    },
+    highlight: {
+        zh: '高亮',
+        en: ' Highlight',
+        kor: ' 강조',
+        jp: 'ハイライト',
+        th: 'แสดงผล'
+    },
+    tip2: {
+        zh: '这将使所有未设置供应商的款式设置为指定的供应商, 确定继续吗？',
+        en: 'This will set all unset styles to the specified supplier, are you sure?',
+        kor: '이 작업은 모든 스타일을 지정된 공급업체로 설정하는 것입니다. 확인하시겠습니까?',
+        jp: 'これにより、すべての未設定のスタイルが指定された仕入先に設定さ れます。 よろしいですか？',
+        th: 'ทำนี้จะตั้งเป็นทั้งหมด สินค้งที่ไม่ได้ตั้งหรือเปลี่ยนแปลงสถานะผู้จำหน่าย ต้องการดำเนินการให้ ใช่หรือไม่?'
+    },
+    supplierMapToEmpty: {
+        zh: '映射目标的供应商不能为空',
+        en: 'Mapping target supplier can not be empty',
+        kor: '매핑 대상 공급업체는 공백이 될 수 없습니다',
+        jp: 'マッピング ターゲット 仕入先は空欄にできません',
+        th: 'แปลง ที่เป็น ที่จะเปลี่ยนแปลง ไม่สามารถเป็น ว่างได้'
+    },
+    tip: {
+        zh: '提示',
+        en: 'Tip',
+        kor: '팁',
+        jp: 'ヒント',
+        th: 'คำแนะนำ'
+    },
+    original: {
+        zh: '原始',
+        en: 'Original ',
+        kor: '원본 ',
+        jp: 'オリジナル',
+        th: 'เดิม'
+    },
+    target: {
+        zh: '目标',
+        en: 'Target ',
+        kor: '목표 ',
+        jp: 'ターゲット',
+        th: 'เป้าหมาย'
+    },
+    onlyStore: {
+        zh: '仅限当前门店',
+        en: 'Only for current store',
+        kor: '현재 매장에만 적용됩니다',
+        jp: '現在の店舗にのみ適用されます',
+        th: 'เป็นเดิมเฉพาะ ร้านค้า'
     }
 }

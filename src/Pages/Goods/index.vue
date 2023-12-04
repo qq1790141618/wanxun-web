@@ -144,10 +144,29 @@
             <t-alert style="padding: 5px 12px; position: sticky; top: 65px;">
                 <template #icon><div></div></template>
                 <t-space size="12px">
-                    <span style="line-height: 32px;">
-                        <t-icon name="check-rectangle" />
-                        {{ localString.selected(selectKey.length)[local.name] }}
+                    <span style="line-height: 30px;">
+                        <t-icon name="check-rectangle" v-if="selectKey.length == data.length" />
+                        <t-icon name="minus-rectangle" v-if="selectKey.length > 0 && selectKey.length < data.length" />
+                        <t-icon name="close-rectangle" v-if="selectKey.length == 0" />
+                        <span style="vertical-align: middle; margin-left: 3px;">
+                            {{ localString.selected(selectKey.length)[local.name] }}
+                        </span>
                     </span>
+                    <t-button
+                    variant="text"
+                    theme="primary"
+                    @click="() => {
+                        batchEdit.data = {}
+                        batchEdit.visible = true
+                    }"
+                    :disabled="selectKey.length == 0"
+                    :title="localString.selected(selectKey.length)[local.name]"
+                    >
+                        <template #icon>
+                            <t-icon name="edit" />
+                        </template>
+                        {{ localString.batch[local.name] }}{{ localString.edit[local.name] }}
+                    </t-button>
                     <t-button
                     variant="text"
                     theme="primary"
@@ -164,16 +183,36 @@
                     variant="text"
                     theme="primary"
                     @click="() => {
-                        batchEdit.data = {}
-                        batchEdit.visible = true
+                        supplierMap.visible = true
                     }"
-                    :disabled="selectKey.length == 0"
                     >
                         <template #icon>
-                            <t-icon name="edit" />
+                            <t-icon name="arrow-up-down-2" />
                         </template>
-                        {{ localString.batch[local.name] }}{{ localString.edit[local.name] }}
+                        {{ localString.supplier[local.name] }}{{ localString.mapping[local.name] }}
                     </t-button>
+                    <t-button
+                    variant="text"
+                    theme="primary"
+                    @click="$router.push('/import')"
+                    >
+                        <template #icon>
+                            <t-icon name="upload" />
+                        </template>
+                        {{ localString.informationImport[local.name] }}
+                    </t-button>
+                    <span style="line-height: 30px; cursor: pointer;">
+                        <t-switch :custom-value="['cost-col', '']" v-model="costHighlight" @change="costHightLightChange" />
+                        <span
+                        style="vertical-align: middle; margin-left: 6px; color: var(--td-brand-color); user-select: none;"
+                        @click="() => {
+                            costHighlight = costHighlight == 'cost-col' ? '' : 'cost-col'
+                            costHightLightChange(costHighlight)
+                        }"
+                        >
+                            {{ localString.cost[local.name] }}{{ localString.highlight[local.name] }}
+                        </span>
+                    </span>
                 </t-space>
             </t-alert>
             <div class="result-containter">
@@ -207,11 +246,23 @@
                     </template>
                     <template #operate="{ row }">
                         <t-space break-line size="5px">
-                            <!-- <t-button
+                            <t-button
                             theme="primary"
                             >
                                 {{ localString.edit[local.name] }}
-                            </t-button> -->
+                            </t-button>
+                            <t-button
+                            variant="outline"
+                            v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
+                            @click="miaostreetGoodsLink(row)"
+                            >
+                                {{ localString.viewMiaostreetLink[local.name] }}
+                            </t-button>
+                            <t-button
+                            variant="outline"
+                            >
+                                {{ localString.viewGoods[local.name] }}
+                            </t-button>
                             <t-button
                             variant="outline"
                             theme="primary"
@@ -219,13 +270,6 @@
                             @click="copy(row['miaostreet-id'], local.name)"
                             >
                                 {{ localString.copy[local.name] }}{{ localString['miaostreet-id'][local.name] }}
-                            </t-button>
-                            <t-button
-                            variant="outline"
-                            v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
-                            @click="miaostreetGoodsLink(row)"
-                            >
-                                {{ localString.viewGoods[local.name] }}
                             </t-button>
                         </t-space>
                     </template>
@@ -331,25 +375,72 @@
                 </t-space>
             </t-col>
             <t-col :span="12">
-                <t-space size="8px">
-                    <t-button
-                    @click="batchEdit.done"
-                    :disabled="batchEdit.loading"
-                    :loading="batchEdit.loading"
-                    >
-                        {{ localString.confirm[local.name] }}
-                    </t-button>
-                    <t-button theme="danger" @click="() => {
-                        batchEdit.visible = false
-                        batchEdit.loading = false
-                        batchEdit.data = {}
-                    }">
-                        {{ localString.cancel[local.name] }}
-                    </t-button>
-                    <t-button variant="outline" @click="batchEdit.data = {}">
-                        {{ localString.reset[local.name] }}
-                    </t-button>
-                </t-space>
+                <confirm-bar
+                :confirm-loading="batchEdit.loading"
+                @confirm="batchEdit.done"
+                @close="() => {
+                    batchEdit.visible = false
+                    batchEdit.loading = false
+                    batchEdit.data = {}
+                }"
+                @reset="batchEdit.data = {}"
+                />
+            </t-col>
+        </t-row>
+    </t-dialog>
+    <t-dialog
+    :close-btn="false"
+    :visible="supplierMap.visible"
+    :close-on-esc-keydown="false"
+    :close-on-overlay-click="false"
+    :footer="false"
+    width="600px"
+    attach="#goods-list"
+    show-in-attached-element
+    >
+        <template #header>
+            <t-icon name="edit" style="margin-right: 5px;" />
+            {{ localString.supplier[local.name] }}{{ localString.mapping[local.name] }}
+        </template>
+        <t-row :gutter="[12, 12]" style="width: 100%;">
+            <t-col :span="6">
+                <t-auto-complete
+                v-model="supplierMap.data.from"
+                :options="supplierOptions.map(obj => obj.value)"
+                :input-props="{
+                    label: localString.original[local.name] + localString.supplier[local.name] + ': '
+                }"
+                clearable
+                >
+                </t-auto-complete>
+            </t-col>
+            <t-col :span="6">
+                <t-auto-complete
+                v-model="supplierMap.data.to"
+                :options="supplierOptions.map(obj => obj.value)"
+                :input-props="{
+                    label: localString.target[local.name] + localString.supplier[local.name] + ': '
+                }"
+                clearable
+                >
+                </t-auto-complete>
+            </t-col>
+            <t-col :span="12">
+                <t-checkbox v-model="supplierMap.data.onlyStore">
+                    {{ localString.onlyStore[local.name] }}
+                </t-checkbox>
+            </t-col>
+            <t-col :span="12">
+                <confirm-bar
+                :confirm-loading="supplierMap.loading"
+                @confirm="supplierMap.done"
+                @close="supplierMap.close"
+                @reset="supplierMap.data = {
+                    from: null,
+                    to: null,
+                    onlyStore: true
+                }"
+                />
             </t-col>
         </t-row>
     </t-dialog>
@@ -359,8 +450,12 @@
 import dayjs from 'dayjs'
 import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink } from '../../hooks'
 import localString from './local'
+import confirmBar from '../../components/confirmBar.vue'
 
 export default {
+    components: {
+        confirmBar
+    },
     setup(){
         const local = inject('local')
         const serve = inject('serve')
@@ -382,9 +477,15 @@ export default {
             supplierOptions.value.splice(0, 1)
         }
 
+        const costHighlight = ref('cost-col')
+        const costHightLightChange = (value) => {
+            columns.value[10].className = 'goods-table-col ' + value
+            localStorage.setItem('cost-highlight', value)
+        }
+
         const loading = ref(false)
         const data = ref([])
-        const columns = [
+        const columns = ref([
             {
                 colKey: 'row-select',
                 type: 'multiple',
@@ -456,18 +557,18 @@ export default {
             {
                 title: localString.cost[local.name],
                 colKey: 'cost',
-                width: 90,
+                width: 70,
                 align: 'center',
-                className: 'goods-table-col'
+                className: 'goods-table-col ' + costHighlight.value
             },
             {
                 title: localString.operate[local.name],
                 colKey: 'operate',
-                width: 180,
+                width: 200,
                 align: 'center',
                 className: 'goods-table-col'
             },
-        ]
+        ])
         const pagination = ref({
             total: 0,
             current: 1,
@@ -581,9 +682,9 @@ export default {
                 }
 
                 let res = await batchEdit.value.uploadData(stylenumber, content)
-                console.log(res)
                 if(res.result){
                     MessagePlugin.success(localString.batchEdited(res.vol)[local.name])
+                    getSearchGoods()
                 } else {
                     MessagePlugin.info(localString.batchEdited(0)[local.name])
                 }
@@ -593,10 +694,105 @@ export default {
                 batchEdit.value.data = {}
             }
         })
+        const supplierMap = ref({
+            visible: false,
+            data: {
+                from: null,
+                to: null,
+                onlyStore: true
+            },
+            loading: false,
+            uploadData: async (from, to, brand) => {
+                let url = serve + '/goods/supplier/map?from=' + from + '&to=' + to + '&brand=' + brand
+                if(supplierMap.value.data.onlyStore){
+                    url += '&store=' + shop.store
+                }
+
+                return fetch(url)
+                .then(res => {
+                    return Promise.resolve(res.json())
+                })
+                .catch(() => {
+                    MessagePlugin.error(localString.httpFail[local.name])
+                })
+            },
+            done: async () => {
+                if(supplierMap.value.data.to === null || supplierMap.value.data.to === ''){
+                    MessagePlugin.error(localString.supplierMapToEmpty[local.name])
+                    return
+                }
+                if(supplierMap.value.data.from === null || supplierMap.value.data.from === ''){
+                    let confirm = DialogPlugin.confirm({
+                        title: localString.tip[local.name],
+                        content: localString.tip2[local.name],
+                        okText: localString.confirm[local.name],
+                        cancelText: localString.cancel[local.name],
+                        onConfirm: async () => {
+                            confirm.hide()
+
+                            supplierMap.value.loading = true
+                            let res1 = await supplierMap.value.uploadData(null, supplierMap.value.data.to, shop.brand)
+                            let res2 = await supplierMap.value.uploadData('', supplierMap.value.data.to, shop.brand)
+                            let count = 0
+
+                            if(res1.result){
+                                count += res1.vol
+                            }
+                            if(res2.result){
+                                count += res2.vol
+                            }
+
+                            MessagePlugin.success(localString.batchEdited(count)[local.name])
+                            supplierMap.value.close()
+                            if(res1.result || res2.result){
+                                getSearchGoods()
+                            }
+
+                            confirm.destroy()
+                        },
+                        onCancel: () => {
+                            confirm.destroy()
+                            supplierMap.value.close()
+                        }
+                    })
+                } else {
+                    supplierMap.value.loading = true
+                    let res = await supplierMap.value.uploadData(supplierMap.value.data.from, supplierMap.value.data.to, shop.brand)
+                    if(res.result){
+                        getSearchGoods()
+                        MessagePlugin.success(localString.batchEdited(res.vol)[local.name])
+                    } else {
+                        MessagePlugin.info(localString.batchEdited(0)[local.name])
+                    }
+
+                    supplierMap.value.close()
+                }
+            },
+            close: () => {
+                supplierMap.value.loading = false
+                supplierMap.value.visible = false
+                supplierMap.value.data = {
+                    from: null,
+                    to: null,
+                    onlyStore: true
+                }
+            }
+        })
+        const goodsEdit = ref({
+            visible: false,
+            data: {},
+            get: () => {},
+            set: () => {}
+        })
 
         onMounted(() => {
             getOptions()
             getSearchGoods()
+
+            if(typeof(localStorage.getItem('cost-highlight')) === 'string'){
+                costHighlight.value = localStorage.getItem('cost-highlight')
+                costHightLightChange(costHighlight.value)
+            }
         })
         watch(() => shop.store, () => {
             getSearchGoods()
@@ -628,7 +824,11 @@ export default {
             exportToFiles,
 
             batchEdit,
-            selectKey
+            selectKey,
+
+            costHighlight,
+            costHightLightChange,
+            supplierMap
         }
     }
 }
@@ -675,9 +875,12 @@ export default {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-.goods-table-col{
-    background-color: #ffffff60!important;
+.result-containter .goods-table-col{
+    background-color: #ffffff60;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+}
+.result-containter .cost-col{
+    background-color: #FEFFE8;
 }
 </style>

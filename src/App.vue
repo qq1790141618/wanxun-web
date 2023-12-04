@@ -5,6 +5,14 @@
             <header-component />
             <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;">
                 <t-breadcrumbItem
+                :to="$router.getRoutes()[6].path"
+                >
+                    <template #icon>
+                        <t-icon :name="$router.getRoutes()[6].meta.icon" />
+                    </template>
+                    {{ $router.getRoutes()[6].meta.title[local.name] }}
+                </t-breadcrumbItem>
+                <t-breadcrumbItem
                 v-for="item in $route.matched"
                 :key="item.meta.key"
                 :to="item.path"
