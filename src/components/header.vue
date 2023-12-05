@@ -393,7 +393,7 @@ export default {
         }
 
         const backToOldVersion = () => {
-            window.open('https://old-work.fixeam.com/')
+            window.open('//dwork.fixeam.com/')
         }
 
         const user = inject('user')
@@ -408,7 +408,7 @@ export default {
             }
         }
         const viewCounter = () => {
-            window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+            window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
         }
         const COUNT = ref('')
         const clickSet = () => {

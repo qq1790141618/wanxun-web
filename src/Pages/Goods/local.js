@@ -152,14 +152,14 @@ export default {
        kor: '수정',
        jp: '編集',
        th: 'แก้ไข'
-   },
-   copy: {
-       zh: '复制',
-       en: 'Copy ',
-       kor: '복사',
-       jp: 'コピー',
-       th: 'ซักซื้อ'
-   },
+    },
+    copy: {
+        zh: '复制',
+        en: 'Copy ',
+        kor: '복사',
+        jp: 'コピー',
+        th: 'ซักซื้อ'
+    },
     viewGoods: {
         zh: '查看商品', 
         en: 'View Goods',
@@ -342,5 +342,110 @@ export default {
         kor: '현재 매장에만 적용됩니다',
         jp: '現在の店舗にのみ適用されます',
         th: 'เป็นเดิมเฉพาะ ร้านค้า'
+    },
+    detailImage: {
+        zh: '详情图',
+        en: 'Detail Image',
+        kor: '상세 이미지',
+        jp: '詳細 イメージ',
+        th: 'รูปภาพข้อมูล'
+    },
+    tagPrice: {
+        zh: '吊牌价',
+        en: 'Tag Price',
+        kor: '태그 가격',
+        jp: 'タグ 価格',
+        th: 'ราคาต่อหน่วย'
+    },
+    inventory: {
+        zh: '库存',
+        en: 'Inventory',
+        kor: '재고',
+        jp: '在庫',
+        th: 'คงเหลือ'
+    },
+    size: {
+        zh: '尺码',
+        en: 'Size',
+        kor: '사이즈',
+        jp: 'サイズ',
+        th: 'ขนาด'
+    },
+    color: {
+        zh: '颜色',
+        en: 'Color',
+        kor: '색상',
+        jp: 'カラー',
+        th: 'สี'
+    },
+    barcode: {
+        zh: '条码',
+        en: 'Barcode ',
+        kor: '바코드',
+        jp: 'バーコード',
+        th: 'บาร์โค๊ด'
+    },
+    brand: {
+        zh: '品牌',
+        en: 'Brand',
+        kor: '브랜드',
+        jp: 'ブランド',
+        th: 'ยี่ห้อ'
+    },
+    store: {
+        zh: '门店',
+        en: 'Store',
+        kor: '매장',
+        jp: '店舗',
+        th: 'ร้านค้า'
+    },
+    counter: {
+        zh: '专柜',
+        en: 'Counter',
+        kor: '대리점',
+        jp: 'カウンター',
+        th: 'ตั๋ว'
+    },
+    preview: {
+        zh: '预览',
+        en: 'Preview',
+        kor: '미리보기',
+        jp: 'プレビュー',
+        th: 'ดูแล้ว'
+    },
+    unify: {
+        zh: '统一',
+        en: 'Unify ',
+        kor: '통일',
+        jp: '統一',
+        th: 'เป็นเลข'
+    },
+    unifyPrice: {
+        zh: '统一价',
+        en: 'Unify Price',
+        kor: '통일가격',
+        jp: '統一価格',
+        th: 'เป็นเลข'
+    },
+    inputTime: {
+        zh: '录入时间',
+        en: 'Input Time',
+        kor: '입력시간',
+        jp: '入力時間',
+        th: 'เป็นเลข'
+    },
+    editTime: {
+        zh: '修改时间',
+        en: 'Edit Time',
+        kor: '수정시간',
+        jp: '編集時間',
+        th: 'เป็นเลข'
+    },
+    editSuccess:{
+        zh: '修改成功',
+        en: 'Edit Success',
+        kor: '수정성공',
+        jp: '編集成功',
+        th: 'เป็นเลข'
     }
 }

@@ -54,7 +54,7 @@ header {
     display: block;
 }
 :root {
-    --td-font-family: 'Rubik', 'HYWenHei-45W', 'Pingfang SC Medium', Microsoft YaHei, Arial Regular;
+    --td-font-family: 'Noto sans', 'HYWenHei-45W', 'Pingfang SC Medium', Microsoft YaHei, Arial Regular;
     --td-font-size-body-medium: 13px;
 }
 body {
@@ -106,4 +106,9 @@ img, div, span{
 }
 ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(144,147,153,.3);
+}
+.description-title{
+    color: #666;
+    font-size: 12px;
+    margin-top: 12px;
 }
