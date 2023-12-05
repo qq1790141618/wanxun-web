@@ -3,12 +3,12 @@
     v-if="loading"
     class="home-progress"
     :percentage="percent"
-    :label="localString.loading[local.name] + ' ' + Math.ceil(percent) + '%'"
+    :label="i18n.loading[i18n.language] + ' ' + Math.ceil(percent) + '%'"
     />
     <t-row :gutter="[12, 12]" v-if="!loading" style="width: 100%; padding: 15px;">
         <t-col :span="12">
             <div style="padding: 0 10px; font-size: 16px;">
-                {{ localString.welcomeBack[local.name] }}！{{ data.famousWord }}
+                {{ i18n.welcomeBack[i18n.language] }}！{{ data.famousWord }}
             </div>
         </t-col>
         <t-col :span="9">
@@ -23,25 +23,25 @@
                     {{ dayjs().subtract(1, 'day').format('YYYY-MM-DD') }}
                 </template>
                 <t-alert v-if="data.day.sales.count == 0 && data.day.refunds.count == 0" >
-                    {{ localString.unUpload[local.name] }}
+                    {{ i18n.unUpload[i18n.language] }}
                     <template #operation>
-                        <span @click="$router.push('/import')">{{ localString.upload[local.name] }}</span>
+                        <span @click="$router.push('/import')">{{ i18n.upload[i18n.language] }}</span>
                     </template>
                 </t-alert>
                 <div class="day-sales" v-if="data.day.sales.count != 0 || data.day.refunds.count != 0">
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="localString.salesCount[local.name]" :value="data.day.sales.count" :unit="localString.piece[local.name]" />
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="localString.salesAmount[local.name]" :value="data.day.sales.amount" :unit="localString.yuan[local.name]" />
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="localString.refundsCount[local.name]" :value="data.day.refunds.count" :unit="localString.piece[local.name]" />
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="localString.refundsAmount[local.name]" :value="data.day.refunds.amount" :unit="localString.yuan[local.name]" />
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="localString.actualSalesAmount[local.name]" :value="Math.round(data.day.sales.amount - data.day.refunds.amount)" :unit="localString.yuan[local.name]" />
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="localString.income[local.name]" :value="Math.round(data.day.sales.income - data.day.refunds.income)" :unit="localString.yuan[local.name]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.salesCount[i18n.language]" :value="data.day.sales.count" :unit="i18n.piece[i18n.language]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.salesAmount[i18n.language]" :value="data.day.sales.amount" :unit="i18n.yuan[i18n.language]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.refundsCount[i18n.language]" :value="data.day.refunds.count" :unit="i18n.piece[i18n.language]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.refundsAmount[i18n.language]" :value="data.day.refunds.amount" :unit="i18n.yuan[i18n.language]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.actualSalesAmount[i18n.language]" :value="Math.round(data.day.sales.amount - data.day.refunds.amount)" :unit="i18n.yuan[i18n.language]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.income[i18n.language]" :value="Math.round(data.day.sales.income - data.day.refunds.income)" :unit="i18n.yuan[i18n.language]" />
                 </div>
             </t-card>
             <t-card :bordered="false" style="margin-top: 12px;">
                 <template #title>
                     <t-icon name="chart"></t-icon>
                     <span style="vertical-align: middle; margin-left: 8px;">
-                        {{ localString.recentData[local.name] }}
+                        {{ i18n.recentData[i18n.language] }}
                     </span>
                 </template>
                 <div ref="mainChart" style="width: 100%; height: 450px;"></div>
@@ -57,10 +57,10 @@
                             <span>
                                 <t-icon name="chart-bubble"></t-icon>
                                 <span style="vertical-align: middle; margin-left: 8px;">
-                                    {{ item == 'goods' ? localString.stylenumber[local.name] : localString.supplier[local.name] }} {{ localString.rank[local.name] }}
+                                    {{ item == 'goods' ? i18n.stylenumber[i18n.language] : i18n.supplier[i18n.language] }} {{ i18n.rank[i18n.language] }}
                                 </span>
                             </span>
-                            <t-tooltip :content="localString.tip1[local.name]">
+                            <t-tooltip :content="i18n.tip0[i18n.language]">
                                 <t-icon name="help-circle" :style="{
                                     color: '#aaa',
                                     cursor: 'pointer',
@@ -74,7 +74,7 @@
                         :data="data[item]"
                         :columns="[
                             {
-                                title: item == 'goods' ? localString.stylenumber[local.name] : localString.supplier[local.name],
+                                title: item == 'goods' ? i18n.stylenumber[i18n.language] : i18n.supplier[i18n.language],
                                 colKey: item == 'goods' ? 'stylenumber' : 'supplier',
                                 width: 100,
                                 ellipsis: true,
@@ -82,7 +82,7 @@
                                 align: 'center'
                             },
                             {
-                                title: localString.salesCount[local.name],
+                                title: i18n.salesCount[i18n.language],
                                 colKey: 'salesCount',
                                 sortType: 'all',
                                 sorter: true,
@@ -90,7 +90,7 @@
                                 align: 'center'
                             },
                             {
-                                title: localString.salesAmount[local.name],
+                                title: i18n.salesAmount[i18n.language],
                                 colKey: 'salesAmount',
                                 sortType: 'all',
                                 sorter: true,
@@ -98,7 +98,7 @@
                                 align: 'center'
                             },
                             {
-                                title: localString.refundsCount[local.name],
+                                title: i18n.refundsCount[i18n.language],
                                 colKey: 'refundsCount',
                                 sortType: 'all',
                                 sorter: true,
@@ -106,7 +106,7 @@
                                 align: 'center'
                             },
                             {
-                                title: localString.refundsAmount[local.name],
+                                title: i18n.refundsAmount[i18n.language],
                                 colKey: 'refundsAmount',
                                 sortType: 'all',
                                 sorter: true,
@@ -133,7 +133,7 @@
                 <template #title>
                     <t-icon name="work-history"></t-icon>
                     <span style="vertical-align: middle; margin-left: 8px;">
-                        {{ localString.recent[local.name] }}
+                        {{ i18n.recent[i18n.language] }}
                     </span>
                 </template>
                 <template #actions>
@@ -144,14 +144,14 @@
                     </t-button>
                 </template>
                 <div style="text-align: center;" v-if="history.menus.length == 0 && history.goods.length == 0">
-                    {{ localString.none[local.name] }}{{ localString.recent[local.name] }}~
+                    {{ i18n.none[i18n.language] }}{{ i18n.recent[i18n.language] }}~
                 </div>
                 <t-tabs default-value="menus" v-if="history.menus.length != 0 || history.goods.length != 0">
                     <t-tab-panel
                     v-for="gruop, index in ['menus', 'goods']"
                     :key="index"
                     :value="gruop"
-                    :label="localString[gruop][local.name]"
+                    :label="i18n[gruop][i18n.language]"
                     :disabled="!history[gruop] || history[gruop].length == 0"
                     >
                         <t-space break-line size="10px" style="margin-top: 10px;" :key="history[gruop]" v-if="history[gruop] && history[gruop].length > 0">
@@ -171,7 +171,7 @@
                             >
                                 <img v-if="gruop == 'menus'" :src="item.meta.avatar" height="20" style="margin-right: 5px;" >
                                 <span v-if="gruop == 'menus'">
-                                    {{ item.meta.title[local.name] }} ( {{ item.path }} )
+                                    {{ i18n[item.meta.title][i18n.language] }} ( {{ item.path }} )
                                 </span>
                                 <img v-if="gruop == 'goods'" :src="item['main-image'] == null ? '' : JSON.parse(item['main-image'])[0]" height="20" style="margin-right: 5px;" >
                                 <span v-if="gruop == 'goods'">
@@ -186,11 +186,11 @@
                 <template #title>
                     <t-icon name="star"></t-icon>
                     <span style="vertical-align: middle; margin-left: 8px;">
-                        {{ localString.collection[local.name] }}
+                        {{ i18n.collection[i18n.language] }}
                     </span>
                 </template>
                 <div style="text-align: center;" v-if="collectionPath.length == 0">
-                    {{ localString.none[local.name] }}{{ localString.collection[local.name] }}~
+                    {{ i18n.none[i18n.language] }}{{ i18n.collection[i18n.language] }}~
                 </div>
                 <t-space break-line size="10px" :key="collectionPath">
                     <t-check-tag
@@ -202,7 +202,7 @@
                     variant="outline"
                     >
                         <img :src="item.meta.avatar" height="20" style="margin-right: 5px;" >
-                        {{ item.meta.title[local.name] }} ( {{ item.path }} )
+                        {{ item.meta.title[i18n.language] }} ( {{ item.path }} )
                     </t-check-tag>
                 </t-space>
             </t-card>
@@ -210,7 +210,7 @@
                 <template #title>
                     <t-icon name="shop"></t-icon>
                     <span style="vertical-align: middle; margin-left: 8px;">
-                        {{ localString.recommend[local.name] }}
+                        {{ i18n.recommend[i18n.language] }}
                     </span>
                 </template>
                 <t-tabs :default-value="shop.brand">
@@ -255,12 +255,12 @@
                                         <span class="number-show">
                                             {{ goods.salesCount }}
                                         </span>
-                                        {{ localString.piece[local.name] }}
+                                        {{ i18n.piece[i18n.language] }}
                                         /
                                         <span class="number-show">
                                             {{ goods.salesAmount }}
                                         </span>
-                                        {{ localString.yuan[local.name] }}
+                                        {{ i18n.yuan[i18n.language] }}
                                     </div>
                                     <t-button
                                     v-if="goods['miaostreet-id'] != null"
@@ -271,7 +271,7 @@
                                         <template #icon>
                                             <t-icon name="browse"></t-icon>
                                         </template>
-                                        {{ localString.viewGoods[local.name] }}
+                                        {{ i18n.viewGoods[i18n.language] }}
                                     </t-button>
                                 </div>
                             </t-card>
@@ -284,25 +284,17 @@
 </template>
 
 <script>
-import localString from './local'
-import moreLang from './moreLang'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import { translate, sort, miaostreetGoodsLink } from '../../hooks'
 
 export default {
     setup(){
-        for (const lang in moreLang) {
-            for (const key in moreLang[lang]) {
-                localString[key][lang] = moreLang[lang][key]
-            }
-        }
-
         const loading = ref(true)
         const percent = ref(0)
         const serve = inject('serve')
         const shop = inject('shop')
-        const local = inject('local')
+        const i18n = inject('i18n')
 
         const data = ref({
             famousWord: '',
@@ -327,7 +319,7 @@ export default {
                 return Promise.resolve(response.json())
             })
             .catch(() => {
-                MessagePlugin.error(localString.httpFail[local.name])
+                MessagePlugin.error(i18n.httpFail[i18n.language])
             })
         }
         const daySales = async () => {
@@ -336,7 +328,7 @@ export default {
                 return Promise.resolve(res.json())
             })
             .catch(() => {
-                MessagePlugin.error(localString.httpFail[local.name])
+                MessagePlugin.error(i18n.httpFail[i18n.language])
             })
         }
         const annualOverview = async () => {
@@ -345,7 +337,7 @@ export default {
                 return Promise.resolve(res.json())
             })
             .catch(() => {
-                MessagePlugin.error(localString.httpFail[local.name])
+                MessagePlugin.error(i18n.httpFail[i18n.language])
             })
         }
         const goodsRanks = async () => {
@@ -354,23 +346,28 @@ export default {
                 return Promise.resolve(res.json())
             })
             .catch(() => {
-                MessagePlugin.error(localString.httpFail[local.name])
+                MessagePlugin.error(i18n.httpFail[i18n.language])
             })
         }
 
-        const initData = async () => {
-            loading.value = true
-
+        const initF = async () => {
             let f = await famousWord()
             data.value.famousWord = f.hitokoto + ' 来自《' + f.works + '》'
             if(f.author && f.author != undefined && f.author != null){
                 data.value.famousWord += f.author
             }
             data.value.famousWord += '。'
-            translate(data.value.famousWord, local.name)
+            translate(data.value.famousWord, i18n.language)
             .then(res => {
                 data.value.famousWord = res.trans_result[0].dst
+
+                return Promise.resolve()
             })
+        }
+        const initData = async () => {
+            loading.value = true
+
+            await initF()
             percent.value = 25
 
             data.value.day = await daySales()
@@ -414,7 +411,7 @@ export default {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: [localString.salesAmount[local.name], localString.refundsAmount[local.name], localString.income[local.name]]
+                    data: [i18n.salesAmount[i18n.language], i18n.refundsAmount[i18n.language], i18n.income[i18n.language]]
                 },
                 xAxis: {
                     type: 'category',
@@ -432,7 +429,7 @@ export default {
                         itemStyle: {
                             borderRadius: 5,
                         },
-                        name: localString.salesAmount[local.name],
+                        name: i18n.salesAmount[i18n.language],
                         data: [],
                         showSymbol: false,
                         smooth: true
@@ -443,14 +440,14 @@ export default {
                         itemStyle: {
                             borderRadius: 5,
                         },
-                        name: localString.refundsAmount[local.name],
+                        name: i18n.refundsAmount[i18n.language],
                         data: [],
                         showSymbol: false,
                         smooth: true
                     },
                     {
                         type: 'line',
-                        name: localString.income[local.name],
+                        name: i18n.income[i18n.language],
                         data: [],
                         showSymbol: false,
                         smooth: true
@@ -516,6 +513,9 @@ export default {
         watch(() => shop.brand, () => {
             initData()
         })
+        watch(() => i18n.language, () => {
+            initF()
+        })
 
         return{
             dayjs,
@@ -523,8 +523,7 @@ export default {
             loading,
             shop,
             data,
-            local,
-            localString,
+            i18n,
             mainChart,
             sort,
             sortValue,

@@ -3,15 +3,15 @@
         <header-component />
         <div class="login-container">
             <div data-v-d8f37094="" class="title-container">
-                <div data-v-d8f37094="" class="title margin-no">{{ localString.logto[lang] }}</div>
+                <div data-v-d8f37094="" class="title margin-no">{{ i18n.logto[lang] }}</div>
                 <div data-v-d8f37094="" class="title">Miaostreet Sales Analysis</div>
                 <div data-v-d8f37094="" class="sub-title">
-                    <p data-v-d8f37094="" class="tip">{{ localString.administratorManagement[lang] }}</p>
+                    <p data-v-d8f37094="" class="tip">{{ i18n.administratorManagement[lang] }}</p>
                 </div>
             </div>
             <t-form :colon="true" :label-width="0" v-if="mode == 1" @submit="login">
                 <t-form-item name="account">
-                    <t-input ref="accountInput" v-model="account" :placeholder="localString.accountWidthUsername[lang]" @enter="() => {
+                    <t-input ref="accountInput" v-model="account" :placeholder="i18n.accountWidthUsername[lang]" @enter="() => {
                         $refs.accountInput.blur()
                         $refs.passwordInput.focus()
                     }">
@@ -21,7 +21,7 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item name="password">
-                    <t-input ref="passwordInput" v-model="password" type="password" :placeholder="localString.password[lang]" @enter="() => {
+                    <t-input ref="passwordInput" v-model="password" type="password" :placeholder="i18n.password[lang]" @enter="() => {
                         $refs.passwordInput.blur()
                         login()
                     }">
@@ -31,15 +31,15 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item>
-                    <t-button theme="primary" type="submit" block>{{ localString.login[lang] }}</t-button>
+                    <t-button theme="primary" type="submit" block>{{ i18n.login[lang] }}</t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-link theme="primary" @click="mode = 2">{{ localString.changeMode2[lang] }}</t-link>
+                    <t-link theme="primary" @click="mode = 2">{{ i18n.changeMode2[lang] }}</t-link>
                 </t-form-item>
             </t-form>
             <t-form :colon="true" :label-width="0" v-if="mode == 2" @submit="login">
                 <t-form-item name="account">
-                    <t-input ref="phoneInput" v-model="account" :placeholder="localString.account[lang]" @enter="() => {
+                    <t-input ref="phoneInput" v-model="account" :placeholder="i18n.account[lang]" @enter="() => {
                         $refs.phoneInput.blur()
                         sendVerifyCode()
                     }">
@@ -49,7 +49,7 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item name="password">
-                    <t-input ref="codeInput" v-model="code" :placeholder="localString.code[lang]" @enter="() => {
+                    <t-input ref="codeInput" v-model="code" :placeholder="i18n.code[lang]" @enter="() => {
                         $refs.codeInput.blur()
                         login()
                     }" style="margin-right: 10px;">
@@ -64,14 +64,14 @@
                     :disabled="codeSendCd > 0"
                     style="min-width: 135px;"
                     >
-                        {{ codeSendCd > 0 ? codeSendCd + 's' + localString.secondReSend[lang] : localString.sendCode[lang] }}
+                        {{ codeSendCd > 0 ? codeSendCd + 's' + i18n.secondReSend[lang] : i18n.sendCode[lang] }}
                     </t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-button theme="primary" type="submit" block >{{ localString.login[lang] }}</t-button>
+                    <t-button theme="primary" type="submit" block >{{ i18n.login[lang] }}</t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-link theme="primary" @click="mode = 1">{{ localString.changeMode1[lang] }}</t-link>
+                    <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode1[lang] }}</t-link>
                 </t-form-item>
             </t-form>
         </div>
@@ -79,30 +79,21 @@
 </template>
 
 <script>
-import localString from './local'
-import moreLang from './moreLang'
 import { sendCode, translate, verifyUser } from '../../hooks'
 import headerComponent from '../../components/header.vue'
-import { watch } from 'vue'
 
 export default {
     components: {
         headerComponent
     },
     setup(){
-        for (const lang in moreLang) {
-            for (const key in moreLang[lang]) {
-                localString[key][lang] = moreLang[lang][key]
-            }
-        }
-        
         const serve = inject('serve')
-        const local = inject('local')
+        const i18n = inject('i18n')
         const lang = ref('zh')
-        lang.value = local.name
+        lang.value = i18n.language
         const user = inject('user')
-        watch(() => local.name, () => {
-            lang.value = local.name
+        watch(() => i18n.language, () => {
+            lang.value = i18n.language
         })
 
         const mode = ref(1)
@@ -118,7 +109,7 @@ export default {
             sendCode(serve, account.value, lang.value)
             .then(response => {
                 if(response.result){
-                    MessagePlugin.success(localString.sended[lang.value])
+                    MessagePlugin.success(i18n.sended[lang.value])
                     codeSendCd.value = 60
                     let timer = setInterval(() => {
                         codeSendCd.value--
@@ -158,7 +149,7 @@ export default {
                     return resolve(response.json())
                 })
                 .catch(() => {
-                    return reject(localString.logFail[lang.value])
+                    return reject(i18n.logFail[lang.value])
                 })
             })
         }
@@ -168,22 +159,22 @@ export default {
             let url = serve + '/user/login/by' + fun + '?'
 
             if(account.value == null || account.value == ''){
-                MessagePlugin.error(localString.accountEmpty[lang.value])
+                MessagePlugin.error(i18n.accountEmpty[lang.value])
                 return
             }
             if(mode.value == 1){
                 if(password.value == null || password.value == ''){
-                    MessagePlugin.error(localString.passwordEmpty[lang.value])
+                    MessagePlugin.error(i18n.passwordEmpty[lang.value])
                     return
                 }
                 url += 'account=' + account.value + '&' + 'password=' + password.value
             } else {
                 if(verifyId.value == null){
-                    MessagePlugin.error(localString.notSendToLog[lang.value])
+                    MessagePlugin.error(i18n.notSendToLog[lang.value])
                     return
                 }
                 if(code.value == null || code.value.length != 6){
-                    MessagePlugin.error(localString.codeError[lang.value])
+                    MessagePlugin.error(i18n.codeError[lang.value])
                     return
                 }
                 url += 'target=' + account.value + '&' + 'verify-id=' + verifyId.value + '&' + 'code=' + code.value
@@ -192,7 +183,7 @@ export default {
             loginReq(url)
             .then(response => {
                 if(response.result){
-                    MessagePlugin.success(localString.loged[lang.value])
+                    MessagePlugin.success(i18n.loged[lang.value])
                     localStorage.setItem('access_token', response.token)
 
                     setTimeout(() => {
@@ -223,9 +214,8 @@ export default {
         }
 
         return {
-            local,
             lang,
-            localString,
+            i18n,
 
             account,
             password,

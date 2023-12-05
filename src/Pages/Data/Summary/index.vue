@@ -3,7 +3,7 @@
         <template #title>
             <t-icon :name="$route.meta.icon"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ $route.meta.title[local.name] }}
+                {{ $route.meta.title[i18n.language] }}
                 ({{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}{{ shop.store }} / {{ shop.brand }})
             </span>
         </template>
@@ -13,7 +13,7 @@
         :columns="columns"
         :loading="loading"
         :loading-props="{
-            text: localString.loading[local.name]
+            text: i18n.loading[i18n.language]
         }"
         max-height="calc(100vh - 300px)"
         @sort-change="sortConfig.done"
@@ -73,12 +73,11 @@
 
 <script>
 import dayjs from 'dayjs'
-import localString from './local'
 import { sort } from '../../../hooks'
 
 export default {
     setup(){
-        const local = inject('local')
+        const i18n = inject('i18n')
         const serve = inject('serve')
         const shop = inject('shop')
 
@@ -147,7 +146,7 @@ export default {
                 return Promise.resolve(response.json())
             })
             .catch(() => {
-                MessagePlugin.error(localString.httpFail[local.name])
+                MessagePlugin.error(i18n.httpFail[i18n.language])
             })
         }
         const computeFootData = (data) => {
@@ -200,9 +199,9 @@ export default {
 
         return {
             shop,
-            local,
+            i18n,
             dayjs,
-            localString,
+            i18n,
             loading,
             data,
             columns,

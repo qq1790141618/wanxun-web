@@ -7,7 +7,7 @@
             <template #header>
                 <span>
                     <t-icon name="search"></t-icon>
-                    {{ localString.condition[local.name] }}
+                    {{ i18n.condition[i18n.language] }}
                 </span>
             </template>
             <t-form label-width="0" style="height: calc(100vh - 250px); overflow-y: auto;">
@@ -16,11 +16,11 @@
                     v-model="condition.type"
                     :options="[
                         {
-                            label: localString.stylenumber[local.name],
+                            label: i18n.stylenumber[i18n.language],
                             value: 'stylenumber'
                         },
                         {
-                            label: localString.productnumber[local.name],
+                            label: i18n.productnumber[i18n.language],
                             value: 'productnumber'
                         },
                         {
@@ -32,7 +32,7 @@
                             value: 'spuid'
                         },
                         {
-                            label: localString['miaostreet-id'][local.name],
+                            label: i18n['miaostreet-id'][i18n.language],
                             value: 'miaostreet-id'
                         }
                     ]"
@@ -42,7 +42,7 @@
                 <t-form-item>
                     <t-textarea
                     v-model="condition.content"
-                    :placeholder="localString.tip1[local.name]"
+                    :placeholder="i18n.tip1[i18n.language]"
                     :autosize="{ minRows: 5, maxRows: 15 }"
                     >
                     </t-textarea>
@@ -53,7 +53,7 @@
                     :options="categoryOptions"
                     clearable
                     filterable
-                    :placeholder="localString.choose[local.name] + localString.category[local.name]"
+                    :placeholder="i18n.choose[i18n.language] + i18n.category[i18n.language]"
                     >
                     </t-cascader>
                 </t-form-item>
@@ -63,34 +63,34 @@
                     :options="supplierOptions"
                     clearable
                     filterable
-                    :placeholder="localString.choose[local.name] + localString.supplier[local.name]"
+                    :placeholder="i18n.choose[i18n.language] + i18n.supplier[i18n.language]"
                     >
                     </t-select>
                 </t-form-item>
                 <t-form-item>
                     <div>
-                        {{ localString.unUpload[local.name] }}:
+                        {{ i18n.unUpload[i18n.language] }}:
                         <t-check-tag-group
                         v-model="condition.unUpload"
                         :options="[
                             {
-                                label: localString.supplier[local.name],
+                                label: i18n.supplier[i18n.language],
                                 value: 'supplier'
                             },
                             {
-                                label: localString.mainImage[local.name],
+                                label: i18n.mainImage[i18n.language],
                                 value: 'main-image'
                             },
                             {
-                                label: localString.price[local.name],
+                                label: i18n.price[i18n.language],
                                 value: 'price'
                             },
                             {
-                                label: localString.cost[local.name],
+                                label: i18n.cost[i18n.language],
                                 value: 'cost'
                             },
                             {
-                                label: localString.firstListingTime[local.name],
+                                label: i18n.firstListingTime[i18n.language],
                                 value: 'first-listing-time'
                             }
                         ]"
@@ -127,7 +127,7 @@
                 :disabled="loading || exportLoading"
                 :loading="loading"
                 >
-                    {{ localString.confirm[local.name] }}
+                    {{ i18n.confirm[i18n.language] }}
                 </t-button>
                 <t-button variant="outline" @click="condition = {
                     type: 'stylenumber',
@@ -136,7 +136,7 @@
                     category: null,
                     supplier: null
                 }">
-                    {{ localString.reset[local.name] }}
+                    {{ i18n.reset[i18n.language] }}
                 </t-button>
             </t-space>
         </t-card>
@@ -149,7 +149,7 @@
                         <t-icon name="minus-rectangle" v-if="selectKey.length > 0 && selectKey.length < data.length" />
                         <t-icon name="close-rectangle" v-if="selectKey.length == 0" />
                         <span style="vertical-align: middle; margin-left: 3px;">
-                            {{ localString.selected(selectKey.length)[local.name] }}
+                            {{ i18n.selected(selectKey.length)[i18n.language] }}
                         </span>
                     </span>
                     <t-button
@@ -160,12 +160,12 @@
                         batchEdit.visible = true
                     }"
                     :disabled="selectKey.length == 0"
-                    :title="localString.selected(selectKey.length)[local.name]"
+                    :title="i18n.selected(selectKey.length)[i18n.language]"
                     >
                         <template #icon>
                             <t-icon name="edit" />
                         </template>
-                        {{ localString.batch[local.name] }}{{ localString.edit[local.name] }}
+                        {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
                     </t-button>
                     <t-button
                     variant="text"
@@ -189,7 +189,7 @@
                         <template #icon>
                             <t-icon name="arrow-up-down-2" />
                         </template>
-                        {{ localString.supplier[local.name] }}{{ localString.mapping[local.name] }}
+                        {{ i18n.supplier[i18n.language] }}{{ i18n.mapping[i18n.language] }}
                     </t-button>
                     <t-button
                     variant="text"
@@ -199,7 +199,7 @@
                         <template #icon>
                             <t-icon name="upload" />
                         </template>
-                        {{ localString.informationImport[local.name] }}
+                        {{ i18n.informationImport[i18n.language] }}
                     </t-button>
                     <span style="line-height: 30px; cursor: pointer;">
                         <t-switch :custom-value="['cost-col', '']" v-model="costHighlight" @change="costHightLightChange" />
@@ -210,7 +210,7 @@
                             costHightLightChange(costHighlight)
                         }"
                         >
-                            {{ localString.cost[local.name] }}{{ localString.highlight[local.name] }}
+                            {{ i18n.cost[i18n.language] }}{{ i18n.highlight[i18n.language] }}
                         </span>
                     </span>
                 </t-space>
@@ -222,7 +222,7 @@
                 :columns="columns"
                 :loading="loading"
                 :loading-props="{
-                    text: localString.loading[local.name]
+                    text: i18n.loading[i18n.language]
                 }"
                 max-height="calc(100vh - 200px)"
                 row-key="stylenumber"
@@ -250,28 +250,28 @@
                             theme="primary"
                             @click="goodsEdit.open(row)"
                             >
-                                {{ localString.edit[local.name] }}
+                                {{ i18n.edit[i18n.language] }}
                             </t-button>
                             <t-button
                             variant="outline"
                             v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
                             @click="miaostreetGoodsLink(row)"
                             >
-                                {{ localString.viewMiaostreetLink[local.name] }}
+                                {{ i18n.viewMiaostreetLink[i18n.language] }}
                             </t-button>
                             <t-button
                             variant="outline"
                             @click="viewGoods.open(row)"
                             >
-                                {{ localString.viewGoods[local.name] }}
+                                {{ i18n.viewGoods[i18n.language] }}
                             </t-button>
                             <t-button
                             variant="outline"
                             theme="primary"
                             v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
-                            @click="copy(row['miaostreet-id'], local.name)"
+                            @click="copy(row['miaostreet-id'], i18n.language)"
                             >
-                                {{ localString.copy[local.name] }}{{ localString['miaostreet-id'][local.name] }}
+                                {{ i18n.copy[i18n.language] }}{{ i18n['miaostreet-id'][i18n.language] }}
                             </t-button>
                         </t-space>
                     </template>
@@ -302,7 +302,7 @@
     >
         <template #header>
             <t-icon name="edit" style="margin-right: 5px;" />
-            {{ localString.batch[local.name] }}{{ localString.edit[local.name] }}
+            {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
         </template>
         <t-row :gutter="[12, 12]" style="width: 100%;">
             <t-col :span="6">
@@ -310,7 +310,7 @@
                 v-model="batchEdit.data.supplier"
                 :options="supplierOptions.map(obj => obj.value)"
                 :input-props="{
-                    label: localString.supplier[local.name] + ': '
+                    label: i18n.supplier[i18n.language] + ': '
                 }"
                 >
                 </t-auto-complete>
@@ -321,8 +321,8 @@
                 :options="categoryOptions"
                 clearable
                 filterable
-                :label="localString.category[local.name] + ': '"
-                :placeholder="localString.choose[local.name] + localString.category[local.name]"
+                :label="i18n.category[i18n.language] + ': '"
+                :placeholder="i18n.choose[i18n.language] + i18n.category[i18n.language]"
                 >
                 </t-cascader>
             </t-col>
@@ -331,17 +331,17 @@
                 v-model="batchEdit.data['miaostreet-listing-status']"
                 :options="[
                     {
-                        label: localString.listing[local.name],
+                        label: i18n.listing[i18n.language],
                         value: 1
                     },
                     {
-                        label: localString.unlist[local.name],
+                        label: i18n.unlist[i18n.language],
                         value: 0
                     }
                 ]"
                 clearable
                 filterable
-                :label="localString.miaostreetListingStatus[local.name] + ': '"
+                :label="i18n.miaostreetListingStatus[i18n.language] + ': '"
                 >
                 </t-select>
             </t-col>
@@ -350,24 +350,24 @@
                 v-model="batchEdit.data['tmall-listing-status']"
                 :options="[
                     {
-                        label: localString.listing[local.name],
+                        label: i18n.listing[i18n.language],
                         value: 1
                     },
                     {
-                        label: localString.unlist[local.name],
+                        label: i18n.unlist[i18n.language],
                         value: 0
                     }
                 ]"
                 clearable
                 filterable
-                :label="localString.tmallListingStatus[local.name] + ': '"
+                :label="i18n.tmallListingStatus[i18n.language] + ': '"
                 >
                 </t-select>
             </t-col>
             <t-col :span="8">
                 <t-space size="13px">
                     <span style="line-height: 32px;">
-                        {{ localString.firstListingTime[local.name] + ': ' }}
+                        {{ i18n.firstListingTime[i18n.language] + ': ' }}
                     </span>
                     <t-date-picker
                     v-model="batchEdit.data['first-listing-time']"
@@ -402,7 +402,7 @@
     >
         <template #header>
             <t-icon name="arrow-up-down-2" style="margin-right: 5px;" />
-            {{ localString.supplier[local.name] }}{{ localString.mapping[local.name] }}
+            {{ i18n.supplier[i18n.language] }}{{ i18n.mapping[i18n.language] }}
         </template>
         <t-row :gutter="[12, 12]" style="width: 100%;">
             <t-col :span="6">
@@ -410,7 +410,7 @@
                 v-model="supplierMap.data.from"
                 :options="supplierOptions.map(obj => obj.value)"
                 :input-props="{
-                    label: localString.original[local.name] + localString.supplier[local.name] + ': '
+                    label: i18n.original[i18n.language] + i18n.supplier[i18n.language] + ': '
                 }"
                 clearable
                 >
@@ -421,7 +421,7 @@
                 v-model="supplierMap.data.to"
                 :options="supplierOptions.map(obj => obj.value)"
                 :input-props="{
-                    label: localString.target[local.name] + localString.supplier[local.name] + ': '
+                    label: i18n.target[i18n.language] + i18n.supplier[i18n.language] + ': '
                 }"
                 clearable
                 >
@@ -429,7 +429,7 @@
             </t-col>
             <t-col :span="12">
                 <t-checkbox v-model="supplierMap.data.onlyStore">
-                    {{ localString.onlyStore[local.name] }}
+                    {{ i18n.onlyStore[i18n.language] }}
                 </t-checkbox>
             </t-col>
             <t-col :span="12">
@@ -456,31 +456,31 @@
     >
         <template #header>
             <t-icon name="browse" style="margin-right: 5px;" />
-            {{ localString.viewGoods[local.name] }}
+            {{ i18n.viewGoods[i18n.language] }}
         </template>
         <t-loading
         v-if="viewGoods.loading"
         style="width: 100%; min-height: 40vh;"
         size="small"
-        :text="localString.loading[local.name]"
+        :text="i18n.loading[i18n.language]"
         ></t-loading>
         <div style="max-height: 60vh; overflow-y: auto; ">
             <t-row :gutter="[12, 12]" style="width: 100%;" v-if="!viewGoods.loading">
                 <t-col :span="9">
                     <t-row :gutter="[12, 4]" style="width: 100%;">
-                        <t-col :span="2" class="description-title">{{ localString.stylenumber[local.name] }}</t-col>
-                        <t-col :span="5" class="description-title">{{ localString.goodName[local.name] }}</t-col>
-                        <t-col :span="2" class="description-title">{{ localString.tagPrice[local.name] }}</t-col>
-                        <t-col :span="3" class="description-title">{{ localString.category[local.name] }}</t-col>
+                        <t-col :span="2" class="description-title">{{ i18n.stylenumber[i18n.language] }}</t-col>
+                        <t-col :span="5" class="description-title">{{ i18n.goodName[i18n.language] }}</t-col>
+                        <t-col :span="2" class="description-title">{{ i18n.tagPrice[i18n.language] }}</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.category[i18n.language] }}</t-col>
                         <t-col :span="2">{{ viewGoods.data.stylenumber }}</t-col>
                         <t-col :span="5">{{ viewGoods.data.name }}</t-col>
                         <t-col :span="2">{{ viewGoods.data.tagprice }}</t-col>
                         <t-col :span="3">{{ viewGoods.data.category }}</t-col>
-                        <t-col :span="5" class="description-title">{{ localString.size[local.name] }}</t-col>
-                        <t-col :span="4" class="description-title">{{ localString.color[local.name] }}</t-col>
-                        <t-col :span="1" class="description-title">{{ localString.inventory[local.name] }}</t-col>
-                        <t-col :span="1" class="description-title">{{ localString.cost[local.name] }}</t-col>
-                        <t-col :span="1" class="description-title">{{ localString.price[local.name] }}</t-col>
+                        <t-col :span="5" class="description-title">{{ i18n.size[i18n.language] }}</t-col>
+                        <t-col :span="4" class="description-title">{{ i18n.color[i18n.language] }}</t-col>
+                        <t-col :span="1" class="description-title">{{ i18n.inventory[i18n.language] }}</t-col>
+                        <t-col :span="1" class="description-title">{{ i18n.cost[i18n.language] }}</t-col>
+                        <t-col :span="1" class="description-title">{{ i18n.price[i18n.language] }}</t-col>
                         <t-col :span="5">{{ viewGoods.data.size }}</t-col>
                         <t-col :span="4">
                             {{ viewGoods.data.color }}
@@ -502,19 +502,19 @@
                                     :data="viewGoods.sku"
                                     :columns="[
                                         {
-                                            title: localString.color[local.name],
+                                            title: i18n.color[i18n.language],
                                             colKey: 'color',
                                             width: '150px',
                                             align: 'center'
                                         },
                                         {
-                                            title: localString.color[local.name],
+                                            title: i18n.color[i18n.language],
                                             colKey: 'colorid',
                                             width: '70px',
                                             align: 'center'
                                         },
                                         {
-                                            title: localString.productnumber[local.name],
+                                            title: i18n.productnumber[i18n.language],
                                             colKey: 'productnumber',
                                             width: '150px',
                                             align: 'center'
@@ -547,13 +547,13 @@
                                     :data="viewGoods.sku"
                                     :columns="[
                                         {
-                                            title: localString.barcode[local.name],
+                                            title: i18n.barcode[i18n.language],
                                             colKey: 'barcode',
                                             width: '150px',
                                             align: 'center'
                                         },
                                         {
-                                            title: localString.inventory[local.name],
+                                            title: i18n.inventory[i18n.language],
                                             colKey: 'inventory',
                                             width: '70px',
                                             align: 'center'
@@ -578,7 +578,7 @@
                         <t-col :span="1" v-if="Math.min(...viewGoods.sku.map(obj => obj.price * 1)) === Math.max(...viewGoods.sku.map(obj => obj.price * 1))">
                             {{ viewGoods.sku[0].price }}
                         </t-col>
-                        <t-col :span="1" class="description-title">{{ localString.mainImage[local.name] }}</t-col>
+                        <t-col :span="1" class="description-title">{{ i18n.mainImage[i18n.language] }}</t-col>
                         <t-col :span="4">
                             <t-swiper :height="300" style="width: 100%;">
                                 <t-swiper-item v-for="item in viewGoods.data['main-image']" :key="item" style="padding: 10px 0;">
@@ -592,7 +592,7 @@
                     </t-row>
                 </t-col>
                 <t-col :span="3">
-                    <t-card :title="localString.detailImage[local.name]">
+                    <t-card :title="i18n.detailImage[i18n.language]">
                         <div style="max-height: 40vh; overflow-y: auto; ">
                             <t-image
                             v-for="item in viewGoods.data['detail-image']"
@@ -616,13 +616,13 @@
     >
         <template #header>
             <t-icon name="edit" style="margin-right: 5px;" />
-            {{ localString.edit[local.name] }}
+            {{ i18n.edit[i18n.language] }}
         </template>
         <t-loading
         v-if="goodsEdit.loading"
         style="width: 100%; min-height: 70vh;"
         size="small"
-        :text="localString.loading[local.name]"
+        :text="i18n.loading[i18n.language]"
         ></t-loading>
         <t-list
         v-if="!goodsEdit.loading"
@@ -630,26 +630,26 @@
         size="small"
         >
             <t-list-item>
-                {{ localString.store[local.name] }}
+                {{ i18n.store[i18n.language] }}
                 <template #action>
                     {{ shop.storeOptions.filter(item => item.value === goodsEdit.sku[0]['store-id'])[0].label }}
                     {{ goodsEdit.sku[0]['store-id'] }}
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.counter[local.name] }}
+                {{ i18n.counter[i18n.language] }}
                 <template #action>
                     {{ goodsEdit.sku[0]['shoppe-id'] }}
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.brand[local.name] }}
+                {{ i18n.brand[i18n.language] }}
                 <template #action>
                     {{ goodsEdit.sku[0].brand }}
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.stylenumber[local.name] }}
+                {{ i18n.stylenumber[i18n.language] }}
                 <template #action>
                     <t-input
                     v-model="goodsEdit.sku[0].stylenumber"
@@ -666,7 +666,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.goodName[local.name] }}
+                {{ i18n.goodName[i18n.language] }}
                 <template #action>
                     <t-textarea
                     v-model="goodsEdit.sku[0].name"
@@ -684,7 +684,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.color[local.name] }}
+                {{ i18n.color[i18n.language] }}
                 <template #action>
                     <div style="max-width: 320px; word-break:break-all; ">
                         {{ goodsEdit.sku.map(obj => obj.color).join(',') }}
@@ -692,7 +692,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.size[local.name] }}
+                {{ i18n.size[i18n.language] }}
                 <template #action>
                     <div style="max-width: 320px; word-break:break-all; ">
                         {{ goodsEdit.sku.map(obj => obj.size).join(',') }}
@@ -700,7 +700,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString['miaostreet-id'][local.name] }}
+                {{ i18n['miaostreet-id'][i18n.language] }}
                 <template #action>
                     <t-input
                     v-model="goodsEdit.sku[0]['miaostreet-id']"
@@ -717,7 +717,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.category[local.name] }}
+                {{ i18n.category[i18n.language] }}
                 <template #action>
                     <t-cascader
                     v-model="goodsEdit.sku[0]['category-id']"
@@ -761,7 +761,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.supplier[local.name] }}
+                {{ i18n.supplier[i18n.language] }}
                 <template #action>
                     <t-auto-complete
                     v-model="goodsEdit.sku[0].supplier"
@@ -781,7 +781,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.supplier[local.name] }}{{ localString.stylenumber[local.name] }}
+                {{ i18n.supplier[i18n.language] }}{{ i18n.stylenumber[i18n.language] }}
                 <template #action>
                     <t-input
                     v-model="goodsEdit.sku[0]['supplier-id']"
@@ -815,7 +815,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.cost[local.name] }}
+                {{ i18n.cost[i18n.language] }}
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
@@ -830,7 +830,7 @@
                             })
                         }
                     }"
-                    >{{ localString.unify[local.name] }}</t-checkbox>
+                    >{{ i18n.unify[i18n.language] }}</t-checkbox>
                     <t-input-number
                     v-if="Math.min(...goodsEdit.sku.map(obj => obj.cost)) === Math.max(...goodsEdit.sku.map(obj => obj.cost))"
                     v-model="goodsEdit.sku[0].cost"
@@ -858,7 +858,7 @@
                         variant="outline"
                         size="small"
                         >
-                            {{ localString.barcode[local.name] }}{{ localString.cost[local.name] }}
+                            {{ i18n.barcode[i18n.language] }}{{ i18n.cost[i18n.language] }}
                         </t-button>
                         <template #content>
                             <t-list
@@ -868,9 +868,9 @@
                             >
                                 <t-list-item
                                 >
-                                    {{ localString.barcode[local.name] }}
+                                    {{ i18n.barcode[i18n.language] }}
                                     <template #action>
-                                        {{ localString.cost[local.name] }}
+                                        {{ i18n.cost[i18n.language] }}
                                     </template>
                                 </t-list-item>
                                 <t-list-item
@@ -892,7 +892,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.price[local.name] }}
+                {{ i18n.price[i18n.language] }}
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
@@ -907,7 +907,7 @@
                             })
                         }
                     }"
-                    >{{ localString.unify[local.name] }}</t-checkbox>
+                    >{{ i18n.unify[i18n.language] }}</t-checkbox>
                     <t-input-number
                     v-if="Math.min(...goodsEdit.sku.map(obj => obj.price)) === Math.max(...goodsEdit.sku.map(obj => obj.price))"
                     v-model="goodsEdit.sku[0].price"
@@ -935,7 +935,7 @@
                         variant="outline"
                         size="small"
                         >
-                            {{ localString.barcode[local.name] }}{{ localString.price[local.name] }}
+                            {{ i18n.barcode[i18n.language] }}{{ i18n.price[i18n.language] }}
                         </t-button>
                         <template #content>
                             <t-list
@@ -945,9 +945,9 @@
                             >
                                 <t-list-item
                                 >
-                                    {{ localString.barcode[local.name] }}
+                                    {{ i18n.barcode[i18n.language] }}
                                     <template #action>
-                                        {{ localString.price[local.name] }}
+                                        {{ i18n.price[i18n.language] }}
                                     </template>
                                 </t-list-item>
                                 <t-list-item
@@ -969,7 +969,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.firstListingTime[local.name] }}
+                {{ i18n.firstListingTime[i18n.language] }}
                 <template #action>
                     <t-date-picker
                     v-model="goodsEdit.sku[0]['first-listing-time']"
@@ -988,7 +988,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.inputTime[local.name] }}
+                {{ i18n.inputTime[i18n.language] }}
                 <template #action>
                     <t-date-picker
                     v-model="goodsEdit.sku[0]['entry-time']"
@@ -1008,7 +1008,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ localString.editTime[local.name] }}
+                {{ i18n.editTime[i18n.language] }}
                 <template #action>
                     <t-date-picker
                     v-model="goodsEdit.sku[0]['update-time']"
@@ -1042,7 +1042,6 @@
 <script>
 import dayjs from 'dayjs'
 import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink } from '../../hooks'
-import localString from './local'
 import confirmBar from '../../components/confirmBar.vue'
 
 export default {
@@ -1050,7 +1049,7 @@ export default {
         confirmBar
     },
     setup(){
-        const local = inject('local')
+        const i18n = inject('i18n')
         const serve = inject('serve')
         const shop = inject('shop')
 
@@ -1085,77 +1084,77 @@ export default {
                 width: 50
             },
             {
-                title: localString.stylenumber[local.name],
+                title: i18n.stylenumber[i18n.language],
                 colKey: 'stylenumber',
                 width: 120,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.image[local.name],
+                title: i18n.image[i18n.language],
                 colKey: 'image',
                 width: 120,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.goodName[local.name],
+                title: i18n.goodName[i18n.language],
                 colKey: 'name',
                 width: 260,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.category[local.name],
+                title: i18n.category[i18n.language],
                 colKey: 'category',
                 width: 190,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString['miaostreet-id'][local.name],
+                title: i18n['miaostreet-id'][i18n.language],
                 colKey: 'miaostreet-id',
                 width: 120,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.salesCount[local.name],
+                title: i18n.salesCount[i18n.language],
                 colKey: 'sales-count',
                 width: 90,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.supplier[local.name],
+                title: i18n.supplier[i18n.language],
                 colKey: 'supplier',
                 width: 100,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.supplier[local.name] + ' ' + localString.stylenumber[local.name],
+                title: i18n.supplier[i18n.language] + ' ' + i18n.stylenumber[i18n.language],
                 colKey: 'supplier-id',
                 width: 120,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.price[local.name],
+                title: i18n.price[i18n.language],
                 colKey: 'price',
                 width: 90,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: localString.cost[local.name],
+                title: i18n.cost[i18n.language],
                 colKey: 'cost',
                 width: 70,
                 align: 'center',
                 className: 'goods-table-col ' + costHighlight.value
             },
             {
-                title: localString.operate[local.name],
+                title: i18n.operate[i18n.language],
                 colKey: 'operate',
                 width: 200,
                 align: 'center',
@@ -1219,19 +1218,22 @@ export default {
             
             loading.value = false
         }
-        const confirmButton = ref(localString.exportQueryGoods[local.name])
+        const confirmButton = ref(i18n.exportQueryGoods[i18n.language])
         const exportLoading = ref(false)
         const exportToFiles = async () => {
-            confirmButton.value = localString.exporting[local.name]
+            confirmButton.value = i18n.exporting[i18n.language]
             exportLoading.value = true
 
             let res = await getSearchGoods(true)
-            MessagePlugin.success(localString.exportSuccess[local.name])
+            MessagePlugin.success(i18n.exportSuccess[i18n.language])
             window.open(serve + '/download?filename=' + res)
 
-            confirmButton.value = localString.exportQueryGoods[local.name]
+            confirmButton.value = i18n.exportQueryGoods[i18n.language]
             exportLoading.value = false
         }
+        watch(() => i18n.language, (newValue) => {
+            confirmButton.value = i18n.exportQueryGoods[newValue]
+        })
         
         const selectKey = ref([])
         const batchEdit = ref({
@@ -1255,7 +1257,7 @@ export default {
                     return Promise.resolve(res.json())
                 })
                 .catch(() => {
-                    MessagePlugin.error(localString.httpFail[local.name])
+                    MessagePlugin.error(i18n.httpFail[i18n.language])
                 })
             },
             done: async () => {
@@ -1276,10 +1278,10 @@ export default {
 
                 let res = await batchEdit.value.uploadData(stylenumber, content)
                 if(res.result){
-                    MessagePlugin.success(localString.batchEdited(res.vol)[local.name])
+                    MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
                     getSearchGoods()
                 } else {
-                    MessagePlugin.info(localString.batchEdited(0)[local.name])
+                    MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
                 }
 
                 batchEdit.value.loading = false
@@ -1306,20 +1308,20 @@ export default {
                     return Promise.resolve(res.json())
                 })
                 .catch(() => {
-                    MessagePlugin.error(localString.httpFail[local.name])
+                    MessagePlugin.error(i18n.httpFail[i18n.language])
                 })
             },
             done: async () => {
                 if(supplierMap.value.data.to === null || supplierMap.value.data.to === ''){
-                    MessagePlugin.error(localString.supplierMapToEmpty[local.name])
+                    MessagePlugin.error(i18n.supplierMapToEmpty[i18n.language])
                     return
                 }
                 if(supplierMap.value.data.from === null || supplierMap.value.data.from === ''){
                     let confirm = DialogPlugin.confirm({
-                        title: localString.tip[local.name],
-                        content: localString.tip2[local.name],
-                        okText: localString.confirm[local.name],
-                        cancelText: localString.cancel[local.name],
+                        title: i18n.tip[i18n.language],
+                        content: i18n.tip2[i18n.language],
+                        okText: i18n.confirm[i18n.language],
+                        cancelText: i18n.cancel[i18n.language],
                         onConfirm: async () => {
                             confirm.hide()
 
@@ -1335,7 +1337,7 @@ export default {
                                 count += res2.vol
                             }
 
-                            MessagePlugin.success(localString.batchEdited(count)[local.name])
+                            MessagePlugin.success(i18n.batchEdited(count)[i18n.language])
                             supplierMap.value.close()
                             if(res1.result || res2.result){
                                 getSearchGoods()
@@ -1353,9 +1355,9 @@ export default {
                     let res = await supplierMap.value.uploadData(supplierMap.value.data.from, supplierMap.value.data.to, shop.brand)
                     if(res.result){
                         getSearchGoods()
-                        MessagePlugin.success(localString.batchEdited(res.vol)[local.name])
+                        MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
                     } else {
-                        MessagePlugin.info(localString.batchEdited(0)[local.name])
+                        MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
                     }
 
                     supplierMap.value.close()
@@ -1458,7 +1460,7 @@ export default {
                 let id = await goodsEdit.value.create()
                 let res = await goodsEdit.value.start(id)
                 if(res.result){
-                    MessagePlugin.success(localString.editSuccess[local.name])
+                    MessagePlugin.success(i18n.editSuccess[i18n.language])
                 }
                 goodsEdit.value.submit = false
                 goodsEdit.value.visible = false
@@ -1489,8 +1491,7 @@ export default {
             dayjs,
             shop,
 
-            local,
-            localString,
+            i18n,
             condition,
             categoryOptions,
             supplierOptions,

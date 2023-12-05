@@ -6,38 +6,10 @@ import App from './App.vue'
 
 import router from './router'
 import user from './user'
+import i18n from './i18n'
 
 createApp(App)
-.provide('local', reactive({
-    name: 'en',
-    options: [
-        {
-            content: '简体中文',
-            value: 'zh',
-            disabled: false
-        },
-        {
-            content: 'English',
-            value: 'en',
-            disabled: false
-        },
-        {
-            content: '한국어',
-            value: 'kor',
-            disabled: false
-        },
-        {
-            content: '日本語',
-            value: 'jp',
-            disabled: false
-        },
-        {
-            content: 'ภาษาไทย',
-            value: 'th',
-            disabled: false
-        }
-    ]
-}))
+.provide('i18n', i18n)
 .provide('serve', 'https://work-serve.fixeam.com/api')
 .provide('user', user)
 .provide('shop', reactive({

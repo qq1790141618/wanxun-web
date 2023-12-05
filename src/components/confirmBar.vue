@@ -5,26 +5,24 @@
         :disabled="confirmLoading"
         :loading="confirmLoading"
         >
-            {{ localString.confirm[local.name] }}
+            {{ i18n.confirm[i18n.language] }}
         </t-button>
         <t-button theme="danger" @click="$emit('close')" v-if="!nocancel && nocancel !== ''">
-            {{ localString.cancel[local.name] }}
+            {{ i18n.cancel[i18n.language] }}
         </t-button>
         <t-button variant="outline" @click="$emit('reset')" v-if="!noreset && noreset !== ''">
-            {{ localString.reset[local.name] }}
+            {{ i18n.reset[i18n.language] }}
         </t-button>
     </t-space>
 </template>
 
 <script>
-import localString from './local'
-
 export default {
     props: ['confirmLoading', 'noreset', 'nocancel'],
     emits: ['confirm', 'close', 'reset'],
     setup(){
-        const local = inject('local')
-        return { local, localString }
+        const i18n = inject('i18n')
+        return { i18n }
     }
 }
 </script>

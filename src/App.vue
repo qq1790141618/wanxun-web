@@ -1,16 +1,16 @@
 <template>
     <t-config-provider :global-config="globalConfig">
-        <router-view v-if="$route.name === 'login'"/>
-        <div v-if="$route.name !== 'login'">
+        <router-view v-if="$route.name === 'login' || $route.name === '/data/analysis-view'"/>
+        <div v-if="$route.name !== 'login' && $route.name !== '/data/analysis-view'">
             <header-component />
             <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;">
                 <t-breadcrumbItem
-                :to="$router.getRoutes()[6].path"
+                :to="$router.getRoutes()[7].path"
                 >
                     <template #icon>
-                        <t-icon :name="$router.getRoutes()[6].meta.icon" />
+                        <t-icon :name="$router.getRoutes()[7].meta.icon" />
                     </template>
-                    {{ $router.getRoutes()[6].meta.title[local.name] }}
+                    {{ i18n[$router.getRoutes()[7].meta.title][i18n.language] }}
                 </t-breadcrumbItem>
                 <t-breadcrumbItem
                 v-for="item in $route.matched"
@@ -20,7 +20,7 @@
                     <template #icon>
                         <t-icon :name="item.meta.icon" />
                     </template>
-                    {{ item.meta.title[local.name] }}
+                    {{ i18n[item.meta.title][i18n.language] }}
                 </t-breadcrumbItem>
             </t-breadcrumb>
             <router-view v-slot="{ Component }" >
@@ -38,6 +38,7 @@ import { verifyUser } from './hooks'
 import headerComponent from './components/header.vue'
 import merge from 'lodash/merge'
 import zhConfig from 'tdesign-vue-next/es/locale/zh_CN'
+import chtConfig from 'tdesign-vue-next/es/locale/zh_TW'
 import enConfig from 'tdesign-vue-next/es/locale/en_US'
 import korConfig from 'tdesign-vue-next/es/locale/ko_KR'
 import jpConfig from 'tdesign-vue-next/es/locale/ja_JP'
@@ -47,7 +48,7 @@ export default {
         headerComponent
     },
     setup(){
-        const local = inject('local')
+        const i18n = inject('i18n')
         const serve = inject('serve')
         const user = inject('user')
         const shop = inject('shop')
@@ -55,10 +56,10 @@ export default {
 
         const initSet = () => {
             if(localStorage.getItem('lang')){
-                local.name = localStorage.getItem('lang')
-                document.documentElement.lang = local.name
+                i18n.language = localStorage.getItem('lang')
+                document.documentElement.lang = i18n.language
             }
-            initLangConfig(local.name)
+            initLangConfig(i18n.language)
             if(localStorage.getItem('user')){
                 user.inform = JSON.stringify(localStorage.getItem('user'))
             }
@@ -77,26 +78,10 @@ export default {
                 user.inform = res.user
                 user.status = 'loged'
                 localStorage.setItem('user', JSON.stringify(res.user))
-
-                let message = {
-                    zh: '欢迎回来！',
-                    en: 'Welcome Back! ',
-                    kor: '안녕하세요！',
-                    jp: 'いらっしゃい！',
-                    th: 'สวัสดี! '
-                }
-                MessagePlugin.success(message[local.name] + res.user.nickname)
+                MessagePlugin.success(i18n.welcomeBack[i18n.language] + '！' + res.user.nickname)
             })
             .catch(() => {
-                let message = {
-                    zh: '用户未登录或登录已经失效',
-                    en: 'User not logged in or login has expired',
-                    kor: '사용자 로그인 하거나 로그인 만료',
-                    jp: 'ユーザーが未登録か、登録が古いです',
-                    th: 'ผู้ใช้ไม่ได้เข้าสู่ระบบไร่ หรือ เข้าระบบไม่เยอะ'
-                }
-                MessagePlugin.info(message[local.name])
-
+                MessagePlugin.info(i18n.loginFailure[i18n.language])
                 user.status = 'unlog'
                 router.replace('/login')
             })
@@ -104,7 +89,7 @@ export default {
 
         const route = useRoute()
         const historyRecord = () => {
-            if(route.path == '/login' || route.path == '/'){
+            if(route.path == '/login' || route.path == '/' || route.path == '/data/analysis-view'){
                 return
             }
             let history = JSON.parse(localStorage.getItem('history')) || {
@@ -135,7 +120,15 @@ export default {
                     globalConfig = merge(zhConfig)
                     break
 
+                case 'cht':
+                    globalConfig = merge(chtConfig)
+                    break
+
                 case 'en':
+                    globalConfig = merge(enConfig)
+                    break
+
+                case 'fra':
                     globalConfig = merge(enConfig)
                     break
 
@@ -156,7 +149,7 @@ export default {
                     break
             }
         }
-        watch(() => local.name, (newValue) => {
+        watch(() => i18n.language, (newValue) => {
             initLangConfig(newValue)
         })
         initSet()
@@ -169,7 +162,7 @@ export default {
         })
 
         return {
-            local,
+            i18n,
             globalConfig
         }
     }

@@ -3,7 +3,7 @@
         <div class="logo" title="LOGO">
             <img src="../assets/logo.png" class="logo-image" >
             <span class="logo-text">
-                {{ localString.websiteName[lang] }}
+                {{ i18n.websiteName[lang] }}
             </span>
         </div>
         <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'" style="background-color: transparent;">
@@ -19,7 +19,7 @@
                     <template #icon>
                         <t-icon :name="item.meta.icon" />
                     </template>
-                    {{ item.meta.title[lang] }}
+                    {{ i18n[item.meta.title][lang] }}
                     <t-button
                     size="small"
                     variant="text"
@@ -53,43 +53,47 @@
                         <t-icon :name="item.meta.icon" />
                     </template>
                     <template #title>
-                        <span>{{ item.meta.title[lang] }}</span>
+                        <span>{{ i18n[item.meta.title][lang] }}</span>
                     </template>
-                    <t-menu-item
+                    <template
                     v-for="subitem in item.children"
                     :key="subitem.name"
-                    :value="subitem.meta.key"
-                    @click="$router.push(subitem.path)"
                     >
-                        <template #icon>
-                            <t-icon :name="subitem.meta.icon" />
-                        </template>
-                        {{ subitem.meta.title[lang] }}
-                        <t-button
-                        size="small"
-                        variant="text"
-                        shape="round"
-                        @click.stop="collection(subitem, true)"
-                        v-if="!collectionPath.map(obj => obj.meta.key).includes(subitem.meta.key)"
-                        class="cl-button"
+                        <t-menu-item
+                        :value="subitem.meta.key"
+                        @click="$router.push(subitem.path)"
+                        v-if="!subitem.meta.hide"
                         >
                             <template #icon>
-                                <t-icon name="star" />
+                                <t-icon :name="subitem.meta.icon" />
                             </template>
-                        </t-button>
-                        <t-button
-                        size="small"
-                        variant="text"
-                        shape="round"
-                        @click.stop="collection(subitem, false)"
-                        v-if="collectionPath.map(obj => obj.meta.key).includes(subitem.meta.key)"
-                        class="cl-button"
-                        >
-                            <template #icon>
-                                <t-icon name="star-filled" />
-                            </template>
-                        </t-button>
-                    </t-menu-item>
+                            {{ i18n[subitem.meta.title][lang] }}
+                            <t-button
+                            size="small"
+                            variant="text"
+                            shape="round"
+                            @click.stop="collection(subitem, true)"
+                            v-if="!collectionPath.map(obj => obj.meta.key).includes(subitem.meta.key)"
+                            class="cl-button"
+                            >
+                                <template #icon>
+                                    <t-icon name="star" />
+                                </template>
+                            </t-button>
+                            <t-button
+                            size="small"
+                            variant="text"
+                            shape="round"
+                            @click.stop="collection(subitem, false)"
+                            v-if="collectionPath.map(obj => obj.meta.key).includes(subitem.meta.key)"
+                            class="cl-button"
+                            >
+                                <template #icon>
+                                    <t-icon name="star-filled" />
+                                </template>
+                            </t-button>
+                        </t-menu-item>
+                    </template>
                 </t-submenu>
             </template>
         </t-head-menu>
@@ -99,7 +103,7 @@
             class="search-box"
             ref="searchBox"
             v-model="searchValue"
-            :placeholder="localString.search[lang]"
+            :placeholder="i18n.search[lang]"
             :style="{ width: searchWidth + 'px', marginRight: '20px', transition: 'all .3s' }"
             @focus="searchWidth = 300"
             @blur="searchWidth = 200"
@@ -121,13 +125,13 @@
                         <img :src="option.avatar" />
                         <div class="custom-option__main">
                             <t-highlight-option :content="option.text" />
-                            <small class="description">{{ localString.type[lang] + ': ' + option.description }}</small>
+                            <small class="description">{{ i18n.type[lang] + ': ' + option.description }}</small>
                         </div>
                     </div>
                 </template>
             </t-auto-complete>
             <t-space size="5px">
-                <t-tooltip :content="localString.backToOldVersion[lang]">
+                <t-tooltip :content="i18n.backToOldVersion[lang]">
                     <t-button variant="text" shape="square" @click="backToOldVersion">
                         <template #icon>
                             <t-icon name="history-setting" />
@@ -135,7 +139,7 @@
                     </t-button>
                 </t-tooltip>
                 <t-dropdown
-                :options="local.options"
+                :options="i18n.options"
                 @click="changeLanguage"
                 placement="bottom"
                 >
@@ -157,19 +161,19 @@
                     <t-dropdown-menu>
                         <t-dropdown-item @click="downloadClient">
                             <t-icon name="desktop" style="margin-right: 5px;" />
-                            {{ localString.windows[lang] }}
+                            {{ i18n.windows[lang] }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="downloadAndroidApp = true">
                             <t-icon name="logo-android" style="margin-right: 5px;" />
-                            {{ localString.android[lang] }}
+                            {{ i18n.android[lang] }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="mobileWeb = true">
                             <t-icon name="mobile" style="margin-right: 5px;" />
-                            {{ localString.mobile[lang] }}
+                            {{ i18n.mobile[lang] }}
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
-                <t-tooltip :content="localString.setting[lang]" v-if="$route.name !== 'login'">
+                <t-tooltip :content="i18n.setting[lang]" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
                             <template #icon>
@@ -197,15 +201,15 @@
                     <t-dropdown-menu>
                         <t-dropdown-item @click="user.avatarView = true">
                             <t-icon name="browse" style="margin-right: 5px;" />
-                            {{ localString.viewAvatar[lang] }}
+                            {{ i18n.viewAvatar[lang] }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="$router.push('/user-center')">
                             <t-icon name="verify" style="margin-right: 5px;" />
-                            {{ localString.userCenter[lang] }}
+                            {{ i18n.userCenter[lang] }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="user.logout">
                             <t-icon name="logout" style="margin-right: 5px;" />
-                            {{ localString.logout[lang] }}
+                            {{ i18n.logout[lang] }}
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
@@ -220,31 +224,31 @@
     </header>
     <t-dialog
     v-model:visible="downloadAndroidApp"
-    :header="localString.android[lang]"
+    :header="i18n.android[lang]"
     :footer="false"
     >
         <div style="text-align: center;">
             <t-icon name="scan" />
-            {{ localString.scanToDownload[lang] }}
+            {{ i18n.scanToDownload[lang] }}
             <img src="../assets/Android.png" style="width: 200px;" >
             <div>
                 <t-button @click="downloadApk">
                     <template #icon>
                         <t-icon name="logo-android" />
                     </template>
-                    {{ localString.downloadApk[lang] }}
+                    {{ i18n.downloadApk[lang] }}
                 </t-button>
             </div>
         </div>
     </t-dialog>
     <t-dialog
     v-model:visible="mobileWeb"
-    :header="localString.mobile[lang]"
+    :header="i18n.mobile[lang]"
     :footer="false"
     >
         <div style="text-align: center;">
             <t-icon name="scan" />
-            {{ localString.scanToVisit[lang] }}
+            {{ i18n.scanToVisit[lang] }}
             <img src="../assets/Mobile Web.png" style="width: 200px;" >
             <t-link href="https://mobile-work.fixeam.com/" target="_blank" style="margin-right: 5px;">
                 Url:
@@ -259,53 +263,54 @@
     </t-dialog>
     <t-dialog
     v-model:visible="settings"
-    :header="localString.setting[lang]"
+    :header="i18n.setting[lang]"
     :footer="false"
     :close-on-overlay-click="false"
     >
         <t-space direction="vertical" style="width: 100%;">
             <t-select
-            :label="localString.store[lang] + ': '"
+            :label="i18n.store[lang] + ': '"
             v-model="shop.store"
             :options="shop.storeOptions"
             @change="saveOptions"
             ></t-select>
             <t-select
-            :label="localString.brand[lang] + ': '"
+            :label="i18n.brand[lang] + ': '"
             v-model="shop.brand"
             :options="shop.brandOptions"
             @change="saveOptions"
             ></t-select>
             <t-link theme="primary" @click="viewCounter" v-if="shop.counter[shop.store + shop.brand]">
-                {{ localString.viewCounter[lang] }}>>
+                {{ i18n.viewCounter[lang] }}>>
             </t-link>
         </t-space>
     </t-dialog>
 </template>
 
 <script>
-import localString from './local'
-import moreLang from './moreLang'
-import { copy, getGoods } from '../hooks'
+import { copy, getGoods, translate } from '../hooks'
 
 export default {
     setup(){
-        for (const lang in moreLang) {
-            for (const key in moreLang[lang]) {
-                localString[key][lang] = moreLang[lang][key]
-            }
-        }
-        
-        const local = inject('local')
+        const i18n = inject('i18n')
         const lang = ref('zh')
-        lang.value = local.name
+        lang.value = i18n.language
         const changeLanguage = (item) => {
-            local.name = item.value
+            if(i18n.language == item.value){
+                return
+            }
+
+            i18n.language = item.value
             lang.value = item.value
             localStorage.setItem('lang', item.value)
+
+            translate('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', lang.value)
+            .then(res => {
+                MessagePlugin.success(res.trans_result[0].dst)
+            })
         }
-        watch(() => local.name, () => {
-            lang.value = local.name
+        watch(() => i18n.language, () => {
+            lang.value = i18n.language
         })
 
         const downloadClient = () => {
@@ -328,7 +333,6 @@ export default {
         watch(() => route.path, () => {
             activeMenu.value = route.meta.key
         })
-
 
         const searchBox = ref(null)
         const searchValue = ref(null)
@@ -358,7 +362,7 @@ export default {
                 if(!value || value.indexOf(routes[i].meta.title[lang.value]) >= 0 || value.indexOf(routes[i].name) >= 0){
                     options.push({
                         label: routes[i].meta.title[lang.value],
-                        description: localString.menus[lang.value],
+                        description: i18n.menus[lang.value],
                         avatar: routes[i].meta.avatar
                     })
                 }
@@ -379,7 +383,7 @@ export default {
             for (let i = 0; i < goods.data.length; i++) {
                 options.push({
                     label: goods.data[i].stylenumber,
-                    description: localString.goods[lang.value],
+                    description: i18n.goods[lang.value],
                     avatar: goods.data[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods.data[i]['main-image'])[0]
                 })
             }
@@ -438,9 +442,8 @@ export default {
         })
 
         return {
-            local,
             lang,
-            localString,
+            i18n,
             backToOldVersion,
             changeLanguage,
             downloadClient,
@@ -499,7 +502,8 @@ export default {
     margin: 0 10px;
     height: 100%;
     line-height: 56px;
-    min-width: 220px;
+    min-width: 230px;
+    flex-shrink: 0;
 }
 .logo-image{
     margin: 4px;
