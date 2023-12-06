@@ -2,6 +2,8 @@ import md5 from 'md5'
 import fetchJSONP from 'fetch-jsonp'
 import useClipboard from 'vue-clipboard3'
 import i18n from '../i18n'
+import dayjs from 'dayjs'
+
 const serve = 'https://work-serve.fixeam.com/api'
 
 export function sendCode(serve, target, lang = 'zh'){
@@ -159,5 +161,30 @@ export async function getGoods(store, brand, condition, start, number, isExport)
     })
     .catch(error => {
         return Promise.resolve(error)
+    })
+}
+
+export function getQuickDateRangePicker(language = 'zh'){
+    return new Promise(async (resolve) => {
+        let primary = {
+            '去年': [dayjs().subtract(1, 'year').startOf('year'), dayjs().subtract(1, 'year').endOf('year')],
+            '今年': [dayjs().startOf('year'), dayjs().subtract(1, 'day')],
+            '上个月': [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
+            '这个月': [dayjs().startOf('month'), dayjs().subtract(1, 'day')],
+            '最近30天': [dayjs().subtract(30, 'day'), dayjs().subtract(1, 'day')],
+            '最近7天': [dayjs().subtract(7, 'day'), dayjs().subtract(1, 'day')]
+        }
+        if(language === 'zh'){
+            return resolve(primary)
+        }
+    
+        let res = new Object
+        for (const key in primary) {
+            let f = await translate(key, language)
+            let transKey = f.trans_result[0].dst
+            res[transKey] = primary[key]
+        }
+
+        return resolve(res)
     })
 }

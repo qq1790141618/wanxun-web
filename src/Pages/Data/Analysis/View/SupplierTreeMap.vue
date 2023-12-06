@@ -13,11 +13,12 @@ export default {
     setup(props){
         const i18n = inject('i18n')
         let chart
+        let amount = new Object
         const primaryChart = ref(null)
         const chartOptions = ref({
             tooltip: {
                 formatter: function (info) {
-                    return info.name + '-' + info.value + '件/'
+                    return info.name + ' - ' + info.value + ' ' + i18n.piece[i18n.language] + ' / ' + amount[info.name] + ' ' + i18n.yuan[i18n.language]
                 }
             },
             series: [
@@ -26,11 +27,6 @@ export default {
                     label: {
                         show: true
                     },
-                    breadcrumb: {
-                        show: false
-                    },
-                    roam: false,
-                    nodeClick: false,
                     itemStyle: {
                         borderRadius: 10,
                         borderColor: '#fff',
@@ -51,6 +47,7 @@ export default {
                     name: props.data[i].name,
                     value: props.data[i].salesCount
                 })
+                amount[props.data[i].name] = props.data[i].salesAmount
             }
 
             chart = echarts.init(primaryChart.value)

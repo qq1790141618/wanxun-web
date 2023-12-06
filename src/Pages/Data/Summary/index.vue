@@ -3,7 +3,7 @@
         <template #title>
             <t-icon :name="$route.meta.icon"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ $route.meta.title[i18n.language] }}
+                {{ i18n[$route.meta.title][i18n.language] }}
                 ({{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}{{ shop.store }} / {{ shop.brand }})
             </span>
         </template>
@@ -27,7 +27,8 @@
             <div style="margin-bottom: 10px; text-align: center;">
                 <t-button
                 variant="outline"
-                shape="square" @click="useMonth = dayjs(useMonth).subtract(1, 'month').format('YYYY-MM')"
+                shape="square"
+                @click="changeMonth(-1)"
                 :disabled="useMonth == '2021-11'"
                 >
                     <template #icon>
@@ -59,7 +60,7 @@
                 <t-button
                 variant="outline"
                 shape="square"
-                @click="useMonth = dayjs(useMonth).add(1, 'month').format('YYYY-MM')"
+                @click="changeMonth(1)"
                 :disabled="useMonth == dayjs().format('YYYY-MM')"
                 >
                     <template #icon>
@@ -181,9 +182,41 @@ export default {
             footData.value = computeFootData(res)
             loading.value = false
         }
+        const cantChangeMonth = ref(false)
+        const changeMonth = (number) => {
+            if(number === 0 || cantChangeMonth.value){
+                return
+            }
+            if(number > 0){
+                if(useMonth.value === dayjs().format('YYYY-MM')){
+                    return
+                }
+                useMonth.value = dayjs(useMonth.value).add(number, 'month').format('YYYY-MM')
+            } else {
+                if(useMonth.value === '2021-11'){
+                    return
+                }
+                useMonth.value = dayjs(useMonth.value).subtract(number * -1, 'month').format('YYYY-MM')
+            }
+        }
+        const onKeyDown = (event) => {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                changeMonth(-1)
+            } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                changeMonth(1)
+            }
+        }
 
         onMounted(() => {
             initData()
+        })
+        onActivated(() => {
+            cantChangeMonth.value = false
+            window.addEventListener('keydown', onKeyDown)
+        })
+        onDeactivated(() => {
+            cantChangeMonth.value = true
+            window.removeEventListener('keydown', onKeyDown)
         })
         watch(() => shop.store, () => {
             data.value = {}
@@ -208,7 +241,8 @@ export default {
             useMonth,
             footData,
             sortConfig,
-            initData
+            initData,
+            changeMonth
         }
     }
 }

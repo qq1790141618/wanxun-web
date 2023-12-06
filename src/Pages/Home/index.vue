@@ -34,7 +34,7 @@
                     <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.refundsCount[i18n.language]" :value="data.day.refunds.count" :unit="i18n.piece[i18n.language]" />
                     <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.refundsAmount[i18n.language]" :value="data.day.refunds.amount" :unit="i18n.yuan[i18n.language]" />
                     <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.actualSalesAmount[i18n.language]" :value="Math.round(data.day.sales.amount - data.day.refunds.amount)" :unit="i18n.yuan[i18n.language]" />
-                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.income[i18n.language]" :value="Math.round(data.day.sales.income - data.day.refunds.income)" :unit="i18n.yuan[i18n.language]" />
+                    <t-statistic :animation-start="true" :animation="{ duration: 2, valueFrom: 0 }" :title="i18n.income[i18n.language]" :value="Math.round((data.day.sales.income - data.day.refunds.income) * 100) / 100" :unit="i18n.yuan[i18n.language]" />
                 </div>
             </t-card>
             <t-card :bordered="false" style="margin-top: 12px;">

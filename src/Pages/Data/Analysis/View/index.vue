@@ -186,8 +186,8 @@ export default {
 .analysis-tab{
     border-radius: 10px;
     width: 1500px;
-    max-width: 100vw;
-    margin: 10px auto;
+    max-width: calc(100vw - 20px);
+    margin: 10px;
 }
 .analysis-view-item{
     padding: 15px;

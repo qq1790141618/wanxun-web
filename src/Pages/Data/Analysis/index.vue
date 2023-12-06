@@ -9,6 +9,7 @@
         show-in-attached-element
         :footer="false"
         :close-btn="false"
+        style="user-select: none;"
         >
             <template #header>
                 <div style="font-size: 16px;">
@@ -56,6 +57,7 @@
                 ></t-select>
                 <t-date-range-picker
                 v-model="create.date"
+                :presets="quickDateRangePicker"
                 ></t-date-range-picker>
                 <t-button
                 :loading="create.loading"
@@ -85,6 +87,8 @@
 
 <script>
 import dayjs from 'dayjs'
+import { getQuickDateRangePicker } from '../../../hooks'
+
 export default {
     setup() {
         const serve = inject('serve')
@@ -163,12 +167,18 @@ export default {
             }
         })
         const lastTime = ref(false)
+        const quickDateRangePicker = ref({})
 
-        onMounted(() => {
+        onMounted(async () => {
             create.initialization()
             if(localStorage.getItem('view-task')){
                 lastTime.value = true
             }
+
+            quickDateRangePicker.value = await getQuickDateRangePicker(i18n.language)
+        })
+        watch(() => i18n.language,  async (newValue) => {
+            quickDateRangePicker.value = await getQuickDateRangePicker(newValue)
         })
 
         return {
@@ -176,7 +186,8 @@ export default {
             i18n,
             create,
             current,
-            lastTime
+            lastTime,
+            quickDateRangePicker
         }
     }
 }
