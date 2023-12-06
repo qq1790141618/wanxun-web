@@ -119,5 +119,22 @@
     "editSuccess": "修改成功",
     "targetIsFail": "請輸入正確的手機號或郵箱",
     "copySuccess": "複製成功",
-    "loginFailure": "登入失效"
+    "loginFailure": "登入失效",
+    "nextStep": "下一步",
+    "time": "時間",
+    "tip4": "正在進行資料分析，請稍後",
+    "tip5": "執行已完成",
+    "tip6": "即將為您自動跳轉",
+    "summary": "總結",
+    "trend": "趨勢",
+    "accumulate": "累計",
+    "contrast": "對比",
+    "thisCycle": "本週期",
+    "comparisonCycle": "同比週期",
+    "afterSalesRatio": "退貨率",
+    "CUP": "客單價",
+    "ratio": "占比",
+    "sex": "性別",
+    "channel": "渠道",
+    "season": "季節"
 }

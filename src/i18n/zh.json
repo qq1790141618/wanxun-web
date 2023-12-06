@@ -119,5 +119,22 @@
     "editSuccess": "修改成功",
     "targetIsFail": "请输入正确的手机号或邮箱",
     "copySuccess": "复制成功",
-    "loginFailure": "登录失效"
+    "loginFailure": "登录失效",
+    "nextStep": "下一步",
+    "time": "时间",
+    "tip4": "正在进行数据分析, 请稍后",
+    "tip5": "执行已完成",
+    "tip6": "即将为您自动跳转",
+    "summary": "汇总",
+    "trend": "趋势",
+    "accumulate": "累计",
+    "contrast": "对比",
+    "thisCycle": "本周期",
+    "comparisonCycle": "同比周期",
+    "afterSalesRatio": "退货率",
+    "CUP": "客单价",
+    "ratio": "占比",
+    "sex": "性别",
+    "channel": "渠道",
+    "season": "季节"
 }

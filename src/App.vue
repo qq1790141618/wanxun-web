@@ -1,7 +1,7 @@
 <template>
     <t-config-provider :global-config="globalConfig">
-        <router-view v-if="$route.name === 'login' || $route.name === '/data/analysis-view'"/>
-        <div v-if="$route.name !== 'login' && $route.name !== '/data/analysis-view'">
+        <router-view v-if="frameLessPage.indexOf($route.name) >= 0"/>
+        <div v-if="frameLessPage.indexOf($route.name) < 0">
             <header-component />
             <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;">
                 <t-breadcrumbItem
@@ -154,7 +154,10 @@ export default {
         })
         initSet()
 
+        const frameLessPage = ['login', 'datas-analysis-view']
+
         onMounted(() => {
+            i18n.checkEmpty()
             loginVerify()
             setTimeout(() => {
                 historyRecord()
@@ -163,7 +166,8 @@ export default {
 
         return {
             i18n,
-            globalConfig
+            globalConfig,
+            frameLessPage
         }
     }
 }

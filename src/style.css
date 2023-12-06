@@ -112,3 +112,71 @@ img, div, span{
     font-size: 12px;
     margin-top: 12px;
 }
+/* header */
+.header{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
+    padding: 0 var(--td-comp-paddingLR-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--td-text-color-primary);
+    height: var(--td-comp-size-xxxl);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--td-border-level-2-color);
+    box-sizing: border-box;
+}
+.logo{
+    margin: 0 10px;
+    height: 100%;
+    line-height: 56px;
+    min-width: 230px;
+    flex-shrink: 0;
+}
+.logo-image{
+    margin: 4px;
+    height: 40px;
+}
+.logo-text{
+    font-size: 16px;
+}
+.operations-container{
+    padding: 0 var(--td-comp-paddingLR-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--td-text-color-primary);
+    height: var(--td-comp-size-xxxl);
+}
+.t-autocomplete-option-list .t-select-option {
+    height: 50px;
+}
+.t-autocomplete-option-list .custom-option {
+    display: flex;
+    align-items: center;
+}
+.t-autocomplete-option-list .custom-option > img {
+    max-height: 36px;
+    border-radius: 5px;
+}
+.t-autocomplete-option-list .custom-option__main {
+    margin-left: 8px;
+}
+.t-autocomplete-option-list .custom-option .description {
+    color: var(--td-gray-color-9);
+}
+.search-box .t-input{
+    background-color: transparent;
+}
+.cl-button{
+    position: relative;
+    top: -1px;
+}

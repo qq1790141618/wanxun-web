@@ -119,5 +119,22 @@
     "editSuccess": "Edit Success",
     "targetIsFail": "Please enter a valid phone number or email address",
     "copySuccess": "Copied",
-    "loginFailure": "Login Failure"
+    "loginFailure": "Login Failure",
+    "nextStep": "Next step",
+    "time": "time",
+    "tip4": "Data analysis in progress, please wait",
+    "tip5": "Execution completed",
+    "tip6": "We will automatically redirect you soon",
+    "summary": "Summary",
+    "trend": "Trend",
+    "accumulate": "cumulative",
+    "contrast": "contrast",
+    "thisCycle": "This cycle",
+    "comparisonCycle": "Year-on-year cycle",
+    "afterSalesRatio": "Return rate",
+    "CUP": "Customer unit price",
+    "ratio": "Proportion",
+    "sex": "Gender",
+    "channel": "channel",
+    "season": "season"
 }

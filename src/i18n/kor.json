@@ -119,5 +119,22 @@
     "editSuccess": "수정 성공",
     "targetIsFail": "정확한 핸드폰 번호나 메일박스를 입력하세요",
     "copySuccess": "복제 성공",
-    "loginFailure": "로그인 실패"
+    "loginFailure": "로그인 실패",
+    "nextStep": "다음 단계",
+    "time": "시간",
+    "tip4": "데이터 분석이 진행 중입니다. 잠시 후",
+    "tip5": "실행 완료",
+    "tip6": "자동 점프",
+    "summary": "요약",
+    "trend": "추세",
+    "accumulate": "누적",
+    "contrast": "비교",
+    "thisCycle": "이 주기",
+    "comparisonCycle": "동기대비 주기",
+    "afterSalesRatio": "반품율",
+    "CUP": "객단가",
+    "ratio": "차지 비율",
+    "sex": "성별",
+    "channel": "채널",
+    "season": "계절"
 }

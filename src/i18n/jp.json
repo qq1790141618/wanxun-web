@@ -119,5 +119,22 @@
     "editSuccess": "変更に成功しました",
     "targetIsFail": "正しい携帯電話番号やメールアドレスを入力してください",
     "copySuccess": "コピー成功",
-    "loginFailure": "ログインが無効になる"
+    "loginFailure": "ログインが無効になる",
+    "nextStep": "次のステップ",
+    "time": "時間",
+    "tip4": "データ解析中です。しばらくお待ちください",
+    "tip5": "実行が完了しました",
+    "tip6": "自動ジャンプ",
+    "summary": "要約",
+    "trend": "傾向",
+    "accumulate": "累計＃ルイケイ＃",
+    "contrast": "比較",
+    "thisCycle": "本サイクル",
+    "comparisonCycle": "前年同期比サイクル",
+    "afterSalesRatio": "返品率",
+    "CUP": "客単価",
+    "ratio": "占有率",
+    "sex": "性別",
+    "channel": "ルート本",
+    "season": "季節"
 }

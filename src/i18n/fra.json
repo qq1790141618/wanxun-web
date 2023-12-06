@@ -119,5 +119,22 @@
     "editSuccess": "Modification réussie",
     "targetIsFail": "Veuillez entrer le numéro de téléphone ou la boîte aux lettres corrects",
     "copySuccess": "Copie réussie",
-    "loginFailure": "Invalidation du débarquement"
+    "loginFailure": "Invalidation du débarquement",
+    "nextStep": "Prochaines étapes",
+    "time": "Le temps",
+    "tip4": "Analyse des données en cours, plus tard",
+    "tip5": "Exécution terminée",
+    "tip6": "Bientôt sauter automatiquement pour vous",
+    "summary": "Résumé",
+    "trend": "Les tendances",
+    "accumulate": "Cumulatif",
+    "contrast": "Le contraste",
+    "thisCycle": "Ce cycle",
+    "comparisonCycle": "Cycle d'année en année",
+    "afterSalesRatio": "Taux de retour",
+    "CUP": "Prix par personne",
+    "ratio": "Pourcentage",
+    "sex": "Sexe",
+    "channel": "Canaux",
+    "season": "Saison"
 }

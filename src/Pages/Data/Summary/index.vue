@@ -157,9 +157,9 @@ export default {
                 for (const key in row) {
                     if(typeof(row[key]) == 'number' && !isNaN(row[key])){
                         if(countData[key]){
-                            countData[key] = Math.round(countData[key] * 1 + row[key] * 1)
+                            countData[key] = Math.round((countData[key] * 1 + row[key] * 1) * 100) / 100
                         } else {
-                            countData[key] = Math.round(row[key] * 1)
+                            countData[key] = Math.round(row[key] * 100) / 100
                         }
                     }
                 }
