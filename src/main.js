@@ -32,19 +32,23 @@ createApp(App)
     brandOptions: [
         {
             label: 'KCOR 107241',
-            value: 'KCOR'
+            value: 'KCOR',
+            logo: 'https://cdn.fixeam.com/tw/KCOR.png'
         },
         {
             label: 'NT 107756',
-            value: 'NT'
+            value: 'NT',
+            logo: 'https://cdn.fixeam.com/tw/NT.png'
         },
         {
             label: '兔皇 5649',
-            value: '兔皇'
+            value: '兔皇',
+            logo: 'https://cdn.fixeam.com/tw/TW.png'
         },
         {
             label: 'DR 111862',
-            value: 'DR'
+            value: 'DR',
+            logo: 'https://cdn.fixeam.com/tw/DR.png'
         }
     ],
     counter: {

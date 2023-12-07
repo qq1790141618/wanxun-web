@@ -1,214 +1,30 @@
 <template>
     <div style="display: flex; position: relative;" id="goods-list">
-        <t-card
-        class="condition-box"
-        :bordered="false"
-        >
-            <template #header>
-                <span>
-                    <t-icon name="search"></t-icon>
-                    {{ i18n.condition[i18n.language] }}
-                </span>
-            </template>
-            <t-form label-width="0" style="height: calc(100vh - 250px); overflow-y: auto;">
-                <t-form-item>
-                    <t-select
-                    v-model="condition.type"
-                    :options="[
-                        {
-                            label: i18n.stylenumber[i18n.language],
-                            value: 'stylenumber'
-                        },
-                        {
-                            label: i18n.productnumber[i18n.language],
-                            value: 'productnumber'
-                        },
-                        {
-                            label: 'SKU',
-                            value: 'SKU'
-                        },
-                        {
-                            label: 'SPU ID',
-                            value: 'spuid'
-                        },
-                        {
-                            label: i18n['miaostreet-id'][i18n.language],
-                            value: 'miaostreet-id'
-                        }
-                    ]"
-                    >
-                    </t-select>
-                </t-form-item>
-                <t-form-item>
-                    <t-textarea
-                    v-model="condition.content"
-                    :placeholder="i18n.tip1[i18n.language]"
-                    :autosize="{ minRows: 5, maxRows: 15 }"
-                    >
-                    </t-textarea>
-                </t-form-item>
-                <t-form-item>
-                    <t-cascader
-                    v-model="condition.category"
-                    :options="categoryOptions"
-                    clearable
-                    filterable
-                    :placeholder="i18n.choose[i18n.language] + i18n.category[i18n.language]"
-                    >
-                    </t-cascader>
-                </t-form-item>
-                <t-form-item>
-                    <t-select
-                    v-model="condition.supplier"
-                    :options="supplierOptions"
-                    clearable
-                    filterable
-                    :placeholder="i18n.choose[i18n.language] + i18n.supplier[i18n.language]"
-                    >
-                    </t-select>
-                </t-form-item>
-                <t-form-item>
-                    <div>
-                        {{ i18n.unUpload[i18n.language] }}:
-                        <t-check-tag-group
-                        v-model="condition.unUpload"
-                        :options="[
-                            {
-                                label: i18n.supplier[i18n.language],
-                                value: 'supplier'
-                            },
-                            {
-                                label: i18n.mainImage[i18n.language],
-                                value: 'main-image'
-                            },
-                            {
-                                label: i18n.price[i18n.language],
-                                value: 'price'
-                            },
-                            {
-                                label: i18n.cost[i18n.language],
-                                value: 'cost'
-                            },
-                            {
-                                label: i18n.firstListingTime[i18n.language],
-                                value: 'first-listing-time'
-                            }
-                        ]"
-                        :checked-props="{
-                            theme: 'primary',
-                            variant: 'outline',
-                            size: 'large',
-                            style: {
-                                marginBottom: '5px'
-                            }
-                        }"
-                        :unchecked-props="{
-                            theme: 'default',
-                            variant: 'outline',
-                            size: 'large',
-                            style: {
-                                marginBottom: '5px'
-                            }
-                        }"
-                        style="margin: 8px 0;"
-                        multiple
-                        >
-                        </t-check-tag-group>
-                    </div>
-                </t-form-item>
-            </t-form>
-            <confirm-bar
-            :confirm-loading="loading || exportLoading"
-            @confirm="() => {
-                pagination.current = 1
-                selectKey = []
-                getSearchGoods()
-            }"
-            @reset="condition = {
-                type: 'stylenumber',
-                content: null,
-                unUpload: [],
-                category: null,
-                supplier: null
-            }"
-            nocancel
-            />
-        </t-card>
+        <ConditionBox
+        :condition="condition"
+        :loading="loading || exportLoading"
+        @confirm="() => {
+            pagination.current = 1
+            selectKey = []
+            getSearchGoods()
+        }"
+        @reset="condition = {
+            type: 'stylenumber',
+            content: null,
+            unUpload: [],
+            category: null,
+            supplier: null
+        }"
+        :categoryOptions="categoryOptions"
+        :supplierOptions="supplierOptions"
+        />
         <div class="content-box">
-            <t-alert style="padding: 5px 12px; position: sticky; top: 65px;">
-                <template #icon><div></div></template>
-                <t-space size="12px">
-                    <span style="line-height: 30px;">
-                        <t-icon name="check-rectangle" v-if="data.length > 0 && selectKey.length == data.length" />
-                        <t-icon name="minus-rectangle" v-if="selectKey.length > 0 && selectKey.length < data.length" />
-                        <t-icon name="close-rectangle" v-if="selectKey.length == 0" />
-                        <span style="vertical-align: middle; margin-left: 3px;">
-                            {{ i18n.selected(selectKey.length)[i18n.language] }}
-                        </span>
-                    </span>
-                    <t-button
-                    variant="text"
-                    theme="primary"
-                    @click="() => {
-                        batchEdit.data = {}
-                        batchEdit.visible = true
-                    }"
-                    :disabled="selectKey.length == 0"
-                    :title="i18n.selected(selectKey.length)[i18n.language]"
-                    >
-                        <template #icon>
-                            <t-icon name="edit" />
-                        </template>
-                        {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
-                    </t-button>
-                    <t-button
-                    variant="text"
-                    theme="primary"
-                    @click="exportToFiles"
-                    :disabled="loading || exportLoading"
-                    :loading="exportLoading"
-                    >
-                        <template #icon>
-                            <t-icon name="file-export" />
-                        </template>
-                        {{ confirmButton }}
-                    </t-button>
-                    <t-button
-                    variant="text"
-                    theme="primary"
-                    @click="() => {
-                        supplierMap.visible = true
-                    }"
-                    >
-                        <template #icon>
-                            <t-icon name="arrow-up-down-2" />
-                        </template>
-                        {{ i18n.supplier[i18n.language] }}{{ i18n.mapping[i18n.language] }}
-                    </t-button>
-                    <t-button
-                    variant="text"
-                    theme="primary"
-                    @click="$router.push('/import')"
-                    >
-                        <template #icon>
-                            <t-icon name="upload" />
-                        </template>
-                        {{ i18n.informationImport[i18n.language] }}
-                    </t-button>
-                    <span style="line-height: 30px; cursor: pointer;">
-                        <t-switch :custom-value="['cost-col', '']" v-model="costHighlight" @change="costHightLightChange" />
-                        <span
-                        style="vertical-align: middle; margin-left: 6px; color: var(--td-brand-color); user-select: none;"
-                        @click="() => {
-                            costHighlight = costHighlight == 'cost-col' ? '' : 'cost-col'
-                            costHightLightChange(costHighlight)
-                        }"
-                        >
-                            {{ i18n.cost[i18n.language] }}{{ i18n.highlight[i18n.language] }}
-                        </span>
-                    </span>
-                </t-space>
-            </t-alert>
+            <OperateBar
+            :data="data"
+            :selectKey="selectKey"
+            :categoryOptions="categoryOptions"
+            :supplierOptions="supplierOptions"
+            />
             <div class="result-containter">
                 <t-table
                 size="small"
@@ -284,106 +100,7 @@
             />
         </div>
     </div>
-    <t-dialog
-    :close-btn="false"
-    v-model:visible="batchEdit.visible"
-    :close-on-esc-keydown="false"
-    :close-on-overlay-click="false"
-    :footer="false"
-    width="600px"
-    attach="#goods-list"
-    show-in-attached-element
-    >
-        <template #header>
-            <t-icon name="edit" style="margin-right: 5px;" />
-            {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
-        </template>
-        <t-row :gutter="[12, 12]" style="width: 100%;">
-            <t-col :span="6">
-                <t-auto-complete
-                v-model="batchEdit.data.supplier"
-                :options="supplierOptions.map(obj => obj.value)"
-                :input-props="{
-                    label: i18n.supplier[i18n.language] + ': '
-                }"
-                >
-                </t-auto-complete>
-            </t-col>
-            <t-col :span="6">
-                <t-cascader
-                v-model="batchEdit.data['category-id']"
-                :options="categoryOptions"
-                clearable
-                filterable
-                :label="i18n.category[i18n.language] + ': '"
-                :placeholder="i18n.choose[i18n.language] + i18n.category[i18n.language]"
-                >
-                </t-cascader>
-            </t-col>
-            <t-col :span="6">
-                <t-select
-                v-model="batchEdit.data['miaostreet-listing-status']"
-                :options="[
-                    {
-                        label: i18n.listing[i18n.language],
-                        value: 1
-                    },
-                    {
-                        label: i18n.unlist[i18n.language],
-                        value: 0
-                    }
-                ]"
-                clearable
-                filterable
-                :label="i18n.miaostreetListingStatus[i18n.language] + ': '"
-                >
-                </t-select>
-            </t-col>
-            <t-col :span="6">
-                <t-select
-                v-model="batchEdit.data['tmall-listing-status']"
-                :options="[
-                    {
-                        label: i18n.listing[i18n.language],
-                        value: 1
-                    },
-                    {
-                        label: i18n.unlist[i18n.language],
-                        value: 0
-                    }
-                ]"
-                clearable
-                filterable
-                :label="i18n.tmallListingStatus[i18n.language] + ': '"
-                >
-                </t-select>
-            </t-col>
-            <t-col :span="8">
-                <t-space size="13px">
-                    <span style="line-height: 32px;">
-                        {{ i18n.firstListingTime[i18n.language] + ': ' }}
-                    </span>
-                    <t-date-picker
-                    v-model="batchEdit.data['first-listing-time']"
-                    :disable-date="(current) => dayjs(current).isAfter(dayjs())"
-                    >
-                    </t-date-picker>
-                </t-space>
-            </t-col>
-            <t-col :span="12">
-                <confirm-bar
-                :confirm-loading="batchEdit.loading"
-                @confirm="batchEdit.done"
-                @close="() => {
-                    batchEdit.visible = false
-                    batchEdit.loading = false
-                    batchEdit.data = {}
-                }"
-                @reset="batchEdit.data = {}"
-                />
-            </t-col>
-        </t-row>
-    </t-dialog>
+    
     <t-dialog
     :close-btn="false"
     v-model:visible="supplierMap.visible"
@@ -1162,10 +879,14 @@
 import dayjs from 'dayjs'
 import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink, uniqueArray } from '../../hooks'
 import confirmBar from '../../components/confirmBar.vue'
+import ConditionBox from './ConditionBox.vue'
+import OperateBar from './OperateBar.vue'
 
 export default {
     components: {
-        confirmBar
+        confirmBar,
+        ConditionBox,
+        OperateBar
     },
     setup(){
         const i18n = inject('i18n')
@@ -1355,59 +1076,7 @@ export default {
         })
         
         const selectKey = ref([])
-        const batchEdit = ref({
-            visible: false,
-            data: {},
-            loading: false,
-            uploadData: async (stylenumbers, content) => {
-                return fetch(serve + '/goods/batch-edit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'store-id': shop.store,
-                        brand: shop.brand,
-                        stylenumbers,
-                        content
-                    })
-                })
-                .then(res => {
-                    return Promise.resolve(res.json())
-                })
-                .catch(() => {
-                    MessagePlugin.error(i18n.httpFail[i18n.language])
-                })
-            },
-            done: async () => {
-                if(JSON.stringify(batchEdit.value.data) == "{}"){
-                    batchEdit.value.visible = false
-                    return
-                }
-
-                batchEdit.value.loading = true
-                let stylenumber = selectKey.value
-                let content = {}
-
-                for (const key in batchEdit.value.data) {
-                    if (batchEdit.value.data[key] !== null && batchEdit.value.data[key] !== '') {
-                        content[key] = batchEdit.value.data[key]
-                    }
-                }
-
-                let res = await batchEdit.value.uploadData(stylenumber, content)
-                if(res.result){
-                    MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
-                    getSearchGoods()
-                } else {
-                    MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
-                }
-
-                batchEdit.value.loading = false
-                batchEdit.value.visible = false
-                batchEdit.value.data = {}
-            }
-        })
+        
         const supplierMap = ref({
             visible: false,
             data: {
@@ -1646,7 +1315,6 @@ export default {
             exportLoading,
             exportToFiles,
 
-            batchEdit,
             selectKey,
 
             costHighlight,
@@ -1662,17 +1330,7 @@ export default {
 </script>
 
 <style>
-.condition-box{
-    position: sticky;
-    top: 65px;
-    left: 0;
-    width: 300px;
-    height: calc(100vh - 110px);
-    margin: 10px;
-    background: #fff url('../../assets/search.png') no-repeat 75% 96%;
-    background-origin: -10px -10px;
-    background-size: 80% auto;
-}
+
 .content-box{
     position: relative;
     flex-grow: 1;
