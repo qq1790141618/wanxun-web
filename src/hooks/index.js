@@ -188,3 +188,16 @@ export function getQuickDateRangePicker(language = 'zh'){
         return resolve(res)
     })
 }
+
+export function uniqueArray(array, primaryKey = false) {
+    if(typeof(primaryKey) == 'string'){
+        array = array.map(obj => obj[primaryKey])
+    }
+    if(typeof(primaryKey) == 'function'){
+        array = primaryKey(array)
+    }
+
+    return array.filter((value, index, self) => {
+        return self.indexOf(value) === index
+    })
+}

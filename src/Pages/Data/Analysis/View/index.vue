@@ -146,6 +146,15 @@ export default {
         const router = useRouter()
         const tabId = ref(1)
 
+        const initMargin = () => {
+            let h = document.documentElement.clientHeight
+            let el = document.querySelector('.analysis-tab')
+            if(!el || el === null || h - 785 < 0){
+                return
+            }
+            el.style.setProperty('--chart-cas-margin-top-bottom', (h - 785) + 'px')
+        }
+
         const initData = () => {
             if(localStorage.getItem('view-task')){
                 try {
@@ -160,15 +169,20 @@ export default {
                     parameter.value = data.value.parameter
                 } catch (error) {
                     console.log(error)
-                    // router.push('/datas/analysis')
+                    router.push('/datas/analysis')
                 }
             } else {
                 router.push('/datas/analysis')
             }
         }
 
+        window.addEventListener('resize', initMargin())
+
         onMounted(() => {
             initData()
+            setTimeout(() => {
+                initMargin()
+            }, 100)
         })
 
         return {
@@ -187,14 +201,15 @@ export default {
     border-radius: 10px;
     width: 1500px;
     max-width: calc(100vw - 20px);
-    margin: 10px;
+    margin: 10px auto;
+    --chart-cas-margin-top-bottom: 50px;
 }
 .analysis-view-item{
     padding: 15px;
 }
 .cas-chart{
-    height: 520px;
-    margin: 50px 0;
+    height: 450px;
+    margin: var(--chart-cas-margin-top-bottom) 0;
     width: 100%;
 }
 </style>

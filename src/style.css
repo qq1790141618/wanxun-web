@@ -180,3 +180,28 @@ img, div, span{
     position: relative;
     top: -1px;
 }
+/* table */
+.t-table,
+.t-table .t-table__header tr,
+.t-table .t-table__footer tr
+{
+    border-radius: 5px;
+}
+.t-table th:first-child,
+.t-table__footer td:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.t-table th:last-child,
+.t-table__footer td:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.t-table__body tr:last-child td,
+.t-table .t-table__header th,
+.t-table .t-table__footer td {
+    border-bottom-width: 0;
+}
+.t-table .t-table__header th{
+    color: #333;
+}

@@ -117,28 +117,22 @@
                     </div>
                 </t-form-item>
             </t-form>
-            <t-space size="8px">
-                <t-button
-                @click="() => {
-                    pagination.current = 1
-                    selectKey = []
-                    getSearchGoods()
-                }"
-                :disabled="loading || exportLoading"
-                :loading="loading"
-                >
-                    {{ i18n.confirm[i18n.language] }}
-                </t-button>
-                <t-button variant="outline" @click="condition = {
-                    type: 'stylenumber',
-                    content: null,
-                    unUpload: [],
-                    category: null,
-                    supplier: null
-                }">
-                    {{ i18n.reset[i18n.language] }}
-                </t-button>
-            </t-space>
+            <confirm-bar
+            :confirm-loading="loading || exportLoading"
+            @confirm="() => {
+                pagination.current = 1
+                selectKey = []
+                getSearchGoods()
+            }"
+            @reset="condition = {
+                type: 'stylenumber',
+                content: null,
+                unUpload: [],
+                category: null,
+                supplier: null
+            }"
+            nocancel
+            />
         </t-card>
         <div class="content-box">
             <t-alert style="padding: 5px 12px; position: sticky; top: 65px;">
@@ -668,36 +662,161 @@
             <t-list-item>
                 {{ i18n.goodName[i18n.language] }}
                 <template #action>
-                    <t-textarea
-                    v-model="goodsEdit.sku[0].name"
-                    @change="(value) => {
-                        goodsEdit.sku = 
-                        goodsEdit.sku.map(obj => {
-                            obj.name = value
-                            return obj
-                        })
-                    }"
-                    size="small"
-                    align="center"
-                    style="width: 320px;"
-                    />
+                    <div style="width: 320px;">
+                        <t-textarea
+                        v-model="goodsEdit.sku[0].name"
+                        @change="(value) => {
+                            goodsEdit.sku = 
+                            goodsEdit.sku.map(obj => {
+                                obj.name = value
+                                return obj
+                            })
+                        }"
+                        size="small"
+                        align="center"
+                        />
+                    </div>
                 </template>
             </t-list-item>
             <t-list-item>
                 {{ i18n.color[i18n.language] }}
                 <template #action>
-                    <div style="max-width: 320px; word-break:break-all; ">
-                        {{ goodsEdit.sku.map(obj => obj.color).join(',') }}
-                    </div>
+                    <t-space size="3px" direction="vertical">
+                        <t-input
+                        v-for="item, index in uniqueArray(goodsEdit.sku, 'color')"
+                        :key="index"
+                        :default-value="item"
+                        size="small"
+                        align="center"
+                        @change="(value) => {
+                            goodsEdit.sku = goodsEdit.sku.map(obj => {
+                                if(obj.color === item){
+                                    obj.color = value
+                                }
+                                return obj
+                            })
+                        }"
+                        ></t-input>
+                    </t-space>
+                    <t-space
+                    size="3px"
+                    direction="vertical"
+                    style="width: 80px; margin-left: 3px;"
+                    v-if="uniqueArray(goodsEdit.sku, 'colorid').length === uniqueArray(goodsEdit.sku, 'color').length"
+                    >
+                        <t-input
+                        v-for="item, index in uniqueArray(goodsEdit.sku, 'colorid')"
+                        :key="index"
+                        :default-value="item"
+                        size="small"
+                        align="center"
+                        @change="(value) => {
+                            goodsEdit.sku = goodsEdit.sku.map(obj => {
+                                if(obj.colorid === item){
+                                    obj.colorid = value
+                                }
+                                return obj
+                            })
+                        }"
+                        ></t-input>
+                    </t-space>
                 </template>
             </t-list-item>
             <t-list-item>
                 {{ i18n.size[i18n.language] }}
                 <template #action>
-                    <div style="max-width: 320px; word-break:break-all; ">
-                        {{ goodsEdit.sku.map(obj => obj.size).join(',') }}
-                    </div>
+                    <t-space size="3px" direction="vertical">
+                        <t-input
+                        v-for="item, index in uniqueArray(goodsEdit.sku, 'size')"
+                        :key="index"
+                        :default-value="item"
+                        size="small"
+                        align="center"
+                        @change="(value) => {
+                            goodsEdit.sku = goodsEdit.sku.map(obj => {
+                                if(obj.size === item){
+                                    obj.size = value
+                                }
+                                return obj
+                            })
+                        }"
+                        ></t-input>
+                    </t-space>
+                    <t-space
+                    size="3px"
+                    direction="vertical"
+                    style="width: 80px; margin-left: 3px;"
+                    v-if="uniqueArray(goodsEdit.sku, 'sizeid').length === uniqueArray(goodsEdit.sku, 'size').length"
+                    >
+                        <t-input
+                        v-for="item, index in uniqueArray(goodsEdit.sku, 'sizeid')"
+                        :key="index"
+                        :default-value="item"
+                        size="small"
+                        align="center"
+                        @change="(value) => {
+                            goodsEdit.sku = goodsEdit.sku.map(obj => {
+                                if(obj.sizeid === item){
+                                    obj.sizeid = value
+                                }
+                                return obj
+                            })
+                        }"
+                        ></t-input>
+                    </t-space>
                 </template>
+            </t-list-item>
+            <t-list-item>
+                {{ i18n.barcode[i18n.language] }}
+                <t-popup placement="right" trigger="click">
+                    <t-button
+                    variant="outline"
+                    size="small"
+                    >
+                        <template #icon>
+                            <t-icon name="edit" />
+                        </template>
+                    </t-button>
+                    <template #content>
+                        <t-list
+                        :split="true"
+                        size="small"
+                        style="width: 400px; max-height: 60vh; overflow-y: auto;"
+                        >
+                            <t-list-item
+                            >
+                                {{ i18n.color[i18n.language] }}
+                                {{ i18n.size[i18n.language] }}
+                                <template #action>
+                                    {{ i18n.barcode[i18n.language] }}
+                                    <t-button
+                                    variant="outline"
+                                    size="small"
+                                    @click="goodsEdit.autoMakeBarcode"
+                                    >
+                                        <template #icon>
+                                            <t-icon name="tree-round-dot-vertical" />
+                                        </template>
+                                    </t-button>
+                                </template>
+                            </t-list-item>
+                            <t-list-item
+                            v-for="item, index in goodsEdit.sku"
+                            :key="index"
+                            >
+                                {{ item.color }}
+                                {{ item.size }}
+                                <template #action>
+                                    <t-input
+                                    v-model="item.barcode"
+                                    size="small"
+                                    align="center"
+                                    />
+                                </template>
+                            </t-list-item>
+                        </t-list>
+                    </template>
+                </t-popup>
             </t-list-item>
             <t-list-item>
                 {{ i18n['miaostreet-id'][i18n.language] }}
@@ -1041,7 +1160,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink } from '../../hooks'
+import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink, uniqueArray } from '../../hooks'
 import confirmBar from '../../components/confirmBar.vue'
 
 export default {
@@ -1421,6 +1540,24 @@ export default {
             sku: [],
             loading: true,
             submit: false,
+            autoMakeBarcode: () => {
+                for (let i = 0; i < goodsEdit.value.sku.length; i++) {
+                    let stylenumber = goodsEdit.value.sku[i].stylenumber
+                    let colorCode = goodsEdit.value.sku[i].colorid
+                    let size = goodsEdit.value.sku[i].size
+                    let sizeM1 = size.split('(')
+                    let sizeM2 = size.split('/')
+                    let sizeCode
+
+                    if((sizeM1.length > 1 && sizeM2.length > 1) || sizeM1.length > 1){
+                        sizeCode = sizeM1[0]
+                    } else {
+                        sizeCode = sizeM2[0]
+                    }
+
+                    goodsEdit.value.sku[i].barcode = stylenumber + colorCode + sizeCode
+                }
+            },
             getData:  async (stylenumber) => {
                 return fetch(serve + '/goods/item/get?store-id=' + shop.store + '&brand=' + shop.brand + '&stylenumber=' + stylenumber, {
                     method: 'POST'
@@ -1517,7 +1654,8 @@ export default {
             supplierMap,
 
             viewGoods,
-            goodsEdit
+            goodsEdit,
+            uniqueArray
         }
     }
 }
@@ -1547,22 +1685,6 @@ export default {
 }
 .result-containter .t-table, .result-containter tr{
     background-color: transparent;
-}
-.result-containter .t-table__header tr{
-    background-color: #fff;
-    border-radius: 5px;
-}
-.result-containter .t-table th{
-    color: #333;
-    border: none;
-}
-.result-containter .t-table th:first-child{
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-.result-containter .t-table th:last-child{
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 .result-containter .goods-table-col{
     background-color: #ffffff60;

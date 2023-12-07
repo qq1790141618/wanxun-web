@@ -7,7 +7,7 @@
     />
     <t-row :gutter="[12, 12]" v-if="!loading" style="width: 100%; padding: 15px;">
         <t-col :span="12">
-            <div style="padding: 0 10px; font-size: 16px;">
+            <div style="padding: 0 10px; font-size: 15px;">
                 {{ i18n.welcomeBack[i18n.language] }}！{{ data.famousWord }}
             </div>
         </t-col>

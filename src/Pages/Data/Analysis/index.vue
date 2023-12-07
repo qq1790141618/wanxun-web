@@ -28,7 +28,7 @@
             class="create-analysis-input"
             v-if="current == 1"
             >
-                <div style="font-size: 16px;">
+                <div style="font-size: 14px;">
                     <t-icon name="shop-5" />
                     <span style="margin-left: 5px;">
                         {{ i18n.choose[i18n.language] }}{{ i18n.counter[i18n.language] }}
@@ -49,11 +49,17 @@
                 :label="i18n.store[i18n.language] + ': '"
                 v-model="create.store"
                 :options="shop.storeOptions"
+                :input-props="{
+                    align: 'center'
+                }"
                 ></t-select>
                 <t-select
                 :label="i18n.brand[i18n.language] + ': '"
                 v-model="create.brand"
                 :options="shop.brandOptions"
+                :input-props="{
+                    align: 'center'
+                }"
                 ></t-select>
                 <t-date-range-picker
                 v-model="create.date"
@@ -205,7 +211,6 @@ export default {
 .create-analysis-input{
     width: 100%;
     padding: 20px;
-    padding-bottom: 40px;
 }
 .create-analysis-input .t-input{
     border-radius: 16px;
@@ -213,5 +218,8 @@ export default {
 }
 .create-analysis-input .t-range-input{
     border-radius: 16px;
+}
+.create-analysis-input .t-range-input .t-input__inner{
+    text-align: center;
 }
 </style>
