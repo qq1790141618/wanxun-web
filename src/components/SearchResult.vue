@@ -1,9 +1,6 @@
 <template>
     <t-dialog
-    :close-btn="false"
     v-model:visible="visible"
-    :close-on-esc-keydown="false"
-    :close-on-overlay-click="false"
     :footer="false"
     width="420px"
     >
