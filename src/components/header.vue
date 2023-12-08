@@ -98,7 +98,7 @@
             </template>
         </t-head-menu>
         <div class="operations-container">
-            <t-auto-complete
+            <t-select
             v-if="$route.name !== 'login'"
             class="search-box"
             ref="searchBox"
@@ -107,16 +107,17 @@
             :style="{ width: searchWidth + 'px', marginRight: '20px', transition: 'all .3s' }"
             @focus="searchWidth = 300"
             @blur="searchWidth = 200"
-            :options="searchOptions"
             :popup-props="{ overlayClassName: 't-autocomplete-option-list' }"
-            @change="search"
+            @search="doneSearch.run"
             clearable
-            @select="selected"
+            @change="selected"
             @enter="() => {
                 if(searchOptions.length > 0){
                     selected(searchOptions[0].label)
                 }
             }"
+            filterable
+            :loading="searchLoading"
             >
                 <template #prefixIcon>
                     <t-icon name="search" :style="{ cursor: 'pointer' }" />
@@ -126,16 +127,21 @@
                     <t-icon name="plus" />
                     <t-icon name="letters-k" />
                 </template>
-                <template #option="{ option }">
+                <t-option
+                v-for="option in searchOptions"
+                :key="option.value"
+                :value="option.label"
+                :label="option.label"
+                >
                     <div class="custom-option">
                         <img :src="option.avatar" />
                         <div class="custom-option__main">
-                            <t-highlight-option :content="option.text" />
+                            <div>{{ option.label }}</div>
                             <small class="description">{{ i18n.type[lang] + ': ' + option.description }}</small>
                         </div>
                     </div>
-                </template>
-            </t-auto-complete>
+                </t-option>
+            </t-select>
             <t-space size="5px">
                 <t-tooltip :content="i18n.backToOldVersion[lang]">
                     <t-button variant="text" shape="square" @click="backToOldVersion">
@@ -343,11 +349,8 @@ export default {
         const searchBox = ref(null)
         const searchValue = ref(null)
         const searchWidth = ref(200)
+        const searchLoading = ref(false)
         const searchOptions = ref([])
-        const searchY = ref({
-            value: '',
-            loading: true
-        })
         const searchStyleNumber = async (value) => {
             if(!value){
                 return []
@@ -362,23 +365,8 @@ export default {
             if(value == null || value == undefined){
                 value = false
             }
-
-            if(searchY.value.loading){
-                if(searchY.value.value !== ''){
-                    searchY.value.value = value
-                    return
-                }
-                
-                searchY.value.value = value
-                setTimeout(() => {
-                    search(searchY.value.value)
-                    searchY.value.value = ''
-                }, 500)
-                return
-            } else {
-                searchY.value.loading = true
-            }
             let options = []
+            searchLoading.value = true
             
             const routes = router.getRoutes()
             for (let i = 0; i < routes.length; i++) {
@@ -388,6 +376,7 @@ export default {
                 if(!value || value.indexOf(i18n[routes[i].meta.title][lang.value]) >= 0 || value.indexOf(routes[i].name) >= 0){
                     options.push({
                         label: i18n[routes[i].meta.title][lang.value],
+                        value: i18n[routes[i].meta.title][lang.value],
                         description: i18n.menus[lang.value],
                         route: routes[i],
                         type: 'menus',
@@ -411,6 +400,7 @@ export default {
             for (let i = 0; i < goods.data.length; i++) {
                 options.push({
                     label: goods.data[i].stylenumber,
+                    value: goods.data[i].stylenumber,
                     description: i18n.goods[lang.value],
                     type: 'goods',
                     avatar: goods.data[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods.data[i]['main-image'])[0]
@@ -418,7 +408,7 @@ export default {
             }
 
             searchOptions.value = options
-            searchY.value.loading = false
+            searchLoading.value = false
         }
         const selected = (value) => {
             let option = searchOptions.value.find(obj => obj.label == value)
@@ -434,6 +424,15 @@ export default {
                 router.push(option.route.path)
             }
         }
+        const doneSearch = ref({
+            timer: null,
+            run: (value) => {
+                clearTimeout(doneSearch.value.timer)
+                doneSearch.value.timer = setTimeout(() => {
+                    search(value)
+                }, 500)
+            }
+        })
 
         const saveOptions = () => {
             localStorage.setItem('store', shop.store)
@@ -506,6 +505,7 @@ export default {
             searchOptions,
             searchValue,
             search,
+            doneSearch,
 
             settings,
             saveOptions,
@@ -517,7 +517,8 @@ export default {
 
             COUNT,
             clickSet,
-            selected
+            selected,
+            searchLoading
         }
     }
 }
