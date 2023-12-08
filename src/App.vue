@@ -57,6 +57,10 @@ export default {
         const initSet = () => {
             if(localStorage.getItem('lang')){
                 i18n.language = localStorage.getItem('lang')
+                document.documentElement.lang = i18n.languages
+            }
+            if(localStorage.getItem('language')){
+                i18n.language = localStorage.getItem('language')
                 document.documentElement.lang = i18n.language
             }
             initLangConfig(i18n.language)
