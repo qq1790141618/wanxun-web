@@ -2,11 +2,20 @@
     <t-dialog
     v-model:visible="visible"
     :footer="false"
-    width="420px"
+    width="600px"
+    :show-overlay="false"
     >
         <template #header>
-            <t-icon name="search" style="margin-right: 5px;" />
-            {{ i18n.search[i18n.language] }} {{ lastValue ? '(' + lastValue + ')' : '' }}
+            <span>
+                <t-icon name="search" style="margin-right: 5px;" />
+                <span style="vertical-align: middle; margin-right: 6px;">
+                    {{ i18n.search[i18n.language] }}
+                </span>
+                <t-tag size="small">
+                    #
+                    {{ lastValue ? lastValue : '' }}
+                </t-tag>
+            </span>
         </template>
         <t-loading
         v-if="loading"
@@ -16,23 +25,24 @@
         ></t-loading>
         <t-list
         size="small"
-        :split="true"
         v-if="!loading"
         style="max-height: 36vh;"
         >
             <t-list-item
             v-for="item in result"
             :key="item.value"
-            style="cursor: pointer;"
             @click="selected(item.value)"
+            class="search-item"
             >
-                <t-image
-                :src="item.avatar"
-                style="background-color: transparent; width: 36px;"
-                shape="round"
-                ></t-image>
-                <span>
-                    {{ item.label }}
+                <span style="width: 330px;">
+                    <t-image
+                    :src="item.avatar"
+                    style="background-color: transparent; width: 36px; display: inline-block;"
+                    shape="round"
+                    ></t-image>
+                    <span style="margin: 12px; margin-right: 5px;">
+                        {{ item.label }}
+                    </span>
                     <t-tag
                     size="small"
                     >
@@ -76,6 +86,7 @@ export default {
             let options = []
             loading.value = true
             visible.value = true
+            lastValue.value = value
             
             const routes = router.getRoutes()
             for (let i = 0; i < routes.length; i++) {
@@ -117,7 +128,6 @@ export default {
             }
 
             result.value = options
-            lastValue.value = value
             loading.value = false
         }
         const selected = (value) => {
@@ -150,5 +160,16 @@ export default {
 </script>
 
 <style>
-
+.search-item{
+    cursor: pointer;
+    background-color: #fcfcfc;
+    margin-bottom: 6px;
+    margin-right: 6px;
+    border-radius: 5px;
+    width: calc(50% - 8px);
+    display: inline-block;
+}
+.search-item:hover {
+    background-color: #f2f3ff;
+}
 </style>

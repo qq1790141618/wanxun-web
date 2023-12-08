@@ -336,13 +336,12 @@ export default {
 
         onMounted(() => {
             getOptions()
-            getSearchGoods()
 
             if(route.query.stylenumber){
                 condition.value.type = 'stylenumber'
                 condition.value.content = route.query.stylenumber
-                getSearchGoods()
             }
+            getSearchGoods()
         })
         watch(() => shop.store, () => {
             getSearchGoods()

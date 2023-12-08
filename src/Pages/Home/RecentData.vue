@@ -56,7 +56,7 @@ export default {
                         type: 'bar',
                         barMaxWidth: 30,
                         itemStyle: {
-                            borderRadius: 5,
+                            borderRadius: 5
                         },
                         name: i18n.salesAmount[i18n.language],
                         data: [],
@@ -67,7 +67,7 @@ export default {
                         type: 'bar',
                         barMaxWidth: 30,
                         itemStyle: {
-                            borderRadius: 5,
+                            borderRadius: 5
                         },
                         name: i18n.refundsAmount[i18n.language],
                         data: [],
