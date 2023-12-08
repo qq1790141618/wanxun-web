@@ -346,7 +346,6 @@ export default {
         const searchOptions = ref([])
         const searchY = ref({
             value: '',
-            timeout: 0,
             loading: true
         })
         const searchStyleNumber = async (value) => {
@@ -364,16 +363,19 @@ export default {
                 value = false
             }
 
-            searchY.value.value = value
-            if(searchY.value.timeout > 0){
+            if(searchY.value.loading){
+                if(searchY.value.value !== ''){
+                    searchY.value.value = value
+                    return
+                }
+                
+                searchY.value.value = value
                 setTimeout(() => {
-                    if(!searchY.value.loading){
-                        search(searchY.value.value)
-                    }
-                }, 2)
+                    search(searchY.value.value)
+                    searchY.value.value = ''
+                }, 500)
                 return
             } else {
-                searchY.value.timeout = 2
                 searchY.value.loading = true
             }
             let options = []
