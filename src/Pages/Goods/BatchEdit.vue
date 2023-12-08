@@ -103,8 +103,12 @@
 
 <script>
 import dayjs from 'dayjs'
+import confirmBar from '../../components/confirmBar.vue'
 
 export default {
+    components: {
+        confirmBar
+    },
     props: {
         selectKey: {
             type: Array,
@@ -120,8 +124,10 @@ export default {
             default: []
         },
     },
-    setup(){
+    emits: ['reload'],
+    setup(props, { emit }){
         const i18n = inject('i18n')
+        const shop = inject('shop')
         const serve = inject('serve')
 
         const visible = ref(false)
@@ -149,7 +155,7 @@ export default {
         }
         const done = async () => {
             if(JSON.stringify(data.value) == "{}"){
-                value.visible = false
+                visible.value = false
                 return
             }
 
@@ -166,7 +172,7 @@ export default {
             let res = await uploadData(stylenumber, content)
             if(res.result){
                 MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
-                // getSearchGoods()
+                emit('reload')
             } else {
                 MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
             }
@@ -182,7 +188,9 @@ export default {
 
         return {
             i18n,
+            shop,
             data,
+            loading,
             visible,
             uploadData,
             done,

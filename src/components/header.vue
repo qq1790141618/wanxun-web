@@ -111,6 +111,12 @@
             :popup-props="{ overlayClassName: 't-autocomplete-option-list' }"
             @change="search"
             clearable
+            @select="selected"
+            @enter="() => {
+                if(searchOptions.length > 0){
+                    selected(searchOptions[0].label)
+                }
+            }"
             >
                 <template #prefixIcon>
                     <t-icon name="search" :style="{ cursor: 'pointer' }" />
@@ -338,6 +344,11 @@ export default {
         const searchValue = ref(null)
         const searchWidth = ref(200)
         const searchOptions = ref([])
+        const searchY = ref({
+            value: '',
+            timeout: 0,
+            loading: true
+        })
         const searchStyleNumber = async (value) => {
             if(!value){
                 return []
@@ -352,6 +363,19 @@ export default {
             if(value == null || value == undefined){
                 value = false
             }
+
+            searchY.value.value = value
+            if(searchY.value.timeout > 0){
+                setTimeout(() => {
+                    if(!searchY.value.loading){
+                        search(searchY.value.value)
+                    }
+                }, 2)
+                return
+            } else {
+                searchY.value.timeout = 2
+                searchY.value.loading = true
+            }
             let options = []
             
             const routes = router.getRoutes()
@@ -359,10 +383,12 @@ export default {
                 if(routes[i].name == 'login'){
                     continue
                 }
-                if(!value || value.indexOf(routes[i].meta.title[lang.value]) >= 0 || value.indexOf(routes[i].name) >= 0){
+                if(!value || value.indexOf(i18n[routes[i].meta.title][lang.value]) >= 0 || value.indexOf(routes[i].name) >= 0){
                     options.push({
-                        label: routes[i].meta.title[lang.value],
+                        label: i18n[routes[i].meta.title][lang.value],
                         description: i18n.menus[lang.value],
+                        route: routes[i],
+                        type: 'menus',
                         avatar: routes[i].meta.avatar
                     })
                 }
@@ -384,11 +410,27 @@ export default {
                 options.push({
                     label: goods.data[i].stylenumber,
                     description: i18n.goods[lang.value],
+                    type: 'goods',
                     avatar: goods.data[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods.data[i]['main-image'])[0]
                 })
             }
 
             searchOptions.value = options
+            searchY.value.loading = false
+        }
+        const selected = (value) => {
+            let option = searchOptions.value.find(obj => obj.label == value)
+            if(option.type == 'goods'){
+                router.push({
+                    path: '/goods',
+                    query: {
+                        stylenumber: option.label
+                    }
+                })
+            }
+            if(option.type == 'menus'){
+                router.push(option.route.path)
+            }
         }
 
         const saveOptions = () => {
@@ -472,7 +514,8 @@ export default {
             routes,
 
             COUNT,
-            clickSet
+            clickSet,
+            selected
         }
     }
 }

@@ -117,7 +117,7 @@
             </t-form-item>
         </t-form>
         <confirm-bar
-        :confirm-loading="loading"
+        :confirm-loading="loading || exportLoading"
         @confirm="$emit('confirm')"
         @reset="$emit('reset')"
         nocancel
@@ -138,6 +138,10 @@ export default {
             required: true
         },
         loading: {
+            type: Boolean,
+            default: false
+        },
+        exportLoading: {
             type: Boolean,
             default: false
         },

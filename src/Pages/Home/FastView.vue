@@ -100,11 +100,10 @@ export default {
 <style>
 .day-sales{
     display: flex;
-    padding: 20px 7%;
-    gap: 6%;
+    padding: 20px 5%;
 }
 .day-sales .t-statistic{
-    flex-shrink: 0;
-    min-width: 11.5%;
+    flex: 1;
+    flex-grow: 1;
 }
 </style>

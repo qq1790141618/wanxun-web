@@ -13,7 +13,7 @@
             <t-button
             variant="text"
             theme="primary"
-            @click="be.open()"
+            @click="$emit('batchEdit')"
             :disabled="selectKey.length == 0"
             :title="i18n.selected(selectKey.length)[i18n.language]"
             >
@@ -22,24 +22,22 @@
                 </template>
                 {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
             </t-button>
-            <!-- <t-button
+            <t-button
             variant="text"
             theme="primary"
-            @click="exportToFiles"
+            @click="$emit('exportToFiles')"
             :disabled="loading || exportLoading"
             :loading="exportLoading"
             >
                 <template #icon>
                     <t-icon name="file-export" />
                 </template>
-                {{ confirmButton }}
+                {{ exportLoading ? i18n.exporting[i18n.language] : i18n.exportQueryGoods[i18n.language] }}
             </t-button>
             <t-button
             variant="text"
             theme="primary"
-            @click="() => {
-                supplierMap.visible = true
-            }"
+            @click="$emit('supplierMap')"
             >
                 <template #icon>
                     <t-icon name="arrow-up-down-2" />
@@ -67,23 +65,13 @@
                 >
                     {{ i18n.cost[i18n.language] }}{{ i18n.highlight[i18n.language] }}
                 </span>
-            </span> -->
+            </span>
         </t-space>
     </t-alert>
-    <BatchEdit
-    ref="be"
-    :selectKey="selectKey"
-    :supplierOptions="supplierOptions"
-    :categoryOptions="categoryOptions"
-    />
 </template>
 
 <script>
-import BatchEdit from './BatchEdit.vue'
 export default {
-    components: {
-        BatchEdit
-    },
     props: {
         data: {
             type: Array,
@@ -102,15 +90,35 @@ export default {
             type: Array,
             default: []
         },
+        loading: {
+            type: Boolean,
+            default: false
+        },
+        exportLoading: {
+            type: Boolean,
+            default: false
+        }
     },
-    emits: [''],
-    setup(){
+    emits: ['batchEdit', 'exportToFiles', 'supplierMap', 'costHightLightChange'],
+    setup(props, { emit }){
         const i18n = inject('i18n')
-        const be = ref(null)
+
+        const costHighlight = ref('cost-col')
+        const costHightLightChange = (value) => {
+            localStorage.setItem('cost-highlight', value)
+            emit('costHightLightChange', costHighlight.value)
+        }
+        onMounted(() => {
+            if(typeof(localStorage.getItem('cost-highlight')) === 'string'){
+                costHighlight.value = localStorage.getItem('cost-highlight')
+                costHightLightChange(costHighlight.value)
+            }
+        })
 
         return {
             i18n,
-            be
+            costHighlight,
+            costHightLightChange
         }
     }
 }
