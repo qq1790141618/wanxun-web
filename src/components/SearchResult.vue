@@ -201,7 +201,7 @@ export default {
                 options.goods.push({
                     label: goods.data[i].stylenumber,
                     value: goods.data[i].stylenumber,
-                    description: i18n.goods[i18n.language],
+                    description: goods.data[i].stylenumber['store-id'],
                     otherTag: goodsbrand.value,
                     type: 'goods',
                     avatar: goods.data[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods.data[i]['main-image'])[0]
