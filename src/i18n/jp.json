@@ -136,5 +136,14 @@
     "ratio": "占有率",
     "sex": "性別",
     "channel": "ルート本",
-    "season": "季節"
+    "season": "季節",
+    "table": "テーブル",
+    "chart": "グラフ",
+    "count": "数量",
+    "styleCount": "デザイン数",
+    "productCount": "商品番号数量",
+    "actualSalesCount": "実売数量",
+    "other": "その他",
+    "quantityOfDynamicSalesStyles": "動ピンパターン数",
+    "turnoverRate": "どうピンりつ"
 }

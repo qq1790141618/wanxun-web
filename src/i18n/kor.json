@@ -136,5 +136,14 @@
     "ratio": "차지 비율",
     "sex": "성별",
     "channel": "채널",
-    "season": "계절"
+    "season": "계절",
+    "table": "테이블",
+    "chart": "차트",
+    "count": "수량",
+    "styleCount": "스타일 수량",
+    "productCount": "상품 번호 수량",
+    "actualSalesCount": "실제 판매 수량",
+    "other": "기타",
+    "quantityOfDynamicSalesStyles": "판매 스타일 수량",
+    "turnoverRate": "동판율"
 }

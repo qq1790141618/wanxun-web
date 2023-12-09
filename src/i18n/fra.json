@@ -136,5 +136,14 @@
     "ratio": "Pourcentage",
     "sex": "Sexe",
     "channel": "Canaux",
-    "season": "Saison"
+    "season": "Saison",
+    "table": "Formulaire",
+    "chart": "Diagramme",
+    "count": "Quantité",
+    "styleCount": "Nombre de styles",
+    "productCount": "Numéro de fret quantité",
+    "actualSalesCount": "Nombre de ventes réelles",
+    "other": "Autres",
+    "quantityOfDynamicSalesStyles": "Nombre de styles de broches mobiles",
+    "turnoverRate": "Taux de vente mobile"
 }

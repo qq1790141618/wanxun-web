@@ -136,5 +136,14 @@
     "ratio": "Proportion",
     "sex": "Gender",
     "channel": "channel",
-    "season": "season"
+    "season": "season",
+    "table": "form",
+    "chart": "chart",
+    "count": "quantity",
+    "styleCount": "Style quantity",
+    "productCount": "Item number quantity",
+    "actualSalesCount": "Actual sales quantity",
+    "other": "other",
+    "quantityOfDynamicSalesStyles": "Quantity of dynamic sales styles",
+    "turnoverRate": "Turnover rate"
 }

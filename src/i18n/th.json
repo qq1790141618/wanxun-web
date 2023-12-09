@@ -136,5 +136,14 @@
     "ratio": "อัตราส่วน",
     "sex": "เพศ",
     "channel": "ช่องทาง",
-    "season": "ฤดูกาล"
+    "season": "ฤดูกาล",
+    "table": "แบบฟอร์ม",
+    "chart": "แผนภูมิ",
+    "count": "ปริมาณ",
+    "styleCount": "จำนวนสไตล์",
+    "productCount": "หมายเลขสินค้า",
+    "actualSalesCount": "จำนวนพินจริง",
+    "other": "อื่นๆ",
+    "quantityOfDynamicSalesStyles": "สไตล์ Actuated Pin จำนวน",
+    "turnoverRate": "อัตรา Pin แบบไดนามิก"
 }
