@@ -11,6 +11,7 @@
     }"
     :sort="sortValue"
     show-sort-column-bg-color
+    :foot-data="footData"
     ></t-table>
 </template>
 
@@ -28,6 +29,7 @@ export default {
         const i18n = inject('i18n')
 
         const primaryData = ref([])
+        const footData = ref([])
         const columns = ref([
             {
                 title: i18n.category[i18n.language],
@@ -80,7 +82,7 @@ export default {
                 title: i18n.turnoverRate[i18n.language],
                 colKey: 'turnover-rate',
                 cell: (h, {row}) => {
-                    if(row['turnover-rate']){
+                    if(row['turnover-rate'] !== false){
                         return Math.round(row['turnover-rate'] * 10000) / 100 + '%'
                     }
                 },
@@ -120,7 +122,7 @@ export default {
                 title: i18n.salesCount[i18n.language] + ' ' + i18n.ratio[i18n.language],
                 colKey: 'saled-stylenumber-rate',
                 cell: (h, {row}) => {
-                    if(row['saled-stylenumber-rate']){
+                    if(row['saled-stylenumber-rate'] !== false){
                         return Math.round(row['saled-stylenumber-rate'] * 10000) / 100 + '%'
                     }
                 },
@@ -152,13 +154,37 @@ export default {
             }
 
             primaryData.value = props.data
+            footData.value = [{
+                category: i18n.summary[i18n.language],
+                stylenumber: 0,
+                productnumber: 0,
+                barcode: 0,
+                'sales-count': 0,
+                'sales-amount': 0,
+                'after-sale-count': 0,
+                'after-sale-amount': 0,
+                'already-saled-stylenumber': 0,
+                'turnover-rate': 0,
+                'stylenumber-proportion': 0,
+                'saled-stylenumber-rate': 0,
+                'need-style': true
+            }]
+
             for (let i = 0; i < primaryData.value.length; i++) {
                 for (const key in itemTemplate) {
                     if (!primaryData.value[i][key]) {
                         primaryData.value[i][key] = itemTemplate[key]
                     }
+
+                    if(key !== 'category'){
+                        footData.value[0][key] += primaryData.value[i][key]
+                    }
                 }
             }
+
+            footData.value[0]['stylenumber-proportion'] = '100%'
+            footData.value[0]['saled-stylenumber-rate'] = '100%'
+            footData.value[0]['turnover-rate'] = Math.round(footData.value[0]['already-saled-stylenumber'] / footData.value[0]['stylenumber'] * 10000) / 100 + '%'
         }
         onMounted(() => {
             initData()
@@ -169,7 +195,8 @@ export default {
             primaryData,
             columns,
             sort,
-            sortValue
+            sortValue,
+            footData
         }
     }
 }
