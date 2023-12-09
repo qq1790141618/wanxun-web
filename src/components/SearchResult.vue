@@ -2,7 +2,7 @@
     <t-dialog
     v-model:visible="visible"
     :footer="false"
-    width="600px"
+    width="620px"
     :show-overlay="false"
     >
         <template #header>
@@ -23,34 +23,57 @@
         size="small"
         :text="i18n.loading[i18n.language]"
         ></t-loading>
-        <t-list
-        size="small"
+        <div
+        style="max-height: 36vh; margin: 10px 0;"
         v-if="!loading"
-        style="max-height: 36vh;"
         >
-            <t-list-item
-            v-for="item in result"
-            :key="item.value"
-            @click="selected(item.value)"
-            class="search-item"
+            <t-card
+            size="small"
+            v-for="c in ['menus', 'store', 'brand', 'goods']"
+            :key="c"
+            :title="i18n[c][i18n.language]"
+            header-bordered
+            :style="{
+                margin: '5px'
+            }"
+            v-show="result[c]"
             >
-                <span style="width: 330px;">
-                    <t-image
-                    :src="item.avatar"
-                    style="background-color: transparent; width: 36px; display: inline-block;"
-                    shape="round"
-                    ></t-image>
-                    <span style="margin: 12px; margin-right: 5px;">
-                        {{ item.label }}
-                    </span>
-                    <t-tag
-                    size="small"
+                <t-list
+                size="small"
+                >
+                    <t-list-item
+                    v-for="item in result[c]"
+                    :key="item.value"
+                    @click="selected(item)"
+                    class="search-item"
                     >
-                        {{ item.description }}
-                    </t-tag>
-                </span>
-            </t-list-item>
-        </t-list>
+                        <span style="width: 330px;">
+                            <t-image
+                            :src="item.avatar"
+                            style="background-color: transparent; width: 36px; height: 36px; display: inline-block;"
+                            shape="round"
+                            fit="contain"
+                            ></t-image>
+                            <span style="margin: 12px; margin-right: 5px;">
+                                {{ item.label }}
+                            </span>
+                            <t-tag
+                            size="small"
+                            >
+                                {{ item.description }}
+                            </t-tag>
+                            <t-tag
+                            size="small"
+                            v-if="item.otherTag"
+                            style="margin-left: 5px;"
+                            >
+                                {{ item.otherTag }}
+                            </t-tag>
+                        </span>
+                    </t-list-item>
+                </t-list>
+            </t-card>
+        </div>
     </t-dialog>
 </template>
 
@@ -66,7 +89,7 @@ export default {
         const router = useRouter()
 
         const loading = ref(false)
-        const result = ref([])
+        const result = ref({})
         const lastValue = ref('')
 
         const searchStyleNumber = async (value) => {
@@ -83,7 +106,7 @@ export default {
             if(value == null || value == undefined){
                 value = false
             }
-            let options = []
+            let options = {}
             loading.value = true
             visible.value = true
             lastValue.value = value
@@ -93,8 +116,11 @@ export default {
                 if(routes[i].name == 'login'){
                     continue
                 }
-                if(!value || value.indexOf(i18n[routes[i].meta.title][i18n.language]) >= 0 || value.indexOf(routes[i].name) >= 0){
-                    options.push({
+                if(!value || i18n[routes[i].meta.title][i18n.language].indexOf(value) >= 0 || routes[i].name.indexOf(value) >= 0){
+                    if(!options.menus){
+                        options.menus = []
+                    }
+                    options.menus.push({
                         label: i18n[routes[i].meta.title][i18n.language],
                         value: i18n[routes[i].meta.title][i18n.language],
                         description: i18n.menus[i18n.language],
@@ -106,11 +132,47 @@ export default {
             }
             result.value = options
 
+            for (let i = 0; i < shop.brandOptions.length; i++) {
+                if(!value || shop.brandOptions[i].label.indexOf(value) >= 0){
+                    if(!options.brand){
+                        options.brand = []
+                    }
+                    options.brand.push({
+                        label: shop.brandOptions[i].label,
+                        value: shop.brandOptions[i].value,
+                        description: i18n.brand[i18n.language],
+                        type: 'brand',
+                        avatar: shop.brandOptions[i].logo
+                    })
+                }
+            }
+            result.value = options
+
+            for (let i = 0; i < shop.storeOptions.length; i++) {
+                if(!value || shop.storeOptions[i].label.indexOf(value) >= 0){
+                    if(!options.store){
+                        options.store = []
+                    }
+                    options.store.push({
+                        label: shop.storeOptions[i].label,
+                        value: shop.storeOptions[i].value,
+                        description: i18n.store[i18n.language],
+                        type: 'store',
+                        avatar: 'https://cdn.fixeam.com/tw/colorful/factory.png'
+                    })
+                }
+            }
+            result.value = options
+
             let styleNumbers = await searchStyleNumber(value)
             styleNumbers = styleNumbers.length == 0 ? [] : styleNumbers.map(obj => obj.stylenumber)
+            let brand = false
+            if(options.brand && options.brand.length > 0){
+                brand = options.brand[0].value
+            }
             let goods = await getGoods(
                 shop.store,
-                shop.brand,
+                brand,
                 styleNumbers.length == 0 ? false : {
                     stylenumber: styleNumbers
                 },
@@ -118,10 +180,29 @@ export default {
                 20
             )
             for (let i = 0; i < goods.data.length; i++) {
-                options.push({
+                if(!options.goods){
+                    options.goods = []
+                }
+
+                let goodsbrand = shop.brandOptions.find(obj => goods.data[i].brand.indexOf(obj.value) >= 0)
+                if(!options.brand){
+                    options.brand = []
+                }
+                if(options.brand.map(obj => obj.value).indexOf(goodsbrand.value) < 0){
+                    options.brand.push({
+                        label: goodsbrand.label,
+                        value: goodsbrand.value,
+                        description: i18n.brand[i18n.language],
+                        type: 'brand',
+                        avatar: goodsbrand.logo
+                    })
+                }
+
+                options.goods.push({
                     label: goods.data[i].stylenumber,
                     value: goods.data[i].stylenumber,
                     description: i18n.goods[i18n.language],
+                    otherTag: goodsbrand.value,
                     type: 'goods',
                     avatar: goods.data[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods.data[i]['main-image'])[0]
                 })
@@ -130,15 +211,25 @@ export default {
             result.value = options
             loading.value = false
         }
-        const selected = (value) => {
-            let option = result.value.find(obj => obj.label == value)
+        const selected = (option) => {
             if(option.type == 'goods'){
+                shop.brand = option.otherTag
+                localStorage.setItem('brand', shop.brand)
+
                 router.push({
                     path: '/goods',
                     query: {
                         stylenumber: option.label
                     }
                 })
+            }
+            if(option.type == 'brand'){
+                shop.brand = option.value
+                localStorage.setItem('brand', shop.brand)
+            }
+            if(option.type == 'store'){
+                shop.store = option.value
+                localStorage.setItem('store', shop.store)
             }
             if(option.type == 'menus'){
                 router.push(option.route.path)

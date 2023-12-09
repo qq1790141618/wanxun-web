@@ -141,17 +141,22 @@ export async function getGoods(store, brand, condition, start, number, isExport)
     if(isExport){
         url += '&export=export'
     }
+
+    let params = {
+        'store-id': store,
+        condition: !condition ? false : JSON.stringify(condition)
+    }
+    if(brand){
+        params.brand = brand
+    }
+    console.log(params);
     
     return fetch(url, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         },
-        body: JSON.stringify({
-            'store-id': store,
-            brand,
-            condition: !condition ? false : JSON.stringify(condition)
-        })
+        body: JSON.stringify(params)
     })
     .then(response => {
         if(isExport){
