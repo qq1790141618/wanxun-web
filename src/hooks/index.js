@@ -149,7 +149,6 @@ export async function getGoods(store, brand, condition, start, number, isExport)
     if(brand){
         params.brand = brand
     }
-    console.log(params);
     
     return fetch(url, {
         method: 'post',

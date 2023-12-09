@@ -32,6 +32,8 @@ export default {
             {
                 title: i18n.category[i18n.language],
                 colKey: 'category',
+                ellipsis: true,
+                tooltip: true,
                 width: 150
             },
             {

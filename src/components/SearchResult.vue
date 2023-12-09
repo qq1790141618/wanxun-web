@@ -3,7 +3,6 @@
     v-model:visible="visible"
     :footer="false"
     width="620px"
-    :show-overlay="false"
     >
         <template #header>
             <span>
