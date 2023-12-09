@@ -176,13 +176,8 @@ export default {
             }
         }
 
-        window.addEventListener('resize', initMargin())
-
         onMounted(() => {
             initData()
-            setTimeout(() => {
-                initMargin()
-            }, 100)
         })
 
         return {

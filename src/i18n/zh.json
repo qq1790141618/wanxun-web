@@ -136,5 +136,14 @@
     "ratio": "占比",
     "sex": "性别",
     "channel": "渠道",
-    "season": "季节"
+    "season": "季节",
+    "table": "表格",
+    "chart": "图表",
+    "count": "数量",
+    "styleCount": "款式数量",
+    "productCount": "货号数量",
+    "actualSalesCount": "实销数量",
+    "other": "其他",
+    "quantityOfDynamicSalesStyles": "动销款式数量",
+    "turnoverRate": "动销率"
 }

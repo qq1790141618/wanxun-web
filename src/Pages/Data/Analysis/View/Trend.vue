@@ -14,7 +14,7 @@
     :bordered="false"
     :data="primaryData"
     :columns="columns"
-    max-height="calc(100vh - 240px)"
+    :max-height="550"
     style="max-width: 800px; margin: 20px auto;"
     :sort="sortValue"
     @sort-change="(val) => {
