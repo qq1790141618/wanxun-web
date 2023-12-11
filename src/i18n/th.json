@@ -145,5 +145,17 @@
     "actualSalesCount": "จำนวนพินจริง",
     "other": "อื่นๆ",
     "quantityOfDynamicSalesStyles": "สไตล์ Actuated Pin จำนวน",
-    "turnoverRate": "อัตรา Pin แบบไดนามิก"
+    "turnoverRate": "อัตรา Pin แบบไดนามิก",
+    "openSource": "รหัสโอเพนซอร์ส",
+    "main": "หลัก",
+    "page": "หน้า",
+    "viteConfig": "การกำหนดค่า Vite",
+    "languagePackage": "แพคภาษา",
+    "entryFile": "แฟ้มทางเข้า",
+    "entryScript": "สคริปต์รายการ",
+    "mainStyleFile": "แฟ้มรูปแบบหลัก",
+    "packageConfig": "โปรไฟล์โครงการ",
+    "indexHtmlFile": "ไฟล์ HTML หลักของหน้า",
+    "userConrtrolFile": "สคริปต์ควบคุมผู้ใช้",
+    "packageLockConfig": "ปรับแต่งแฟ้มล็อค"
 }

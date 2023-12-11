@@ -141,6 +141,127 @@ const routes = [
         }
     },
     {
+        path: '/open-source',
+        name: 'open-source',
+        component: () => import('./Pages/Source/index.vue'),
+        redirect: '/open-source/Appvue',
+        meta: {
+            title: 'openSource',
+            icon: 'code',
+            avatar: 'https://cdn.fixeam.com/tw/colorful/code.png',
+            key: '5',
+            keepAlive: true,
+            menuShow: true,
+            hideChild: true
+        },
+        children: [
+            {
+                path: '/open-source/Appvue',
+                name: 'Appvue',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'entryFile',
+                    icon: 'code',
+                    key: '6-1-1',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 0
+                }
+            },
+            {
+                path: '/open-source/mainjs',
+                name: 'mainjs',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'entryScript',
+                    icon: 'code',
+                    key: '6-1-2',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 1
+                }
+            },
+            {
+                path: '/open-source/stylecss',
+                name: 'stylecss',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'mainStyleFile',
+                    icon: 'code',
+                    key: '6-1-3',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 2
+                }
+            },
+            {
+                path: '/open-source/packagejson',
+                name: 'packagejson',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'packageConfig',
+                    icon: 'code',
+                    key: '6-1-4',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 3
+                }
+            },
+            {
+                path: '/open-source/package-lockjson',
+                name: 'package-lockjson',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'packageLockConfig',
+                    icon: 'code',
+                    key: '6-1-8',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 4
+                }
+            },
+            {
+                path: '/open-source/viteconfigjs',
+                name: 'viteconfigjs',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'viteConfig',
+                    icon: 'code',
+                    key: '6-1-5',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 5
+                }
+            },
+            {
+                path: '/open-source/indexhtml',
+                name: 'indexhtml',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'indexHtmlFile',
+                    icon: 'code',
+                    key: '6-1-6',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 6
+                }
+            },
+            {
+                path: '/open-source/userjs',
+                name: 'userjs',
+                component: () => import('./Pages/Source/document/index.vue'),
+                meta: {
+                    title: 'userConrtrolFile',
+                    icon: 'code',
+                    key: '6-1-7',
+                    keepAlive: true,
+                    hide: true,
+                    idx: 7
+                }
+            }
+        ]
+    },
+    {
         path: '/user-center',
         name: 'user-center',
         component: () => import('./Pages/UserCenter/index.vue'),
@@ -148,7 +269,7 @@ const routes = [
             title: 'userCenter',
             icon: 'verify',
             avatar: 'https://cdn.fixeam.com/tw/colorful/user.png',
-            key: '5',
+            key: '6',
             keepAlive: true,
             menuShow: true
         }

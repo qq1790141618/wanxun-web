@@ -145,5 +145,17 @@
     "actualSalesCount": "Actual sales quantity",
     "other": "other",
     "quantityOfDynamicSalesStyles": "Quantity of dynamic sales styles",
-    "turnoverRate": "Turnover rate"
+    "turnoverRate": "Turnover rate",
+    "openSource": "Open Source",
+    "main": "main",
+    "page": "page",
+    "viteConfig": "Vite configuration",
+    "languagePackage": "Language Pack",
+    "entryFile": "Entry file",
+    "entryScript": "Entry script",
+    "mainStyleFile": "Main Style File",
+    "packageConfig": "Project configuration file",
+    "indexHtmlFile": "Page main HTML file",
+    "userConrtrolFile": "User Control Script",
+    "packageLockConfig": "Configure locked files"
 }

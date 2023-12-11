@@ -9,6 +9,13 @@
                     searchResult.search(value)
                 }"
                 />
+                <t-tooltip content="Github">
+                    <t-button variant="text" shape="square" @click="viewOnGithub">
+                        <template #icon>
+                            <t-icon name="logo-github" />
+                        </template>
+                    </t-button>
+                </t-tooltip>
                 <t-tooltip :content="i18n.backToOldVersion[i18n.language]">
                     <t-button variant="text" shape="square" @click="backToOldVersion">
                         <template #icon>
@@ -236,6 +243,10 @@ export default {
         }
         const searchResult = ref(null)
 
+        const viewOnGithub = () => {
+            window.open('https://github.com/qq1790141618/wanxun-web')
+        }
+
         onMounted(() => {
             if(!localStorage.getItem('setting-button-attention')){
                 COUNT.value = 'new'
@@ -244,6 +255,7 @@ export default {
 
         return {
             i18n,
+            viewOnGithub,
             backToOldVersion,
             changeLanguage,
             downloadClient,

@@ -5,7 +5,7 @@
         :key="item.name"
         >
             <t-menu-item
-            v-if="(!item.children || item.children.length == 0) && item.meta.menuShow"
+            v-if="(!item.children || item.children.length == 0 || item.meta.hideChild) && item.meta.menuShow"
             :value="item.meta.key"
             @click="$router.push(item.path)"
             >
@@ -39,7 +39,7 @@
                 </t-button>
             </t-menu-item>
             <t-submenu
-            v-if="item.children && item.children.length > 0 && item.meta.menuShow"
+            v-if="item.children && item.children.length > 0 && item.meta.menuShow && !item.meta.hideChild"
             :value="item.meta.key"
             >
                 <template #icon>

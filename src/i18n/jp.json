@@ -145,5 +145,17 @@
     "actualSalesCount": "実売数量",
     "other": "その他",
     "quantityOfDynamicSalesStyles": "動ピンパターン数",
-    "turnoverRate": "どうピンりつ"
+    "turnoverRate": "どうピンりつ",
+    "openSource": "オープンソースコード",
+    "main": "主要",
+    "page": "ページ",
+    "viteConfig": "Vite構成",
+    "languagePackage": "言語パック",
+    "entryFile": "エントリファイル",
+    "entryScript": "ポータルスクリプト",
+    "mainStyleFile": "マスタースタイルファイル",
+    "packageConfig": "プロジェクトプロファイル",
+    "indexHtmlFile": "ページマスターHTMLファイル",
+    "userConrtrolFile": "ユーザー制御スクリプト",
+    "packageLockConfig": "ロックファイルの設定"
 }

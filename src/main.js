@@ -8,6 +8,8 @@ import router from './router'
 import user from './user'
 import i18n from './i18n'
 
+import 'highlight.js/styles/github-dark.min.css'
+
 createApp(App)
 .provide('i18n', i18n)
 .provide('serve', 'https://work-serve.fixeam.com/api')

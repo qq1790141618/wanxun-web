@@ -145,5 +145,17 @@
     "actualSalesCount": "Nombre de ventes réelles",
     "other": "Autres",
     "quantityOfDynamicSalesStyles": "Nombre de styles de broches mobiles",
-    "turnoverRate": "Taux de vente mobile"
+    "turnoverRate": "Taux de vente mobile",
+    "openSource": "Code Source Ouvert",
+    "main": "Principalement",
+    "page": "La page",
+    "viteConfig": "Configuration de vite",
+    "languagePackage": "Pack de langues",
+    "entryFile": "Fichier d'entrée",
+    "entryScript": "Script d'entrée",
+    "mainStyleFile": "Fichier de style principal",
+    "packageConfig": "Fichier de configuration du projet",
+    "indexHtmlFile": "Fichier HTML principal de la page",
+    "userConrtrolFile": "Scripts de contrôle utilisateur",
+    "packageLockConfig": "Configurer le fichier de verrouillage"
 }

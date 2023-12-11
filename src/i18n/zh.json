@@ -145,5 +145,17 @@
     "actualSalesCount": "实销数量",
     "other": "其他",
     "quantityOfDynamicSalesStyles": "动销款式数量",
-    "turnoverRate": "动销率"
+    "turnoverRate": "动销率",
+    "openSource": "开源代码",
+    "main": "主要",
+    "page": "页面",
+    "viteConfig": "Vite配置",
+    "languagePackage": "语言包",
+    "entryFile": "入口文件",
+    "entryScript": "入口脚本",
+    "mainStyleFile": "主样式文件",
+    "packageConfig": "项目配置文件",
+    "indexHtmlFile": "页面主HTML文件",
+    "userConrtrolFile": "用户控制脚本",
+    "packageLockConfig": "配置锁定文件"
 }

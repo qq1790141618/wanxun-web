@@ -5,12 +5,13 @@
             <header-component />
             <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;">
                 <t-breadcrumbItem
-                :to="$router.getRoutes()[7].path"
+                v-if="homeRoute"
+                :to="homeRoute.path"
                 >
                     <template #icon>
-                        <t-icon :name="$router.getRoutes()[7].meta.icon" />
+                        <t-icon :name="homeRoute.meta.icon" />
                     </template>
-                    {{ i18n[$router.getRoutes()[7].meta.title][i18n.language] }}
+                    {{ i18n[homeRoute.meta.title][i18n.language] }}
                 </t-breadcrumbItem>
                 <t-breadcrumbItem
                 v-for="item in $route.matched"
@@ -53,6 +54,12 @@ export default {
         const user = inject('user')
         const shop = inject('shop')
         const router = useRouter()
+        const homeRoute = ref(false)
+        for (let i = 0; i < router.getRoutes().length; i++) {
+            if(router.getRoutes()[i].path === '/'){
+                homeRoute.value = router.getRoutes()[i]
+            }
+        }
 
         const initSet = () => {
             if(localStorage.getItem('lang')){
@@ -171,7 +178,8 @@ export default {
         return {
             i18n,
             globalConfig,
-            frameLessPage
+            frameLessPage,
+            homeRoute
         }
     }
 }
