@@ -1,8 +1,7 @@
 <template>
     <t-list split v-if="data">
         <t-list-item>
-            <span>{{ i18n.menus[i18n.language] }}</span>
-            <span>{{ i18n.value[i18n.language] }}</span>
+            <span>{{ i18n.reverseFreight[i18n.language] }}</span>
         </t-list-item>
         <t-list-item>
             <span>{{ i18n.allRefundsCount[i18n.language] }}</span>

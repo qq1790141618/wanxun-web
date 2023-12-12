@@ -169,5 +169,6 @@
     "allRefundsCount": "수량 감당",
     "allRefundsFreight": "부담 금액",
     "allSalesCount": "실제 판매 수량",
-    "aveShipBorneSales": "실판매 평균 부담금액"
+    "aveShipBorneSales": "실판매 평균 부담금액",
+    "reverseFreight": "역배송비"
 }

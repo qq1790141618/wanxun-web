@@ -169,5 +169,6 @@
     "allRefundsCount": "承擔數量",
     "allRefundsFreight": "承擔金額",
     "allSalesCount": "實際銷售數量",
-    "aveShipBorneSales": "實銷平均承擔金額"
+    "aveShipBorneSales": "實銷平均承擔金額",
+    "reverseFreight": "逆向運費"
 }

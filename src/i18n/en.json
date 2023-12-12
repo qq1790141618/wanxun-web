@@ -169,5 +169,6 @@
     "allRefundsCount": "Undertaken quantity",
     "allRefundsFreight": "Commitment amount",
     "allSalesCount": "Actual sales quantity",
-    "aveShipBorneSales": "Average actual sales commitment amount"
+    "aveShipBorneSales": "Average actual sales commitment amount",
+    "reverseFreight": "Reverse Freight"
 }

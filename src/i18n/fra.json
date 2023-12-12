@@ -169,5 +169,6 @@
     "allRefundsCount": "Assumer la quantité",
     "allRefundsFreight": "Assumer le montant",
     "allSalesCount": "Nombre réel de ventes",
-    "aveShipBorneSales": "Montant moyen supporté par les ventes réelles"
+    "aveShipBorneSales": "Montant moyen supporté par les ventes réelles",
+    "reverseFreight": "Frais d'expédition inversés"
 }

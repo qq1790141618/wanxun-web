@@ -169,5 +169,6 @@
     "allRefundsCount": "แบกรับปริมาณ",
     "allRefundsFreight": "จำนวนเงินที่รับผิดชอบ",
     "allSalesCount": "ปริมาณการขายจริง",
-    "aveShipBorneSales": "ยอดชำระหนี้เฉลี่ย"
+    "aveShipBorneSales": "ยอดชำระหนี้เฉลี่ย",
+    "reverseFreight": "การขนส่งสินค้าย้อนกลับ"
 }

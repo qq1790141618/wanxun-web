@@ -169,5 +169,6 @@
     "allRefundsCount": "承担数量",
     "allRefundsFreight": "承担金额",
     "allSalesCount": "实际销售数量",
-    "aveShipBorneSales": "实销平均承担金额"
+    "aveShipBorneSales": "实销平均承担金额",
+    "reverseFreight": "逆向运费"
 }
