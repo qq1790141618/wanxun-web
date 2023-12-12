@@ -1,19 +1,20 @@
 <template>
     <div class="document-content">
-        <div
-        class="code-box"
-        v-for="item, index in full[$route.meta.idx]"
-        :key="index"
-        >
-            <h4>
-                {{ index }}
-            </h4>
+        <t-loading
+        v-if="loading"
+        style="width: 100%; min-height: 70vh;"
+        size="small"
+        :text="i18n.loading[i18n.language]"
+        ></t-loading>
+        <div class="code-box" v-if="viewNode.value !== '' && !loading">
             <div class="code-box-actions">
                 <t-button
                 size="small"
                 variant="text"
+                theme="default"
                 shape="square"
-                @click="copy(item, i18n.language)"
+                @click="copy(documentContent[viewNode], i18n.language)"
+                ghost
                 >
                     <template #icon>
                         <t-icon name="copy" />
@@ -21,15 +22,30 @@
                 </t-button>
             </div>
             <highlightjs
-            :language="codeLang[index]"
-            :code="item"
+            v-if="codeLang[type]"
+            :language="codeLang[type]"
+            :code="documentContent[viewNode]"
             />
         </div>
+        <t-image-viewer
+        v-if="type === 'image'"
+        :images="[
+            viewNode
+        ]"
+        >
+            <template #trigger="{ open }">
+                <t-image
+                :src="viewNode"
+                fit="contain"
+                class="image-view"
+                @click="open"
+                ></t-image>
+            </template>
+        </t-image-viewer>
     </div>
 </template>
 
 <script>
-import full from './full.js'
 import 'highlight.js/lib/common'
 import hljsVuePlugin from "@highlightjs/vue-plugin"
 import { copy } from '../../../hooks'
@@ -41,24 +57,60 @@ export default {
     setup(){
         const i18n = inject('i18n')
         const codeLang = {
-            '<template>': 'html',
+            'vue': 'js',
             'html': 'html',
-            '<script>': 'js',
             'js': 'js',
-            'style': 'css',
+            'json': 'json',
             'css': 'css'
+        }
+        const viewNode = ref('')
+        const documentContent = ref({})
+        const type = ref('')
+        const loading = ref(false)
+
+        const getDocumentContent = async (item) => {
+            return fetch(item)
+            .then(res => {
+                return Promise.resolve(res.text())
+            })
+        }
+        const openDocument = async (orUrl, node) => {
+            let item = orUrl + node.value
+            type.value = node.type
+
+            if(documentContent.value[item]){
+                viewNode.value = item
+            } else {
+                loading.value = true
+                let content = await getDocumentContent(item)
+                documentContent.value[item] = content
+                viewNode.value = item
+                loading.value = false
+            }
         }
 
         return {
             i18n,
-            full,
             copy,
-            codeLang
+            codeLang,
+            openDocument,
+            documentContent,
+            viewNode,
+            type,
+            loading
         }
     }
 }
 </script>
 
 <style>
-
-</style>./full.js
+.image-view{
+    width: 400px;
+    height: 300px;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+}
+</style>

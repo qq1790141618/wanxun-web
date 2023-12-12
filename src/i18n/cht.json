@@ -157,5 +157,17 @@
     "packageConfig": "項目設定檔",
     "indexHtmlFile": "頁面主HTML檔案",
     "userConrtrolFile": "用戶控制腳本",
-    "packageLockConfig": "配寘鎖定檔案"
+    "packageLockConfig": "配寘鎖定檔案",
+    "categoryPriceRange": "品類價格帶",
+    "comprehensivePriceRange": "綜合價格分佈",
+    "comprehensiveTurnoverRate": "綜合動銷率",
+    "salesAvailable": "有銷售",
+    "noSales": "無銷售",
+    "refundsRate": "退貨率",
+    "afterSaleRate": "售後率",
+    "value": "值",
+    "allRefundsCount": "承擔數量",
+    "allRefundsFreight": "承擔金額",
+    "allSalesCount": "實際銷售數量",
+    "aveShipBorneSales": "實銷平均承擔金額"
 }

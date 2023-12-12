@@ -157,5 +157,17 @@
     "packageConfig": "プロジェクトプロファイル",
     "indexHtmlFile": "ページマスターHTMLファイル",
     "userConrtrolFile": "ユーザー制御スクリプト",
-    "packageLockConfig": "ロックファイルの設定"
+    "packageLockConfig": "ロックファイルの設定",
+    "categoryPriceRange": "品目価格帯",
+    "comprehensivePriceRange": "そうごうかかくぶんぷ",
+    "comprehensiveTurnoverRate": "そうごうどうピンりつ",
+    "salesAvailable": "販売あり",
+    "noSales": "販売なし",
+    "refundsRate": "返品率",
+    "afterSaleRate": "アフターサービスレート",
+    "value": "値＃アタイ＃",
+    "allRefundsCount": "負担数量",
+    "allRefundsFreight": "負担額",
+    "allSalesCount": "実績販売数量",
+    "aveShipBorneSales": "実売平均負担額"
 }

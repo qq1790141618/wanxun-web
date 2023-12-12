@@ -5,15 +5,10 @@
             </t-header>
             <t-layout>
                 <t-aside width="300px">
-                    <SourceMenu />
+                    <SourceMenu @open="(orUrl, node) => { docv.openDocument(orUrl, node) }" />
                 </t-aside>
                 <t-content>
-                    <router-view v-slot="{ Component }" >
-                        <keep-alive>
-                            <component :is="Component" :key="$route.meta.key" v-if="$route.meta.keepAlive"/>
-                        </keep-alive>
-                        <component :is="Component" :key="$route.meta.key" v-if="!$route.meta.keepAlive"/>
-                    </router-view>
+                    <DocumentViewer ref="docv" />
                 </t-content>
             </t-layout>
         </t-layout>
@@ -22,16 +17,20 @@
 
 <script>
 import SourceMenu from './SerceMenu.vue'
+import DocumentViewer from './document/index.vue'
 
 export default {
     components: {
-        SourceMenu
+        SourceMenu,
+        DocumentViewer
     },
     setup() {
         const i18n = inject('i18n')
+        const docv = ref(null)
 
         return {
-            i18n
+            i18n,
+            docv
         }
     }
 }
@@ -39,11 +38,7 @@ export default {
 
 <style>
 #source .t-layout, #source .t-layout__header, #source .t-layout__sider{
-    background-color: transparent;
     height: calc(100vh - 110px);
-}
-#source .t-layout__header{
-    height: 0;
 }
 #source .t-layout__content{
     padding: 0 36px;
@@ -51,6 +46,7 @@ export default {
     overflow-y: auto;
 }
 .document-content{
+    position: relative;
     flex-grow: 1;
 }
 .code-box{
@@ -64,7 +60,7 @@ export default {
 }
 .code-box code{
     min-height: 60px;
-    max-height: 80vh;
+    max-height: calc(100vh - 110px);
     border-radius: 7px;
     padding: 12px 20px!important;
     white-space: pre-wrap !important;
@@ -75,7 +71,7 @@ export default {
 }
 .code-box-actions{
     position: absolute;
-    right: 13px;
+    right: 20px;
     top: 15px;
 }
 </style>

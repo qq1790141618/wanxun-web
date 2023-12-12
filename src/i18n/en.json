@@ -157,5 +157,17 @@
     "packageConfig": "Project configuration file",
     "indexHtmlFile": "Page main HTML file",
     "userConrtrolFile": "User Control Script",
-    "packageLockConfig": "Configure locked files"
+    "packageLockConfig": "Configure locked files",
+    "categoryPriceRange": "Category price band",
+    "comprehensivePriceRange": "Comprehensive price distribution",
+    "comprehensiveTurnoverRate": "Comprehensive sales rate",
+    "salesAvailable": "Sales available",
+    "noSales": "No sales",
+    "refundsRate": "Return rate",
+    "afterSaleRate": "After sales rate",
+    "value": "value",
+    "allRefundsCount": "Undertaken quantity",
+    "allRefundsFreight": "Commitment amount",
+    "allSalesCount": "Actual sales quantity",
+    "aveShipBorneSales": "Average actual sales commitment amount"
 }

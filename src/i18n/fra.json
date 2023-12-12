@@ -157,5 +157,17 @@
     "packageConfig": "Fichier de configuration du projet",
     "indexHtmlFile": "Fichier HTML principal de la page",
     "userConrtrolFile": "Scripts de contrôle utilisateur",
-    "packageLockConfig": "Configurer le fichier de verrouillage"
+    "packageLockConfig": "Configurer le fichier de verrouillage",
+    "categoryPriceRange": "Catégorie Prix band",
+    "comprehensivePriceRange": "Distribution intégrée des prix",
+    "comprehensiveTurnoverRate": "Taux de vente mobile combiné",
+    "salesAvailable": "Il y a des ventes",
+    "noSales": "Aucune vente",
+    "refundsRate": "Taux de retour",
+    "afterSaleRate": "Taux après - vente",
+    "value": "Valeur",
+    "allRefundsCount": "Assumer la quantité",
+    "allRefundsFreight": "Assumer le montant",
+    "allSalesCount": "Nombre réel de ventes",
+    "aveShipBorneSales": "Montant moyen supporté par les ventes réelles"
 }

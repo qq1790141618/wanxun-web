@@ -7,6 +7,12 @@
     >
         <template #header>
             <span>
+                <t-icon name="castle-3" style="margin-right: 3px;" />
+                {{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}
+                /
+                {{ shop.brand }}
+            </span>
+            <span>
                 <span style="margin-right: 6px;">
                     <t-icon name="calendar" style="margin-right: 3px;" />
                     {{ i18n.choose[i18n.language] }}{{ i18n.time[i18n.language] }}:
@@ -17,12 +23,6 @@
                 :presets="quickDateRangePicker"
                 @change="initData"
                 ></t-date-range-picker>
-            </span>
-            <span>
-                <t-icon name="castle-3" style="margin-right: 3px;" />
-                {{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}
-                /
-                {{ shop.brand }}
             </span>
         </template>
         <t-loading

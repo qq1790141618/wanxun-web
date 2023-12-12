@@ -205,3 +205,12 @@ img, div, span{
 .t-table .t-table__header th{
     color: #333;
 }
+#app .t-layout, #app .t-layout__header, #app .t-layout__sider{
+    background-color: transparent;
+}
+#app .t-layout__header{
+    height: 0;
+}
+#app .t-layout__content{
+    padding: 0 12px;
+}

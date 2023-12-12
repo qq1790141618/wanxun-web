@@ -157,5 +157,17 @@
     "packageConfig": "โปรไฟล์โครงการ",
     "indexHtmlFile": "ไฟล์ HTML หลักของหน้า",
     "userConrtrolFile": "สคริปต์ควบคุมผู้ใช้",
-    "packageLockConfig": "ปรับแต่งแฟ้มล็อค"
+    "packageLockConfig": "ปรับแต่งแฟ้มล็อค",
+    "categoryPriceRange": "ประเภท เข็มขัดราคา",
+    "comprehensivePriceRange": "การกระจายราคาอย่างครอบคลุม",
+    "comprehensiveTurnoverRate": "อัตราพินแบบไดนามิกที่ครอบคลุม",
+    "salesAvailable": "มียอดขาย",
+    "noSales": "ไม่มียอดขาย",
+    "refundsRate": "อัตราผลตอบแทน",
+    "afterSaleRate": "อัตราหลังการขาย",
+    "value": "ค่า",
+    "allRefundsCount": "แบกรับปริมาณ",
+    "allRefundsFreight": "จำนวนเงินที่รับผิดชอบ",
+    "allSalesCount": "ปริมาณการขายจริง",
+    "aveShipBorneSales": "ยอดชำระหนี้เฉลี่ย"
 }

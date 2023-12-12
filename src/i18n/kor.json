@@ -157,5 +157,17 @@
     "packageConfig": "프로젝트 구성 파일",
     "indexHtmlFile": "페이지 주 HTML 파일",
     "userConrtrolFile": "사용자 제어 스크립트",
-    "packageLockConfig": "잠긴 파일 구성"
+    "packageLockConfig": "잠긴 파일 구성",
+    "categoryPriceRange": "품목 가격대",
+    "comprehensivePriceRange": "종합 가격 분포",
+    "comprehensiveTurnoverRate": "종합 판매율",
+    "salesAvailable": "판매",
+    "noSales": "판매 없음",
+    "refundsRate": "반품율",
+    "afterSaleRate": "판매 후율",
+    "value": "값",
+    "allRefundsCount": "수량 감당",
+    "allRefundsFreight": "부담 금액",
+    "allSalesCount": "실제 판매 수량",
+    "aveShipBorneSales": "실판매 평균 부담금액"
 }
