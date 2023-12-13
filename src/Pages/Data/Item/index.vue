@@ -23,6 +23,18 @@
                     :presets="quickDateRangePicker"
                     @change="initData"
                     ></t-date-range-picker>
+                    <t-button
+                    size="small"
+                    variant="outline"
+                    style="margin-left: 5px;"
+                    :loading="exportLoading"
+                    @click="exportToFiles"
+                    >
+                        <template #icon>
+                            <t-icon name="file-export" />
+                        </template>
+                        {{ i18n.export[i18n.language] }}
+                    </t-button>
                 </span>
             </template>
             <t-loading
@@ -96,9 +108,16 @@ export default {
                 return Promise.resolve(res.json())
             })
         }
-        const getData = async (dateFrom, dateTo) => {
-            return fetch(serve + `/analysis/refunds/get?store-id=${ shop.store }&brand=${ shop.brand }&date=["${ dateFrom }","${ dateTo }"]&start=0&number=9999`)
+        const getData = async (dateFrom, dateTo, isExport = false) => {
+            let url = serve + `/analysis/refunds/get?store-id=${ shop.store }&brand=${ shop.brand }&date=["${ dateFrom }","${ dateTo }"]&start=0&number=9999`
+            if(isExport){
+                url += '&export=export'
+            }
+            return fetch(url)
             .then(res => {
+                if(isExport){
+                    return Promise.resolve(res.text())
+                }
                 return Promise.resolve(res.json())
             })
         }
@@ -133,6 +152,17 @@ export default {
             }, 500)
         }
 
+        const exportLoading = ref(false)
+        const exportToFiles = async () => {
+            exportLoading.value = true
+
+            let res = await getData(date.value[0], date.value[1], true)
+            MessagePlugin.success(i18n.exportSuccess[i18n.language])
+            window.open(serve + '/download?filename=' + res)
+            
+            exportLoading.value = false
+        }
+
         const quickDateRangePicker = ref({})
         watch(() => i18n.language,  async (newValue) => {
             quickDateRangePicker.value = await getQuickDateRangePicker(newValue)
@@ -155,7 +185,9 @@ export default {
             shop,
             loading,
             data,
-            initData
+            initData,
+            exportLoading,
+            exportToFiles
         }
     }
 }
