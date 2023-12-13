@@ -44,7 +44,10 @@ export default {
             return false
         }
         
-        watch(() => activeFile.value, (newValue) => {
+        watch(() => activeFile.value, (newValue, oldValue) => {
+            if(!newValue[0]){
+                return
+            }
             let node = findnode(tree, newValue[0])
             if(node.type === 'fold'){
                 return

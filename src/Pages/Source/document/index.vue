@@ -69,7 +69,8 @@ export default {
         const loading = ref(false)
 
         const getDocumentContent = async (item) => {
-            return fetch(item)
+            let t = (new Date()).getTime()
+            return fetch(item + '?ver=' + t)
             .then(res => {
                 return Promise.resolve(res.text())
             })
@@ -78,7 +79,7 @@ export default {
             let item = orUrl + node.value
             type.value = node.type
 
-            if(documentContent.value[item]){
+            if(documentContent.value[item] || node.type == 'image'){
                 viewNode.value = item
             } else {
                 loading.value = true
