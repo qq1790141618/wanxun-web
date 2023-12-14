@@ -388,8 +388,23 @@ export default [
                                 type: 'fold',
                                 children: [
                                     {
+                                        label: 'GoodsProfitRanks.vue',
+                                        value: '/src/Pages/Data/Operational/GoodsProfitRanks.vue',
+                                        type: 'vue'
+                                    },
+                                    {
                                         label: 'index.vue',
                                         value: '/src/Pages/Data/Operational/index.vue',
+                                        type: 'vue'
+                                    },
+                                    {
+                                        label: 'OperationalContrust.vue',
+                                        value: '/src/Pages/Data/Operational/OperationalContrust.vue',
+                                        type: 'vue'
+                                    },
+                                    {
+                                        label: 'ProfitRatio.vue',
+                                        value: '/src/Pages/Data/Operational/ProfitRatio.vue',
                                         type: 'vue'
                                     }
                                 ]

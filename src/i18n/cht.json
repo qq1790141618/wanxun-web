@@ -171,5 +171,14 @@
     "allSalesCount": "實際銷售數量",
     "aveShipBorneSales": "實銷平均承擔金額",
     "reverseFreight": "逆向運費",
-    "export": "匯出"
+    "export": "匯出",
+    "refresh": "刷新",
+    "date": "日期",
+    "month": "月",
+    "year": "年",
+    "eahtc": "預估平均吊牌費用",
+    "psfr": "平臺服務費比例",
+    "tax": "稅費",
+    "profit": "利潤",
+    "recentBusinessComparison": "近期經營對比"
 }

@@ -171,5 +171,14 @@
     "allSalesCount": "Nombre réel de ventes",
     "aveShipBorneSales": "Montant moyen supporté par les ventes réelles",
     "reverseFreight": "Frais d'expédition inversés",
-    "export": "Exporter"
+    "export": "Exporter",
+    "refresh": "Rafraîchir",
+    "date": "Date",
+    "month": "Mois",
+    "year": "Année",
+    "eahtc": "Coût moyen estimé des étiquettes suspendues",
+    "psfr": "Proportion des frais de service de la plateforme",
+    "tax": "Les taxes",
+    "profit": "Bénéfices",
+    "recentBusinessComparison": "Comparaison des opérations récentes"
 }

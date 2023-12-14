@@ -126,6 +126,7 @@
     ref="goodsEdit"
     :categoryOptions="categoryOptions"
     :supplierOptions="supplierOptions"
+    @reload="getSearchGoods()"
     />
 </template>
 

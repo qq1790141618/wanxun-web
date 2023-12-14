@@ -171,5 +171,14 @@
     "allSalesCount": "Actual sales quantity",
     "aveShipBorneSales": "Average actual sales commitment amount",
     "reverseFreight": "Reverse Freight",
-    "export": "Export"
+    "export": "Export",
+    "refresh": "Refresh",
+    "date": "Date",
+    "month": "Month",
+    "year": "Year",
+    "eahtc": "Estimated average hang tag cost",
+    "psfr": "Platform service fee ratio",
+    "tax": "Tax ",
+    "profit": "Profit ",
+    "recentBusinessComparison": "Recent business comparison"
 }

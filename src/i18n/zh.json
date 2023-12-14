@@ -171,5 +171,14 @@
     "allSalesCount": "实际销售数量",
     "aveShipBorneSales": "实销平均承担金额",
     "reverseFreight": "逆向运费",
-    "export": "导出"
+    "export": "导出",
+    "refresh": "刷新",
+    "date": "日期",
+    "month": "月",
+    "year": "年",
+    "eahtc": "预估平均吊牌费用",
+    "psfr": "平台服务费比例",
+    "tax": "税费",
+    "profit": "利润",
+    "recentBusinessComparison": "近期经营对比"
 }

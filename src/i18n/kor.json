@@ -171,5 +171,14 @@
     "allSalesCount": "실제 판매 수량",
     "aveShipBorneSales": "실판매 평균 부담금액",
     "reverseFreight": "역배송비",
-    "export": "내보내기"
+    "export": "내보내기",
+    "refresh": "새로 고침",
+    "date": "날짜",
+    "month": "월",
+    "year": "년",
+    "eahtc": "평균 카드놀이 비용을 예측하다.",
+    "psfr": "플랫폼 서비스 요금 비율",
+    "tax": "세금",
+    "profit": "이익",
+    "recentBusinessComparison": "최근 경영 비교"
 }

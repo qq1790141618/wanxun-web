@@ -171,5 +171,14 @@
     "allSalesCount": "実績販売数量",
     "aveShipBorneSales": "実売平均負担額",
     "reverseFreight": "リバース運賃",
-    "export": "エクスポート＃エクスポート＃"
+    "export": "エクスポート＃エクスポート＃",
+    "refresh": "リフレッシュ",
+    "date": "日付",
+    "month": "月",
+    "year": "年",
+    "eahtc": "平均ハンガー費用の見積もり",
+    "psfr": "プラットフォームのサービス料比率",
+    "tax": "税金",
+    "profit": "利潤",
+    "recentBusinessComparison": "最近の経営比較"
 }
