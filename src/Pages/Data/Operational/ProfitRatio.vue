@@ -94,7 +94,6 @@ export default {
                     value: t
                 })
 
-                console.log(chartOption.value)
                 chart = echarts.init(chartEl.value)
                 chartEl.value.removeAttribute('_echarts_instance_')
                 chart.clear()

@@ -21,7 +21,8 @@
                     :options="shop.storeOptions"
                     @change="initData"
                     style="width: 160px;"
-                    creatable
+                    :disabled="loading"
+                    clearable
                     />
                     <t-select
                     size="small"
@@ -30,6 +31,7 @@
                     :options="shop.brandOptions"
                     @change="initData"
                     style="width: 160px;"
+                    :disabled="loading"
                     />
                     
                     <span style="margin-right: 6px;">
@@ -42,6 +44,7 @@
                     v-model="mode"
                     @change="initData"
                     style="width: 90px;"
+                    :disabled="loading"
                     />
                     <t-date-picker
                     size="small"
@@ -49,6 +52,7 @@
                     v-model="date[mode]"
                     @change="initData"
                     style="width: 135px;"
+                    :disabled="loading"
                     />
 
                     <t-input-number
@@ -59,6 +63,7 @@
                     :suffix="i18n.yuan[i18n.language]"
                     style="width: 240px;"
                     @change="computerProfit"
+                    :disabled="loading"
                     />
                     <t-input-number
                     size="small"
@@ -67,6 +72,7 @@
                     :label="i18n.psfr[i18n.language]"
                     style="width: 220px;"
                     @change="computerProfit"
+                    :disabled="loading"
                     />
                     <t-input-number
                     size="small"
@@ -75,6 +81,7 @@
                     :label="i18n.tax[i18n.language] + i18n.ratio[i18n.language]"
                     style="width: 180px;"
                     @change="computerProfit"
+                    :disabled="loading"
                     />
 
                     <t-button
@@ -210,7 +217,7 @@ export default {
         const loading = ref(false)
         const fetchData = async (mode, value) => {
             let url = serve + `/analysis/aooc?brand=${ brand.value }&mode=${ mode }&time=${ value }`
-            if(store.value !== null){
+            if(store.value && store.value !== null){
                 url = url + `&store-id=${ store.value }`
             }
 
@@ -230,6 +237,9 @@ export default {
             let n = 5
             if(mode.value == 'year'){
                 n = 2
+            }
+            if(mode.value == 'date'){
+                n = 7
             }
             let option = modeOptions.find(obj => obj.value === mode.value)
             let format = option.format
@@ -259,7 +269,11 @@ export default {
             }
 
             data.value = results
-            computerProfit()
+            if(JSON.stringify(errorInfo.value) === '{}'){
+                computerProfit()
+            } else {
+                loading.value = false
+            }
         }
         const computerProfit = () => {
             loading.value = true
@@ -269,6 +283,7 @@ export default {
 
                 for (let i = 0; i < list.length; i++) {
                     list[i].income = list[i].salesIncome - list[i].refundsIncome
+                    list[i].income = Math.round(list[i].income * 100) / 100
                     list[i].actualSalesCount = list[i].salesCount - list[i].refundsCount
                     list[i].actualSalesAmount = list[i].salesAmount - list[i].refundsAmount
                     list[i].useCost = list[i].salesCost - list[i].refundsCost
@@ -327,7 +342,7 @@ export default {
 }
 .opera-ana .chart{
     width: 100%;
-    height: 400px;
+    height: 40vh;
     margin: 15vh 0;
 }
 </style>
