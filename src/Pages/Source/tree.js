@@ -576,6 +576,11 @@ export default [
                         type: 'fold',
                         children: [
                             {
+                                label: 'EditAvatar.vue',
+                                value: '/src/Pages/UserCenter/EditAvatar.vue',
+                                type: 'vue'
+                            },
+                            {
                                 label: 'index.vue',
                                 value: '/src/Pages/UserCenter/index.vue',
                                 type: 'vue'

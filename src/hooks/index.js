@@ -205,3 +205,39 @@ export function uniqueArray(array, primaryKey = false) {
         return self.indexOf(value) === index
     })
 }
+
+export function imageFileToBase(file) {
+    return new Promise((resolve) => {
+        if(file[0].raw){
+            file = file[0].raw
+        }
+
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
+
+        reader.onload = function () { 
+            return resolve(this.result)
+        }
+    })
+}
+
+export function getGreeting() {
+    var date = new Date()
+    var hour = date.getHours()
+    var greeting = ''
+
+    if (hour >= 0 && hour < 5) {
+        greeting = 'before dawn'
+    } else if (hour >= 5 && hour < 11) {
+        greeting = 'morning'
+    } else if (hour >= 11 && hour < 13) {
+        greeting = 'noon'
+    } else if (hour >= 13 && hour < 18) {
+        greeting = 'afternoon'
+    } else if (hour >= 18 && hour < 24) {
+        greeting = 'night'
+    }
+
+    return greeting
+}
+  
