@@ -111,7 +111,8 @@ export default {
         })
 
         return {
-            chartEl
+            chartEl,
+            chartOption
         }
     }
 }

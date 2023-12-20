@@ -185,7 +185,7 @@ export default {
             {
                 title: i18n.stylenumber[i18n.language],
                 colKey: 'stylenumber',
-                width: 120,
+                width: 100,
                 align: 'center',
                 className: 'goods-table-col'
             },
@@ -199,14 +199,21 @@ export default {
             {
                 title: i18n.goodName[i18n.language],
                 colKey: 'name',
-                width: 260,
+                width: 240,
+                align: 'center',
+                className: 'goods-table-col'
+            },
+            {
+                title: i18n.tagPrice[i18n.language],
+                colKey: 'tagprice',
+                width: 70,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
                 title: i18n.category[i18n.language],
                 colKey: 'category',
-                width: 190,
+                width: 180,
                 align: 'center',
                 className: 'goods-table-col'
             },
@@ -227,14 +234,14 @@ export default {
             {
                 title: i18n.supplier[i18n.language],
                 colKey: 'supplier',
-                width: 100,
+                width: 90,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
                 title: i18n.supplier[i18n.language] + ' ' + i18n.stylenumber[i18n.language],
                 colKey: 'supplier-id',
-                width: 120,
+                width: 110,
                 align: 'center',
                 className: 'goods-table-col'
             },

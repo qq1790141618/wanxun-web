@@ -72,7 +72,7 @@
             variant="outline"
             >
                 <img :src="item.meta.avatar" height="20" style="margin-right: 5px;" >
-                {{ item.meta.title[i18n.language] }} ( {{ item.path }} )
+                {{ i18n[item.meta.title][i18n.language] }} ( {{ item.path }} )
             </t-check-tag>
         </t-space>
     </t-card>

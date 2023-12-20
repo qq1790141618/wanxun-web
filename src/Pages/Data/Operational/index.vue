@@ -76,7 +76,7 @@
                     />
                     <t-input-number
                     size="small"
-                    v-model="platformServiceFee"
+                    v-model="tax"
                     :step="0.01"
                     :label="i18n.tax[i18n.language] + i18n.ratio[i18n.language]"
                     style="width: 180px;"

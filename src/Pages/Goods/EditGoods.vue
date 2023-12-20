@@ -487,6 +487,83 @@
                 </template>
             </t-list-item>
             <t-list-item>
+                {{ i18n.tagPrice[i18n.language] }}
+                <template #action>
+                    <t-checkbox
+                    style="vertical-align: middle;"
+                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice))"
+                    @change="(checked) => {
+                        if(checked){
+                            let tagprice = sku[0].tagprice
+                            sku = 
+                            sku.map(obj => {
+                                obj.tagprice = tagprice
+                                return obj
+                            })
+                        }
+                    }"
+                    >{{ i18n.unify[i18n.language] }}</t-checkbox>
+                    <t-input-number
+                    v-if="Math.min(...sku.map(obj => obj.tagprice)) === Math.max(...sku.map(obj => obj.tagprice))"
+                    v-model="sku[0].tagprice"
+                    @change="(value) => {
+                        sku = 
+                        sku.map(obj => {
+                            obj.tagprice = value
+                            return obj
+                        })
+                    }"
+                    size="small"
+                    align="center"
+                    style="margin: 0 10px;"
+                    />
+                    <span
+                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice))"
+                    style="margin: 0 10px;"
+                    >
+                        {{ Math.min(...sku.map(obj => obj.tagprice)) }}
+                        ~
+                        {{ Math.max(...sku.map(obj => obj.tagprice)) }}
+                    </span>
+                    <t-popup placement="right" trigger="click">
+                        <t-button
+                        variant="outline"
+                        size="small"
+                        >
+                            {{ i18n.barcode[i18n.language] }}{{ i18n.tagPrice[i18n.language] }}
+                        </t-button>
+                        <template #content>
+                            <t-list
+                            :split="true"
+                            size="small"
+                            style="width: 400px; max-height: 60vh; overflow-y: auto;"
+                            >
+                                <t-list-item
+                                >
+                                    {{ i18n.barcode[i18n.language] }}
+                                    <template #action>
+                                        {{ i18n.tagPrice[i18n.language] }}
+                                    </template>
+                                </t-list-item>
+                                <t-list-item
+                                v-for="item, index in sku"
+                                :key="index"
+                                >
+                                    {{ item.barcode }}
+                                    <template #action>
+                                        <t-input
+                                        v-model="item.tagprice"
+                                        size="small"
+                                        align="center"
+                                        />
+                                    </template>
+                                </t-list-item>
+                            </t-list>
+                        </template>
+                    </t-popup>
+                </template>
+            </t-list-item>
+            <t-list-item>
                 {{ i18n.firstListingTime[i18n.language] }}
                 <template #action>
                     <t-date-picker
@@ -577,7 +654,7 @@ export default {
         }
     },
     emits: ['reload'],
-    setup(){
+    setup(props, { emit }){
         const i18n = inject('i18n')
         const serve = inject('serve')
         const shop = inject('shop')
