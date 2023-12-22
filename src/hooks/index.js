@@ -240,4 +240,20 @@ export function getGreeting() {
 
     return greeting
 }
+
+export async function updateUserInfo(inform) {
+    if(!inform.uid){
+        return Promise.reject('Propertype `uid` is not found in inform')
+    }
+    let access_token = localStorage.getItem('access_token')
+    inform = JSON.stringify(inform)
+
+    return fetch(serve + `/user/inform/update?token=${ access_token }&user-inform=${ inform }`)
+    .then(response => {
+        return Promise.resolve(response.json())
+    })
+    .catch(() => {
+        MessagePlugin.error(i18n.httpFail[i18n.language])
+    })
+}
   

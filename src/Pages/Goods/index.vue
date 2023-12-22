@@ -29,7 +29,7 @@
             :loading="loading"
             :export-loading="exportLoading"
             @exportToFiles="exportToFiles"
-            @costHightLightChange="(value) => { columns[10].className = 'goods-table-col ' + value }"
+            @costHightLightChange="(value) => { columns[11].className = 'goods-table-col ' + value }"
             @supplierMap="spm.open()"
             />
             <div class="result-containter">

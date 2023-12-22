@@ -167,6 +167,7 @@
 <script>
 import EditAvatar from './EditAvatar.vue'
 import confirmBar from '../../components/confirmBar.vue'
+import { updateUserInfo } from '../../hooks'
 
 export default {
     components: {
@@ -183,22 +184,10 @@ export default {
             isEdit: false,
             data: {},
             loading: false,
-            uploadData: async (inform) => {
-                let access_token = localStorage.getItem('access_token')
-                inform = JSON.stringify(inform)
-
-                return fetch(serve + `/user/inform/update?token=${ access_token }&user-inform=${ inform }`)
-                .then(response => {
-                    return Promise.resolve(response.json())
-                })
-                .catch(() => {
-                    MessagePlugin.error(i18n.httpFail[i18n.language])
-                })
-            },
             done: async () => {
                 informEdit.value.loading = true
 
-                await informEdit.value.uploadData({
+                await updateUserInfo({
                     uid: user.inform.uid,
                     nickname: informEdit.value.data.nickname,
                     hiredate: informEdit.value.data.hiredate,
