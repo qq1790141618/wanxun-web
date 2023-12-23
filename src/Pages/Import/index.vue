@@ -47,12 +47,17 @@
                             </template>
                             关闭所有Tab
                         </t-button>
-                        <t-popup placement="bottom-right" trigger="hover">
+                        <t-popup placement="bottom" trigger="hover">
                             <t-button variant="text" shape="round">
                                 <template #icon>
                                     <t-icon name="help-circle"></t-icon>
                                 </template>
-                                数据来源
+                                <span>
+                                    数据来源
+                                </span>
+                                <t-tag theme="primary" shape="round" variant="light" style="margin-left: 8px;">
+                                    为了保证导入数据的准确性，本页面暂不支持中文以外的语言
+                                </t-tag>
                             </t-button>
                             <template #content>
                                 <div style="padding: 13px; padding-top: 0;">
@@ -156,19 +161,16 @@
                                     </h3>
                                     <div>
                                         <t-icon name="numbers-1-1"></t-icon>
-                                        为了保证导入数据的准确性，本页面暂不支持中文以外的语言。
-                                    </div>
-                                    <div>
-                                        <t-icon name="numbers-2-1"></t-icon>
                                         导入顺序按照上面的顺序从上倒下依次倒入，在导入后一项时确保前一项已经成功导入。
                                     </div>
                                     <div>
-                                        <t-icon name="numbers-3-1"></t-icon>
+                                        <t-icon name="numbers-2-1"></t-icon>
                                         导入（订单列表/订单明细，订单退款信息，销售对账信息）时，三项的在后台导出的日期时间选择，需要完全一致。
                                     </div>
                                 </div>
                             </template>
                         </t-popup>
+                        
                     </div>
                     <div id="content-table">
                         <t-table

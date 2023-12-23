@@ -181,5 +181,15 @@
     "tax": "税费",
     "profit": "利润",
     "recentBusinessComparison": "近期经营对比",
-    "avatar": "头像"
+    "avatar": "头像",
+    "phone": "手机",
+    "username": "用户名",
+    "nickname": "昵称",
+    "mail": "邮箱",
+    "hiredate": "入职时间",
+    "birthday": "生日",
+    "location": "地址",
+    "personalInformation": "个人信息",
+    "moreOperate": "更多操作",
+    "pass": "密码"
 }

@@ -181,5 +181,15 @@
     "tax": "세금",
     "profit": "이익",
     "recentBusinessComparison": "최근 경영 비교",
-    "avatar": "프로필 사진"
+    "avatar": "프로필 사진",
+    "phone": "핸드폰",
+    "username": "사용자 이름",
+    "nickname": "닉네임",
+    "mail": "메일박스",
+    "hiredate": "입사 기간",
+    "birthday": "생일",
+    "location": "주소",
+    "personalInformation": "개인 정보",
+    "moreOperate": "추가 작업",
+    "pass": "암호"
 }

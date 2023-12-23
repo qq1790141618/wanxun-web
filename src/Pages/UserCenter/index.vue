@@ -68,10 +68,10 @@
                         </t-button>
                     </template>
                     <t-row style="margin-top: -10px;" :gutter="[12, 8]">
-                        <t-col :span="3" class="description-title">用户名</t-col>
-                        <t-col :span="3" class="description-title">昵称</t-col>
-                        <t-col :span="3" class="description-title">手机</t-col>
-                        <t-col :span="3" class="description-title">邮箱</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.username[i18n.language] }}</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.nickname[i18n.language] }}</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.phone[i18n.language] }}</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.mail[i18n.language] }}</t-col>
                         <t-col :span="3">{{ user.inform.username }}</t-col>
                         <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.nickname }}</t-col>
                         <t-col :span="3" v-if="informEdit.isEdit">
@@ -79,9 +79,9 @@
                         </t-col>
                         <t-col :span="3">{{ user.inform.phone }}</t-col>
                         <t-col :span="3">{{ user.inform.mail }}</t-col>
-                        <t-col :span="3" class="description-title">入职时间</t-col>
-                        <t-col :span="3" class="description-title">生日</t-col>
-                        <t-col :span="6" class="description-title">地址</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.hiredate[i18n.language] }}</t-col>
+                        <t-col :span="3" class="description-title">{{ i18n.birthday[i18n.language] }}</t-col>
+                        <t-col :span="6" class="description-title">{{ i18n.location[i18n.language] }}</t-col>
                         <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.hiredate }}</t-col>
                         <t-col :span="3" v-if="informEdit.isEdit">
                             <t-date-picker v-model="informEdit.data.hiredate" size="small" clearable style="width: 100%;"></t-date-picker>
@@ -117,7 +117,7 @@
                 :bordered="false"
                 >
                     <template #header>
-                        <span>更多操作</span>
+                        <span>{{ i18n.moreOperate[i18n.language] }}</span>
                     </template>
                     <t-space direction="vertical" style="margin-top: -10px; width: 100%;" size="8px">
                         <t-button
@@ -130,7 +130,8 @@
                             <template #icon>
                                 <t-icon name="user-locked" />
                             </template>
-                            修改密码
+                            {{ i18n.edit[i18n.language] }}
+                            {{ i18n.pass[i18n.language] }}
                         </t-button>
                         <t-button
                         variant="outline"
@@ -142,7 +143,8 @@
                             <template #icon>
                                 <t-icon name="mobile" />
                             </template>
-                            修改手机号
+                            {{ i18n.edit[i18n.language] }}
+                            {{ i18n.phone[i18n.language] }}
                         </t-button>
                         <t-button
                         variant="outline"
@@ -154,7 +156,8 @@
                             <template #icon>
                                 <t-icon name="mail" />
                             </template>
-                            修改邮箱
+                            {{ i18n.edit[i18n.language] }}
+                            {{ i18n.mail[i18n.language] }}
                         </t-button>
                     </t-space>
                 </t-card>
@@ -167,7 +170,7 @@
 <script>
 import EditAvatar from './EditAvatar.vue'
 import confirmBar from '../../components/confirmBar.vue'
-import { updateUserInfo } from '../../hooks'
+import { updateUserInfo, translate } from '../../hooks'
 
 export default {
     components: {
@@ -214,10 +217,11 @@ export default {
         }
         const initLocation = async () => {
             let res = await locationFormat(user.inform.location)
-            user.inform.locationDisplay = res.result
+            let f = await translate(res.result, i18n.language)
+            user.inform.locationDisplay = f.trans_result[0].dst
         }
         const locationOption = async (level, parent_id = false) => {
-            let url = serve + '/user/location/options?level=' + level
+            let url = serve + '/user/location/options?level=' + level + '&language=' + i18n.language
             if(parent_id){
                 url += '&parent_id=' + parent_id
             }
@@ -225,7 +229,7 @@ export default {
             return fetch(url)
             .then(res => {
                 return Promise.resolve(res.json())
-            })
+            }) 
         }
         const options = ref([])
         const initOptions = async (node) => {
@@ -262,6 +266,11 @@ export default {
         const openUrl = (url) => {
             window.open(url)
         }
+
+        watch(() => i18n.language, () => {
+            initLocation()
+            initUserLocationOptions()
+        })
         
         onMounted(() => {
             setTimeout(() => {

@@ -181,5 +181,15 @@
     "tax": "ภาษีและค่าธรรมเนียม",
     "profit": "กำไร",
     "recentBusinessComparison": "เปรียบเทียบผลการดำเนินงานล่าสุด",
-    "avatar": "อวตาร"
+    "avatar": "อวตาร",
+    "phone": "โทรศัพท์มือถือ",
+    "username": "ชื่อผู้ใช้",
+    "nickname": "ชื่อเล่น",
+    "mail": "กล่องจดหมาย",
+    "hiredate": "เวลาเริ่มงาน",
+    "birthday": "วันเกิด",
+    "location": "ที่อยู่",
+    "personalInformation": "ข้อมูลส่วนบุคคล",
+    "moreOperate": "การดำเนินงานเพิ่มเติม",
+    "pass": "รหัสผ่าน"
 }

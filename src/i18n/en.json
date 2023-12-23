@@ -181,5 +181,15 @@
     "tax": "Tax ",
     "profit": "Profit ",
     "recentBusinessComparison": "Recent business comparison",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "phone": "mobile phone",
+    "username": "user name",
+    "nickname": "nickname",
+    "mail": "mailbox",
+    "hiredate": "Date of employment",
+    "birthday": "birthday",
+    "location": "address",
+    "personalInformation": "personal information",
+    "moreOperate": "More operations",
+    "pass": "password"
 }

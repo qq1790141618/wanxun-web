@@ -181,5 +181,15 @@
     "tax": "Les taxes",
     "profit": "Bénéfices",
     "recentBusinessComparison": "Comparaison des opérations récentes",
-    "avatar": "Image de tête"
+    "avatar": "Image de tête",
+    "phone": "Téléphone portable",
+    "username": "Nom d'utilisateur",
+    "nickname": "Surnom",
+    "mail": "Boîte aux lettres",
+    "hiredate": "Temps d'intégration",
+    "birthday": "Anniversaire",
+    "location": "Adresse",
+    "personalInformation": "Informations personnelles",
+    "moreOperate": "Plus d'opérations",
+    "pass": "Mot de passe"
 }

@@ -181,5 +181,15 @@
     "tax": "税金",
     "profit": "利潤",
     "recentBusinessComparison": "最近の経営比較",
-    "avatar": "アイコン"
+    "avatar": "アイコン",
+    "phone": "携帯電話",
+    "username": "ユーザー名",
+    "nickname": "ニックネーム",
+    "mail": "メールボックス",
+    "hiredate": "入社時間",
+    "birthday": "誕生日",
+    "location": "アドレス",
+    "personalInformation": "個人情報",
+    "moreOperate": "その他の操作",
+    "pass": "パスワード"
 }
