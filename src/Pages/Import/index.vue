@@ -265,7 +265,6 @@
                             <div class="box-center" v-if="item.type != 'order'">
                                 <div>
                                     解析到的数据为 {{ tableParse[item.type].name }} : 共{{ item.jsonBody.length }}条数据。
-                                    {{ item.jsonBody }}
                                 </div>
                                 <t-button @click="submit(item)" :loading="createLoading" style="margin-top: 8px;">
                                     确认创建任务
