@@ -265,6 +265,7 @@
                             <div class="box-center" v-if="item.type != 'order'">
                                 <div>
                                     解析到的数据为 {{ tableParse[item.type].name }} : 共{{ item.jsonBody.length }}条数据。
+                                    {{ item.jsonBody }}
                                 </div>
                                 <t-button @click="submit(item)" :loading="createLoading" style="margin-top: 8px;">
                                     确认创建任务
@@ -298,6 +299,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
     setup(){
         const i18n = inject('i18n')
@@ -485,9 +488,11 @@ export default {
                         let key = '上架时间'
 
                         if(!value[key] || value[key] == null || value[key] == ''){
+                            console.log(key + ' ' + value[key] + '值不存在')
                             return false
                         }
-                        if(dayjs(value[key]).isValid() || dayjs(value[key]) === 'Invalid Date'){
+                        if(dayjs(value[key]).format('YYYY-MM-DD') === 'Invalid Date'){
+                            console.log(key + ' ' + value[key] + ' ' + dayjs(value[key]).format('YYYY-MM-DD') + ' ' + '日期错误')
                             return false
                         }
 

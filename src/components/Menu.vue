@@ -1,5 +1,5 @@
 <template>
-    <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'" style="background-color: transparent;">
+    <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'" style="background-color: transparent; overflow-x: auto; overflow-y: hidden;">
         <template
         v-for="item in routes"
         :key="item.name"

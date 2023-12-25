@@ -49,22 +49,22 @@
                 :label="i18n.store[i18n.language] + ': '"
                 v-model="create.store"
                 :options="shop.storeOptions"
-                :input-props="{
-                    align: 'center'
-                }"
                 ></t-select>
                 <t-select
                 :label="i18n.brand[i18n.language] + ': '"
                 v-model="create.brand"
                 :options="shop.brandOptions"
-                :input-props="{
-                    align: 'center'
-                }"
                 ></t-select>
                 <t-date-range-picker
                 v-model="create.date"
                 :presets="quickDateRangePicker"
-                ></t-date-range-picker>
+                >
+                    <template #prefix-icon>
+                        <div style="width: 100%; text-align: right;" >
+                            {{ i18n.time[i18n.language] + ': ' }}
+                        </div>
+                    </template>
+                </t-date-range-picker>
                 <t-button
                 :loading="create.loading"
                 @click="create.confirm"
@@ -216,10 +216,13 @@ export default {
     border-radius: 16px;
     padding: 6px 20px;
 }
+.create-analysis-input .t-range-input .t-input{
+    padding: 3px;
+}
 .create-analysis-input .t-range-input{
     border-radius: 16px;
 }
-.create-analysis-input .t-range-input .t-input__inner{
-    text-align: center;
+.create-analysis-input .t-range-input__prefix{
+    width: 120px;
 }
 </style>
