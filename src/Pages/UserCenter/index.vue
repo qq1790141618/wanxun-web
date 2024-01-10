@@ -122,23 +122,20 @@
                     <t-space direction="vertical" style="margin-top: -10px; width: 100%;" size="8px">
                         <t-button
                         variant="outline"
+                        @click.stop="edpw.open()"
                         block
-                        @click.stop="() => {
-                            openUrl('https://dwork.fixeam.com/user/center?access_token=' + access_token)
-                        }"
+                        disabled
                         >
                             <template #icon>
                                 <t-icon name="user-locked" />
                             </template>
-                            {{ i18n.edit[i18n.language] }}
-                            {{ i18n.pass[i18n.language] }}
+                            {{ i18n.editPassword[i18n.language] }}
                         </t-button>
                         <t-button
                         variant="outline"
                         block
-                        @click.stop="() => {
-                            openUrl('https://dwork.fixeam.com/user/center?access_token=' + access_token)
-                        }"
+                        @click.stop="() => { }"
+                        disabled
                         >
                             <template #icon>
                                 <t-icon name="mobile" />
@@ -149,9 +146,8 @@
                         <t-button
                         variant="outline"
                         block
-                        @click.stop="() => {
-                            openUrl('https:////dwork.fixeam.com/user/center?access_token=' + access_token)
-                        }"
+                        @click.stop="() => { }"
+                        disabled
                         >
                             <template #icon>
                                 <t-icon name="mail" />
@@ -165,16 +161,19 @@
         </t-row>
     </div>
     <EditAvatar ref="editAvatarDialog" />
+    <EditPassword ref="edpw" />
 </template>
 
 <script>
 import EditAvatar from './EditAvatar.vue'
 import confirmBar from '../../components/confirmBar.vue'
+import EditPassword from './EditPassword.vue'
 import { updateUserInfo, translate } from '../../hooks'
 
 export default {
     components: {
         EditAvatar,
+        EditPassword,
         confirmBar
     },
     setup(){
@@ -263,9 +262,9 @@ export default {
             }
         }
         const access_token = localStorage.getItem('access_token')
-        const openUrl = (url) => {
-            window.open(url)
-        }
+        const edpw = ref(null)
+        const edph = ref(null)
+        const edem = ref(null)
 
         watch(() => i18n.language, () => {
             initLocation()
@@ -288,7 +287,9 @@ export default {
             initOptions,
             options,
             access_token,
-            openUrl
+            edpw,
+            edph,
+            edem
         }
     }
 }

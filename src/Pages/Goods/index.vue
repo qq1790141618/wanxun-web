@@ -273,6 +273,7 @@ export default {
             pageSize: 20,
             pageSizeOptions: [20, 30, 50, 100]
         })
+        
         const getSearchGoods = async (isExport) => {
             let con = new Object
             let recon
@@ -342,6 +343,26 @@ export default {
         const goodsEdit = ref(null)
         const route = useRoute()
 
+        let listenToShop = () => {
+            condition.value = {
+                type: 'stylenumber',
+                content: null,
+                unUpload: [],
+                category: null,
+                supplier: null
+            }
+            getSearchGoods()
+        }
+
+        watch(() => route.query.stylenumber, async (newValue) => {
+            condition.value.type = 'stylenumber'
+            condition.value.content = newValue
+            
+            await getSearchGoods()
+        })
+        watch(() => shop.store, () => { listenToShop() })
+        watch(() => shop.brand, () => { listenToShop() })
+
         onMounted(() => {
             getOptions()
 
@@ -349,17 +370,6 @@ export default {
                 condition.value.type = 'stylenumber'
                 condition.value.content = route.query.stylenumber
             }
-            getSearchGoods()
-        })
-        watch(() => shop.store, () => {
-            getSearchGoods()
-        })
-        watch(() => shop.brand, () => {
-            getSearchGoods()
-        })
-        watch(() => route.query.stylenumber, (newValue) => {
-            condition.value.type = 'stylenumber'
-            condition.value.content = newValue
             getSearchGoods()
         })
 

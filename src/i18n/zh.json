@@ -191,5 +191,20 @@
     "location": "地址",
     "personalInformation": "个人信息",
     "moreOperate": "更多操作",
-    "pass": "密码"
+    "pass": "密码",
+    "editPassword": "修改密码",
+    "verifyIndentiy": "验证身份",
+    "verifyEnvironmentalSecurity": "验证环境安全",
+    "result": "结果",
+    "checkingEnvironmentalSecurity": "正在环境安全",
+    "verified": "验证通过",
+    "chooseVerifyMode": "选择验证方式",
+    "mobilePhoneVerification": "手机验证",
+    "emailVerification": "邮箱验证",
+    "oldPasswordVerification": "旧密码验证",
+    "oldPassword": "旧密码",
+    "pleaseInput": "请输入",
+    "oldPasswordError": "旧密码不正确",
+    "newPassword": "新密码",
+    "newPasswordError": "新密码格式不正确"
 }

@@ -3,15 +3,15 @@
         <header-component />
         <div class="login-container">
             <div data-v-d8f37094="" class="title-container">
-                <div data-v-d8f37094="" class="title margin-no">{{ i18n.logto[lang] }}</div>
+                <div data-v-d8f37094="" class="title margin-no">{{ i18n.logto[i18n.language] }}</div>
                 <div data-v-d8f37094="" class="title">Miaostreet Sales Analysis</div>
                 <div data-v-d8f37094="" class="sub-title">
-                    <p data-v-d8f37094="" class="tip">{{ i18n.administratorManagement[lang] }}</p>
+                    <p data-v-d8f37094="" class="tip">{{ i18n.administratorManagement[i18n.language] }}</p>
                 </div>
             </div>
             <t-form :colon="true" :label-width="0" v-if="mode == 1" @submit="login">
                 <t-form-item name="account">
-                    <t-input ref="accountInput" v-model="account" :placeholder="i18n.accountWidthUsername[lang]" @enter="() => {
+                    <t-input ref="accountInput" v-model="account" :placeholder="i18n.accountWidthUsername[i18n.language]" @enter="() => {
                         $refs.accountInput.blur()
                         $refs.passwordInput.focus()
                     }">
@@ -21,7 +21,7 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item name="password">
-                    <t-input ref="passwordInput" v-model="password" type="password" :placeholder="i18n.password[lang]" @enter="() => {
+                    <t-input ref="passwordInput" v-model="password" type="password" :placeholder="i18n.password[i18n.language]" @enter="() => {
                         $refs.passwordInput.blur()
                         login()
                     }">
@@ -31,15 +31,15 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item>
-                    <t-button theme="primary" type="submit" block>{{ i18n.login[lang] }}</t-button>
+                    <t-button theme="primary" type="submit" block>{{ i18n.login[i18n.language] }}</t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-link theme="primary" @click="mode = 2">{{ i18n.changeMode2[lang] }}</t-link>
+                    <t-link theme="primary" @click="mode = 2">{{ i18n.changeMode2[i18n.language] }}</t-link>
                 </t-form-item>
             </t-form>
             <t-form :colon="true" :label-width="0" v-if="mode == 2" @submit="login">
                 <t-form-item name="account">
-                    <t-input ref="phoneInput" v-model="account" :placeholder="i18n.account[lang]" @enter="() => {
+                    <t-input ref="phoneInput" v-model="account" :placeholder="i18n.account[i18n.language]" @enter="() => {
                         $refs.phoneInput.blur()
                         sendVerifyCode()
                     }">
@@ -49,7 +49,7 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item name="password">
-                    <t-input ref="codeInput" v-model="code" :placeholder="i18n.code[lang]" @enter="() => {
+                    <t-input ref="codeInput" v-model="code" :placeholder="i18n.code[i18n.language]" @enter="() => {
                         $refs.codeInput.blur()
                         login()
                     }" style="margin-right: 10px;">
@@ -64,14 +64,14 @@
                     :disabled="codeSendCd > 0"
                     style="min-width: 135px;"
                     >
-                        {{ codeSendCd > 0 ? codeSendCd + 's' + i18n.secondReSend[lang] : i18n.sendCode[lang] }}
+                        {{ codeSendCd > 0 ? codeSendCd + 's' + i18n.secondReSend[i18n.language] : i18n.sendCode[i18n.language] }}
                     </t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-button theme="primary" type="submit" block >{{ i18n.login[lang] }}</t-button>
+                    <t-button theme="primary" type="submit" block >{{ i18n.login[i18n.language] }}</t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode1[lang] }}</t-link>
+                    <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode1[i18n.language] }}</t-link>
                 </t-form-item>
             </t-form>
         </div>
@@ -89,12 +89,7 @@ export default {
     setup(){
         const serve = inject('serve')
         const i18n = inject('i18n')
-        const lang = ref('zh')
-        lang.value = i18n.language
         const user = inject('user')
-        watch(() => i18n.language, () => {
-            lang.value = i18n.language
-        })
 
         const mode = ref(1)
         const account = ref(null)
@@ -106,10 +101,10 @@ export default {
         const codeSendLd = ref(false)
         const sendVerifyCode = async () => {
             codeSendLd.value = true
-            sendCode(serve, account.value, lang.value)
+            sendCode(serve, account.value, i18n.language)
             .then(response => {
                 if(response.result){
-                    MessagePlugin.success(i18n.sended[lang.value])
+                    MessagePlugin.success(i18n.sended[i18n.language])
                     codeSendCd.value = 60
                     let timer = setInterval(() => {
                         codeSendCd.value--
@@ -121,7 +116,7 @@ export default {
                         codeInput.value.focus()
                     }, 1000)
                 } else {
-                    translate(response.error, lang.value)
+                    translate(response.error, i18n.language)
                     .then(res => {
                         MessagePlugin.error(res.trans_result[0].dst)
                     })
@@ -149,7 +144,7 @@ export default {
                     return resolve(response.json())
                 })
                 .catch(() => {
-                    return reject(i18n.logFail[lang.value])
+                    return reject(i18n.logFail[i18n.language])
                 })
             })
         }
@@ -159,22 +154,22 @@ export default {
             let url = serve + '/user/login/by' + fun + '?'
 
             if(account.value == null || account.value == ''){
-                MessagePlugin.error(i18n.accountEmpty[lang.value])
+                MessagePlugin.error(i18n.accountEmpty[i18n.language])
                 return
             }
             if(mode.value == 1){
                 if(password.value == null || password.value == ''){
-                    MessagePlugin.error(i18n.passwordEmpty[lang.value])
+                    MessagePlugin.error(i18n.passwordEmpty[i18n.language])
                     return
                 }
                 url += 'account=' + account.value + '&' + 'password=' + password.value
             } else {
                 if(verifyId.value == null){
-                    MessagePlugin.error(i18n.notSendToLog[lang.value])
+                    MessagePlugin.error(i18n.notSendToLog[i18n.language])
                     return
                 }
                 if(code.value == null || code.value.length != 6){
-                    MessagePlugin.error(i18n.codeError[lang.value])
+                    MessagePlugin.error(i18n.codeError[i18n.language])
                     return
                 }
                 url += 'target=' + account.value + '&' + 'verify-id=' + verifyId.value + '&' + 'code=' + code.value
@@ -183,14 +178,14 @@ export default {
             loginReq(url)
             .then(response => {
                 if(response.result){
-                    MessagePlugin.success(i18n.loged[lang.value])
+                    MessagePlugin.success(i18n.loged[i18n.language])
                     localStorage.setItem('access_token', response.token)
 
                     setTimeout(() => {
                         loginVerify()
                     }, 100)
                 } else {
-                    translate(response.error, lang.value)
+                    translate(response.error, i18n.language)
                     .then(res => {
                         MessagePlugin.error(res.trans_result[0].dst)
                     })
@@ -214,7 +209,6 @@ export default {
         }
 
         return {
-            lang,
             i18n,
 
             account,

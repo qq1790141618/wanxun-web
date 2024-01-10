@@ -256,4 +256,11 @@ export async function updateUserInfo(inform) {
         MessagePlugin.error(i18n.httpFail[i18n.language])
     })
 }
-  
+
+export function delay(timeout) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, timeout)
+    })
+}
