@@ -337,7 +337,7 @@
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
-                    v-if="Math.min(...sku.map(obj => obj.cost)) !== Math.max(...sku.map(obj => obj.cost))"
+                    v-if="Math.min(...sku.map(obj => obj.cost)) !== Math.max(...sku.map(obj => obj.cost)) && !isNaN(Math.min(...sku.map(obj => obj.cost))) && !isNaN(Math.max(...sku.map(obj => obj.cost)))"
                     @change="(checked) => {
                         if(checked){
                             let cost = sku[0].cost
@@ -350,7 +350,7 @@
                     }"
                     >{{ i18n.unify[i18n.language] }}</t-checkbox>
                     <t-input-number
-                    v-if="Math.min(...sku.map(obj => obj.cost)) === Math.max(...sku.map(obj => obj.cost))"
+                    v-if="Math.min(...sku.map(obj => obj.cost)) === Math.max(...sku.map(obj => obj.cost)) || isNaN(Math.min(...sku.map(obj => obj.cost))) || isNaN(Math.max(...sku.map(obj => obj.cost)))"
                     v-model="sku[0].cost"
                     @change="(value) => {
                         sku = 
@@ -364,7 +364,7 @@
                     style="margin: 0 10px;"
                     />
                     <span
-                    v-if="Math.min(...sku.map(obj => obj.cost)) !== Math.max(...sku.map(obj => obj.cost))"
+                    v-if="Math.min(...sku.map(obj => obj.cost)) !== Math.max(...sku.map(obj => obj.cost)) && !isNaN(Math.min(...sku.map(obj => obj.cost))) && !isNaN(Math.max(...sku.map(obj => obj.cost)))"
                     style="margin: 0 10px;"
                     >
                         {{ Math.min(...sku.map(obj => obj.cost)) }}
@@ -414,7 +414,7 @@
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
-                    v-if="Math.min(...sku.map(obj => obj.price)) !== Math.max(...sku.map(obj => obj.price))"
+                    v-if="Math.min(...sku.map(obj => obj.price)) !== Math.max(...sku.map(obj => obj.price)) && !isNaN(Math.min(...sku.map(obj => obj.price))) && !isNaN(Math.max(...sku.map(obj => obj.price)))"
                     @change="(checked) => {
                         if(checked){
                             let price = sku[0].price
@@ -427,7 +427,7 @@
                     }"
                     >{{ i18n.unify[i18n.language] }}</t-checkbox>
                     <t-input-number
-                    v-if="Math.min(...sku.map(obj => obj.price)) === Math.max(...sku.map(obj => obj.price))"
+                    v-if="Math.min(...sku.map(obj => obj.price)) === Math.max(...sku.map(obj => obj.price)) || isNaN(Math.min(...sku.map(obj => obj.price))) || isNaN(Math.max(...sku.map(obj => obj.price)))"
                     v-model="sku[0].price"
                     @change="(value) => {
                         sku = 
@@ -441,7 +441,7 @@
                     style="margin: 0 10px;"
                     />
                     <span
-                    v-if="Math.min(...sku.map(obj => obj.price)) !== Math.max(...sku.map(obj => obj.price))"
+                    v-if="Math.min(...sku.map(obj => obj.price)) !== Math.max(...sku.map(obj => obj.price)) && !isNaN(Math.min(...sku.map(obj => obj.price))) && !isNaN(Math.max(...sku.map(obj => obj.price)))"
                     style="margin: 0 10px;"
                     >
                         {{ Math.min(...sku.map(obj => obj.price)) }}
@@ -491,7 +491,7 @@
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
-                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice))"
+                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice)) && !isNaN(Math.min(...sku.map(obj => obj.tagprice))) && !isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
                     @change="(checked) => {
                         if(checked){
                             let tagprice = sku[0].tagprice
@@ -504,7 +504,7 @@
                     }"
                     >{{ i18n.unify[i18n.language] }}</t-checkbox>
                     <t-input-number
-                    v-if="Math.min(...sku.map(obj => obj.tagprice)) === Math.max(...sku.map(obj => obj.tagprice))"
+                    v-if="Math.min(...sku.map(obj => obj.tagprice)) === Math.max(...sku.map(obj => obj.tagprice)) || isNaN(Math.min(...sku.map(obj => obj.tagprice))) || isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
                     v-model="sku[0].tagprice"
                     @change="(value) => {
                         sku = 
@@ -518,7 +518,7 @@
                     style="margin: 0 10px;"
                     />
                     <span
-                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice))"
+                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice)) && !isNaN(Math.min(...sku.map(obj => obj.tagprice))) && !isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
                     style="margin: 0 10px;"
                     >
                         {{ Math.min(...sku.map(obj => obj.tagprice)) }}

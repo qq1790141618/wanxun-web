@@ -104,8 +104,8 @@ export default {
             }
             if(data.value.from === null || data.value.from === ''){
                 let confirm = DialogPlugin.confirm({
-                    title: i18n.tip[i18n.language],
-                    content: i18n.tip2[i18n.language],
+                    header: i18n.tip[i18n.language],
+                    body: i18n.tip2[i18n.language],
                     okText: i18n.confirm[i18n.language],
                     cancelText: i18n.cancel[i18n.language],
                     onConfirm: async () => {
