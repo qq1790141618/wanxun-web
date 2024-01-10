@@ -65,7 +65,7 @@ export default {
             loading.value = true
             let res = await startRemove(dateFrom.value)
             if(res.result){
-                MessagePlugin.success(`删除成功, 总计删除${ affected }个订单记录`)
+                MessagePlugin.success(`删除成功, 总计删除${ res.affected }个订单记录`)
             } else {
                 NotifyPlugin.error({
                     title: '移除失败',
