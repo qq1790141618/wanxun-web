@@ -50,19 +50,11 @@
             class="content"
             style="width: 100%;"
             >
-                <t-loading
-                size="small"
-                v-if="current === 0 && !verified"
-                :text="i18n.checkingEnvironmentalSecurity[i18n.language] + '...'"
-                style="width: 100%; height: 240px;"
+                <EnvironmentalSecurity
+                v-if="current === 0"
+                @verified="current = 1"
+                @close="visible = false"
                 />
-                <div
-                v-if="current === 0 && verified"
-                style="margin: 110px 0; text-align: center;"
-                >
-                    <t-icon name="check" />
-                    {{ i18n.verified[i18n.language] }}
-                </div>
 
                 <OpenAuthentication
                 v-if="current === 1"
@@ -75,8 +67,21 @@
                         {{ i18n.newPassword[i18n.language] }}:
                         <t-input style="width: 340px;" type="password" v-model="newPassword" ></t-input>
                     </t-space>
-                    <t-button @click="changeToNew" style="margin-top: 5px;">
+                    <t-button @click="changeToNew" :loading="changeLoading" style="margin-top: 5px;">
                         {{ i18n.confirm[i18n.language] }}
+                    </t-button>
+                </div>
+
+                <div v-if="current === 3" style="text-align: center; margin-top: 20px;">
+                    <t-icon name="check-circle" size="80px" color="var(--td-success-color)" />
+                    <div style="margin: 10px 0; font-size: 14px;">
+                        {{ i18n.passwordHasChanged[i18n.language] }}!
+                    </div>
+                    <t-button @click="visible = false">
+                        <template #icon>
+                            <t-icon name="close" />
+                        </template>
+                        {{ i18n.close[i18n.language] }}
                     </t-button>
                 </div>
             </div>
@@ -85,36 +90,33 @@
 </template>
 
 <script>
-import { updateUserInfo, translate, delay } from '../../hooks'
+import { updateUser, translate, delay } from '../../hooks'
+import EnvironmentalSecurity from './EnvironmentalSecurity.vue'
 import OpenAuthentication from './OpenAuthentication.vue'
+import md5 from 'md5'
 
 export default {
     components: {
-        OpenAuthentication
+        OpenAuthentication,
+        EnvironmentalSecurity
     },
     setup(){
         const i18n = inject('i18n')
+        const user = inject('user')
+
         const visible = ref(false)
+        const current = ref(0)
+
         const open = async () => {
             current.value = 0
             visible.value = true
-
-            // verified.value = false
-            // let timestamp = (new Date()).getTime()
-            // await delay(timestamp % 3500)
-
-            // verified.value = true
-            // await delay(700)
-
-            current.value = 1
-            current.value = 2
         }
-
-        const current = ref(0)
-        const verified = ref(false)
 
         const close = () => {
             return new Promise((resolve, reject) => {
+                if(current.value === 3){
+                    return resolve(true)
+                }
                 const confirmDialog = DialogPlugin.confirm({
                     header: '关闭对话框',
                     body: '操作尚未完成，确认关闭当前对话框？关闭后编辑内容将消失',
@@ -131,8 +133,32 @@ export default {
         }
 
         const newPassword  = ref('')
-        const changeToNew = () => {
-            
+        const changeLoading = ref(false)
+        const changeToNew = async () => {
+            if(newPassword.value.length < 6){
+                MessagePlugin.error(i18n.newPasswordError[i18n.language])
+                return
+            }
+
+            changeLoading.value = true
+            let newp = md5(newPassword.value)
+            let res = await updateUser({
+                uid: user.inform.uid,
+                password: newp
+            })
+            if(res.result){
+                MessagePlugin.success(i18n.editSuccess[i18n.language])
+
+                user.inform.password = newp
+                localStorage.setItem('user', JSON.stringify(user.inform))
+
+                current.value++
+            } else {
+                let f = translate(res.error, i18n.language)
+                MessagePlugin.error(f.trans_result[0].dst)
+            }
+
+            changeLoading.value = false
         }
 
         return {
@@ -140,9 +166,10 @@ export default {
             visible,
             open,
             current,
-            verified,
             close,
-            newPassword
+            newPassword,
+            changeToNew,
+            changeLoading
         }
     }
 }

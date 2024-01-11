@@ -43,7 +43,7 @@
             {{ i18n.code[i18n.language] }}:
             <t-input style="width: 160px;" v-model="phone.code" :maxlength="6" ></t-input>
             <t-button @click="sendVCode" :loading="phone.ld" :disabled="phone.cd > 0" >
-                {{ phone.cd > 0 ? phone.cd + 's' + i18n.secondReSend[lang] : i18n.sendCode[i18n.language] }}
+                {{ phone.cd > 0 ? phone.cd + 's' + i18n.secondReSend[i18n.language] : i18n.sendCode[i18n.language] }}
             </t-button>
         </t-space>
 
@@ -164,7 +164,7 @@ export default {
         const sendVCode = async () => {
             let account
             if(m.value == 1){
-                phone.value.number = user.inform.phone
+                phone.value.number = user.inform.phone.replace('+86', '')
                 phone.value.ld = true
                 account = phone.value.number
             }

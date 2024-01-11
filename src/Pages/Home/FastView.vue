@@ -6,8 +6,7 @@
         <template #actions>
             {{ dayjs().subtract(1, 'day').format('YYYY-MM-DD') }}
         </template>
-        <t-alert v-if="data.sales.count == 0 && data.refunds.count == 0" >
-            {{ i18n.unUpload[i18n.language] }}
+        <t-alert v-if="data.sales.count == 0 && data.refunds.count == 0" :message="i18n.salesDataOfYetNotUpload[i18n.language]" >
             <template #operation>
                 <span @click="$router.push('/import')">{{ i18n.upload[i18n.language] }}</span>
             </template>

@@ -257,6 +257,22 @@ export async function updateUserInfo(inform) {
     })
 }
 
+export async function updateUser(inform) {
+    if(!inform.uid){
+        return Promise.reject('Propertype `uid` is not found in inform')
+    }
+    let access_token = localStorage.getItem('access_token')
+    inform = JSON.stringify(inform)
+
+    return fetch(serve + `/user/base/update?token=${ access_token }&user=${ inform }`)
+    .then(response => {
+        return Promise.resolve(response.json())
+    })
+    .catch(() => {
+        MessagePlugin.error(i18n.httpFail[i18n.language])
+    })
+}
+
 export function delay(timeout) {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -264,3 +280,4 @@ export function delay(timeout) {
         }, timeout)
     })
 }
+

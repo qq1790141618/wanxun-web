@@ -194,6 +194,7 @@
     "pass": "密码",
     "editPassword": "修改密码",
     "verifyIndentiy": "验证身份",
+    "verifyClosed": "用户取消验证",
     "verifyEnvironmentalSecurity": "验证环境安全",
     "result": "结果",
     "checkingEnvironmentalSecurity": "正在环境安全",
@@ -206,5 +207,8 @@
     "pleaseInput": "请输入",
     "oldPasswordError": "旧密码不正确",
     "newPassword": "新密码",
-    "newPasswordError": "新密码格式不正确"
+    "newPasswordError": "新密码格式不正确, 必须是大于6位的数字、字母或字符组合",
+    "salesDataOfYetNotUpload": "昨日销售数据未上传",
+    "passwordHasChanged": "您的密码已经成功重置",
+    "close": "关闭"
 }

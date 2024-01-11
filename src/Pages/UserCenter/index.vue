@@ -124,7 +124,6 @@
                         variant="outline"
                         @click.stop="edpw.open()"
                         block
-                        disabled
                         >
                             <template #icon>
                                 <t-icon name="user-locked" />

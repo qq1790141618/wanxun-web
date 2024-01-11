@@ -110,12 +110,13 @@ const i18n = reactive({
                     hasEmpty = true
                     let f = await translate( i18n[key]["zh"], languageCode)
                     languagePackage[key] = f.trans_result[0].dst
-                    i18n[key][languageCode] = languagePackage[key]
+                    i18n[key][languageCode] = f.trans_result[0].dst
                 }
             }
 
             if(hasEmpty){
                 console.log(JSON.stringify(languagePackage))
+                return
             }
         }
     }
