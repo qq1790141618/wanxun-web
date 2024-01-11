@@ -581,8 +581,23 @@ export default [
                                 type: 'vue'
                             },
                             {
+                                label: 'EditPassword.vue',
+                                value: '/src/Pages/UserCenter/EditPassword.vue',
+                                type: 'vue'
+                            },
+                            {
+                                label: 'EnvironmentalSecurity.vue',
+                                value: '/src/Pages/UserCenter/EnvironmentalSecurity.vue',
+                                type: 'vue'
+                            },
+                            {
                                 label: 'index.vue',
                                 value: '/src/Pages/UserCenter/index.vue',
+                                type: 'vue'
+                            },
+                            {
+                                label: 'OpenAuthentication.vue',
+                                value: '/src/Pages/UserCenter/OpenAuthentication.vue',
                                 type: 'vue'
                             }
                         ]
