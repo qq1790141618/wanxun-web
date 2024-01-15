@@ -210,5 +210,13 @@
     "newPasswordError": "新密码格式不正确, 必须是大于6位的数字、字母或字符组合",
     "salesDataOfYetNotUpload": "昨日销售数据未上传",
     "passwordHasChanged": "您的密码已经成功重置",
-    "close": "关闭"
+    "close": "关闭",
+    "chat": "即时通讯",
+    "newMail": "新邮箱号码",
+    "newMailError": "请输入正确的新邮箱号码",
+    "newPhone": "新手机号码",
+    "mailHasChanged": "您的绑定邮箱已经成功重置",
+    "newPhoneError": "请输入正确的新手机号码",
+    "verifycode": "验证码",
+    "phoneHasChanged": "您的绑定手机号码已经成功重置"
 }

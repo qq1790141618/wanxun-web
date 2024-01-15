@@ -210,5 +210,13 @@
     "newPasswordError": "The new password format is incorrect and must be a combination of numbers, letters, or characters greater than 6 digits",
     "salesDataOfYetNotUpload": "Yesterday's sales data was not uploaded",
     "passwordHasChanged": "Your password has been successfully reset",
-    "close": "close"
+    "close": "close",
+    "chat": "Chat",
+    "newMail": "New email number",
+    "newMailError": "Please enter the correct new email number",
+    "newPhone": "New phone number",
+    "mailHasChanged": "Your bound email has been successfully reset",
+    "newPhoneError": "Please enter the correct new phone number",
+    "verifycode": "Verification code",
+    "phoneHasChanged": "Your bound phone number has been successfully reset"
 }

@@ -50,11 +50,13 @@ export default {
                 var captcha = new TencentCaptcha(appid, vcallback, {})
                 captcha.show()
             } catch (error) {
-                var ticket = 'terror_1001_' + appid + '_' + Math.floor(new Date().getTime() / 1000)
+                var date = new Date()
+                var ticket = 'terror_1001_' + appid + '_' + Math.floor(date.getTime() / 1000)
+                await delay(date.getTime() % 2500)
                 vcallback({
                     ret: 0,
                     randstr: '@'+ Math.random().toString(36).substr(2),
-                    ticket: ticket,
+                    ticket,
                     errorCode: 1001,
                     errorMessage: 'jsload_error'
                 })
@@ -72,14 +74,8 @@ export default {
             }
 
             if (res.ret === 0) {
-                var str = '【randstr】->【' + res.randstr + '】      【ticket】->【' + res.ticket + '】';
-                var ipt = document.createElement('input')
-                ipt.value = str
-                document.body.appendChild(ipt)
-                ipt.select()
-                document.execCommand("copy")
-                document.body.removeChild(ipt)
-                console.log('1. 返回结果（randstr、ticket）已复制到剪切板，ctrl+v 查看。2. 打开浏览器控制台，查看完整返回结果。')
+                var str = '【randstr】->【' + res.randstr + '】      【ticket】->【' + res.ticket + '】'
+                console.log(str)
             }
         }
 

@@ -210,5 +210,13 @@
     "newPasswordError": "Le nouveau mot de passe n'est pas au bon format et doit être une combinaison de chiffres, de lettres ou de caractères de plus de 6 chiffres",
     "salesDataOfYetNotUpload": "Les données de vente d'hier n'ont pas été téléchargées",
     "passwordHasChanged": "Votre mot de passe a été réinitialisé avec succès",
-    "close": "Fermé"
+    "close": "Fermé",
+    "chat": "Messagerie instantanée",
+    "newMail": "Nouveau numéro de boîte aux lettres",
+    "newMailError": "Veuillez entrer le nouveau numéro de boîte aux lettres correct",
+    "newPhone": "Nouveau numéro de téléphone portable",
+    "mailHasChanged": "Votre boîte aux lettres liée a été réinitialisée avec succès",
+    "newPhoneError": "Veuillez entrer le nouveau numéro de téléphone correct",
+    "verifycode": "Code de vérification",
+    "phoneHasChanged": "Votre numéro de téléphone BIND a été réinitialisé avec succès"
 }

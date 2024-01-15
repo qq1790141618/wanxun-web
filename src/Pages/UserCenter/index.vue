@@ -133,8 +133,7 @@
                         <t-button
                         variant="outline"
                         block
-                        @click.stop="() => { }"
-                        disabled
+                        @click.stop="edph.open()"
                         >
                             <template #icon>
                                 <t-icon name="mobile" />
@@ -145,8 +144,7 @@
                         <t-button
                         variant="outline"
                         block
-                        @click.stop="() => { }"
-                        disabled
+                        @click.stop="edem.open()"
                         >
                             <template #icon>
                                 <t-icon name="mail" />
@@ -161,19 +159,25 @@
     </div>
     <EditAvatar ref="editAvatarDialog" />
     <EditPassword ref="edpw" />
+    <EditMail ref="edem" />
+    <EditPhone ref="edph" />
 </template>
 
 <script>
 import EditAvatar from './EditAvatar.vue'
 import confirmBar from '../../components/confirmBar.vue'
 import EditPassword from './EditPassword.vue'
+import EditMail from './EditMail.vue'
+import EditPhone from './EditPhone.vue'
 import { updateUserInfo, translate } from '../../hooks'
 
 export default {
     components: {
         EditAvatar,
         EditPassword,
-        confirmBar
+        confirmBar,
+        EditMail,
+        EditPhone
     },
     setup(){
         const i18n = inject('i18n')

@@ -16,7 +16,7 @@
 @font-face {
     font-family: 'Noto sans';
     src: url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.eot');
-    src: url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.woff2') format('woff2'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.woff') format('woff'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.svg') format('svg');
+    src: url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.woff') format('woff'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.svg') format('svg');
 }
 
 @font-face {
@@ -37,7 +37,7 @@
 @font-face {
     font-family: 'Pingfang SC Regular';
     src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot');
-    src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.woff2') format('woff2'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.woff') format('woff'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.svg') format('svg');
+    src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.woff') format('woff'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.svg') format('svg');
 }
 @font-face {
     font-family: 'HYWenHei-45W';

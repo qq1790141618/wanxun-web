@@ -154,7 +154,7 @@ export default {
 
                 current.value++
             } else {
-                let f = translate(res.error, i18n.language)
+                let f = await translate(res.error, i18n.language)
                 MessagePlugin.error(f.trans_result[0].dst)
             }
 

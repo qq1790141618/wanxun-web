@@ -586,6 +586,16 @@ export default [
                                 type: 'vue'
                             },
                             {
+                                label: 'EditPhone.vue',
+                                value: '/src/Pages/UserCenter/EditPhone.vue',
+                                type: 'vue'
+                            },
+                            {
+                                label: 'EditMail.vue',
+                                value: '/src/Pages/UserCenter/EditMail.vue',
+                                type: 'vue'
+                            },
+                            {
                                 label: 'EnvironmentalSecurity.vue',
                                 value: '/src/Pages/UserCenter/EnvironmentalSecurity.vue',
                                 type: 'vue'

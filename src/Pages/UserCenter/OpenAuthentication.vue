@@ -18,6 +18,7 @@
                 >
                 </t-option>
                 <t-option
+                v-if="user.inform.mail && user.inform.mail !== null"
                 :label="i18n.emailVerification[i18n.language]"
                 :value="2"
                 >

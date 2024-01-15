@@ -58,6 +58,13 @@
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
+                <t-tooltip :content="i18n.chat[i18n.language]" v-if="$route.name !== 'login'">
+                    <t-button variant="text" shape="square" @click="chatPage">
+                        <template #icon>
+                            <t-icon name="chat-double" />
+                        </template>
+                    </t-button>
+                </t-tooltip>
                 <t-tooltip :content="i18n.setting[i18n.language]" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
@@ -247,6 +254,10 @@ export default {
             window.open('https://github.com/qq1790141618/wanxun-web')
         }
 
+        const chatPage = () => {
+            window.open('https://wxchat.fixeam.com/?access_token=' + localStorage.getItem('access_token'))
+        }
+
         onMounted(() => {
             if(!localStorage.getItem('setting-button-attention')){
                 COUNT.value = 'new'
@@ -270,7 +281,8 @@ export default {
             user,
             COUNT,
             clickSet,
-            searchResult
+            searchResult,
+            chatPage
         }
     }
 }

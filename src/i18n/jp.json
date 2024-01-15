@@ -210,5 +210,13 @@
     "newPasswordError": "新しいパスワードは正しくありません。6桁以上の数字、文字、または文字の組み合わせでなければなりません",
     "salesDataOfYetNotUpload": "昨日の販売データがアップロードされていません",
     "passwordHasChanged": "パスワードのリセットに成功しました",
-    "close": "閉じる"
+    "close": "閉じる",
+    "chat": "インスタントメッセージング",
+    "newMail": "新しいメールボックス番号",
+    "newMailError": "正しい新しいメールアドレス番号を入力してください",
+    "newPhone": "新しい携帯番号",
+    "mailHasChanged": "バインドされたメールボックスは正常にリセットされました",
+    "newPhoneError": "正しい新しい携帯電話番号を入力してください",
+    "verifycode": "認証コード",
+    "phoneHasChanged": "バインドされた携帯電話番号のリセットに成功しました"
 }
