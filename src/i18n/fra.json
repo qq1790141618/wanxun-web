@@ -218,5 +218,7 @@
     "mailHasChanged": "Votre boîte aux lettres liée a été réinitialisée avec succès",
     "newPhoneError": "Veuillez entrer le nouveau numéro de téléphone correct",
     "verifycode": "Code de vérification",
-    "phoneHasChanged": "Votre numéro de téléphone BIND a été réinitialisé avec succès"
+    "phoneHasChanged": "Votre numéro de téléphone BIND a été réinitialisé avec succès",
+    "colleagueInfo":"Informations sur les collègues",
+    "uid":"ID utilisateur"
 }

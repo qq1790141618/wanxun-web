@@ -281,3 +281,11 @@ export function delay(timeout) {
     })
 }
 
+export async function GetAllUserInform() {
+    let access_token = localStorage.getItem('access_token')
+    return fetch(serve + '/user/inform/all?token=' + access_token)
+    .then(response => {
+        return Promise.resolve(response.json())
+    })
+}
+

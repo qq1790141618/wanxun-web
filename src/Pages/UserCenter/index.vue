@@ -111,6 +111,13 @@
                         </t-col>
                     </t-row>
                 </t-card>
+                <div
+                class="card-containter"
+                style="margin-top: 12px;"
+                >
+                    <h3>{{ i18n.colleagueInfo[i18n.language] }}</h3>
+                    <ColleagueView />
+                </div>
             </t-col>
             <t-col :span="3">
                 <t-card
@@ -169,6 +176,7 @@ import confirmBar from '../../components/confirmBar.vue'
 import EditPassword from './EditPassword.vue'
 import EditMail from './EditMail.vue'
 import EditPhone from './EditPhone.vue'
+import ColleagueView from './ColleagueView.vue'
 import { updateUserInfo, translate } from '../../hooks'
 
 export default {
@@ -177,7 +185,8 @@ export default {
         EditPassword,
         confirmBar,
         EditMail,
-        EditPhone
+        EditPhone,
+        ColleagueView
     },
     setup(){
         const i18n = inject('i18n')
@@ -300,7 +309,7 @@ export default {
 
 <style>
 #user-center{
-    width: 1200px;
+    width: 1300px;
     margin: 15px auto;
     max-width: calc(100% - 20px);
 }

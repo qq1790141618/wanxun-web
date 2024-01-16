@@ -199,5 +199,7 @@
     "mailHasChanged": "您的綁定郵箱已經成功重置",
     "newPhoneError": "請輸入正確的新手機號碼",
     "verifycode": "驗證碼",
-    "phoneHasChanged": "您的綁定手機號碼已經成功重置"
+    "phoneHasChanged": "您的綁定手機號碼已經成功重置",
+    "colleagueInfo": "同事資訊",
+    "uid": "用戶ID"
 }

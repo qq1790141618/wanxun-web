@@ -218,5 +218,7 @@
     "mailHasChanged": "Your bound email has been successfully reset",
     "newPhoneError": "Please enter the correct new phone number",
     "verifycode": "Verification code",
-    "phoneHasChanged": "Your bound phone number has been successfully reset"
+    "phoneHasChanged": "Your bound phone number has been successfully reset",
+    "colleagueInfo":"Colleague information",
+    "uid":"User ID"
 }

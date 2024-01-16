@@ -576,6 +576,11 @@ export default [
                         type: 'fold',
                         children: [
                             {
+                                label: 'ColleagueView.vue',
+                                value: '/src/Pages/UserCenter/ColleagueView.vue',
+                                type: 'vue'
+                            },
+                            {
                                 label: 'EditAvatar.vue',
                                 value: '/src/Pages/UserCenter/EditAvatar.vue',
                                 type: 'vue'

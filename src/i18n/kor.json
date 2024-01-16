@@ -218,5 +218,7 @@
     "mailHasChanged": "바인딩 사서함이 성공적으로 재설정되었습니다.",
     "newPhoneError": "정확한 새 핸드폰 번호를 입력하십시오.",
     "verifycode": "인증 코드",
-    "phoneHasChanged": "귀하의 바인딩 핸드폰 번호가 성공적으로 재설정되었습니다."
+    "phoneHasChanged": "귀하의 바인딩 핸드폰 번호가 성공적으로 재설정되었습니다.",
+    "colleagueInfo":"동료 정보",
+    "uid":"사용자 ID"
 }

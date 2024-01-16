@@ -218,5 +218,7 @@
     "mailHasChanged": "您的绑定邮箱已经成功重置",
     "newPhoneError": "请输入正确的新手机号码",
     "verifycode": "验证码",
-    "phoneHasChanged": "您的绑定手机号码已经成功重置"
+    "phoneHasChanged": "您的绑定手机号码已经成功重置",
+    "colleagueInfo": "同事信息",
+    "uid": "用户ID"
 }

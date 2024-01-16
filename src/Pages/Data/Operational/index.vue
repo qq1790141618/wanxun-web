@@ -287,7 +287,7 @@ export default {
                     list[i].actualSalesCount = list[i].salesCount - list[i].refundsCount
                     list[i].actualSalesAmount = list[i].salesAmount - list[i].refundsAmount
                     list[i].useCost = list[i].salesCost - list[i].refundsCost
-                    list[i].profit = list[i].income * (1 - platformServiceFee.value - tax.value) - list[i].useCost - tagFee.value * list[i].actualSalesCount
+                    list[i].profit = list[i].income * (1 - tax.value) - platformServiceFee.value * list[i].actualSalesAmount - list[i].useCost - tagFee.value * list[i].actualSalesCount
                     list[i].profit = Math.round(list[i].profit * 100) / 100
                     list[i].profitRatio = list[i].profit == 0 ? 0 : list[i].profit / list[i].actualSalesAmount
                     list[i].profitRatio = Math.round(list[i].profitRatio * 10000) / 10000

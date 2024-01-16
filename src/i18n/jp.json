@@ -218,5 +218,7 @@
     "mailHasChanged": "バインドされたメールボックスは正常にリセットされました",
     "newPhoneError": "正しい新しい携帯電話番号を入力してください",
     "verifycode": "認証コード",
-    "phoneHasChanged": "バインドされた携帯電話番号のリセットに成功しました"
+    "phoneHasChanged": "バインドされた携帯電話番号のリセットに成功しました",
+    "colleagueInfo":"同僚情報",
+    "uid":"ユーザID"
 }
