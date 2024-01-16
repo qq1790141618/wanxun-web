@@ -10,7 +10,8 @@
     >
         <template #header>
             <div style="width: 100%;">
-                {{ i18n.editPassword[i18n.language] }}
+                {{ i18n.edit[i18n.language] }}
+                {{ i18n.mail[i18n.language] }}
 
                 <t-button
                 @click="async () => {
@@ -42,7 +43,7 @@
             >
                 <t-step-item :content="i18n.verifyEnvironmentalSecurity[i18n.language]" />
                 <t-step-item :content="i18n.verifyIndentiy[i18n.language]" />
-                <t-step-item :content="i18n.editPassword[i18n.language]" />
+                <t-step-item :content="i18n.edit[i18n.language] + i18n.mail[i18n.language]" />
                 <t-step-item :content="i18n.result[i18n.language]" />
             </t-steps>
 
