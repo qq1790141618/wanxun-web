@@ -118,6 +118,13 @@
                     <h3>{{ i18n.colleagueInfo[i18n.language] }}</h3>
                     <ColleagueView />
                 </div>
+                <!-- <iframe
+                src="https://u.ali213.net/games/paopaodragon/index.html?game_code=281"
+                frameborder="0"
+                style="margin-top: 10px; width: 100%; height: 600px;"
+                v-if="bubbleShooterHd >= 5"
+                >
+                </iframe> -->
             </t-col>
             <t-col :span="3">
                 <t-card
@@ -161,6 +168,9 @@
                         </t-button>
                     </t-space>
                 </t-card>
+                <t-button @click="bubbleShooterHdClick" block style="margin-top: 10px;">
+                    bubble-shooter-hd
+                </t-button>
             </t-col>
         </t-row>
     </div>
@@ -290,6 +300,15 @@ export default {
             }, 300)
         })
 
+        const bubbleShooterHd = ref(0)
+        const bubbleShooterHdClick = () => {
+            bubbleShooterHd.value++
+            if(bubbleShooterHd.value >= 5) {
+                window.open('https://www.msn.cn/zh-cn/play/games/bubble-shooter-hd/cg-9nzvl6gzqhkj', "newwindow","height=520, width=520, top=280, left=700, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+                bubbleShooterHd.value = 0
+            }
+        }
+
         return {
             i18n,
             user,
@@ -301,7 +320,9 @@ export default {
             access_token,
             edpw,
             edph,
-            edem
+            edem,
+            bubbleShooterHd,
+            bubbleShooterHdClick
         }
     }
 }
