@@ -48,15 +48,33 @@
                     移除任务
                 </t-button>
             </t-popconfirm>
+            <t-button
+            theme="warning"
+            shape="round"
+            size="small"
+            style="margin-top: 5px;"
+            v-if="row.error != null"
+            @click="showError(row.error)"
+            >
+                <template #icon>
+                    <t-icon name="error-circle" />
+                </template>
+                错误信息
+            </t-button>
         </template>
     </t-table>
+    <ErrorDialog ref="errorDialog" />
 </template>
 
 <script>
 import { translate } from '../../hooks'
+import ErrorDialog from './ErrorDialog.vue'
 
 export default {
     props: ['data', 'loading'],
+    components: {
+        ErrorDialog
+    },
     setup(){
         const serve = inject('serve')
         const i18n = inject('i18n')
@@ -120,9 +138,17 @@ export default {
             }
         }
 
+        const errorDialog = ref(null)
+        const showError = (error) => {
+            var error = JSON.parse(error)
+            errorDialog.value.open(error)
+        }
+
         return {
             columns,
-            removeTask
+            removeTask,
+            showError,
+            errorDialog
         }
     }
 }
