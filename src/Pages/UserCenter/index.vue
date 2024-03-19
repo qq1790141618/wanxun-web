@@ -169,7 +169,7 @@
                     </t-space>
                 </t-card>
                 <t-button @click="bubbleShooterHdClick" block style="margin-top: 10px;">
-                    bubble-shooter-hd
+                    Bubble Shooter HD
                 </t-button>
             </t-col>
         </t-row>
@@ -330,7 +330,7 @@ export default {
 
 <style>
 #user-center{
-    width: 1300px;
+    width: 1390px;
     margin: 15px auto;
     max-width: calc(100% - 20px);
 }

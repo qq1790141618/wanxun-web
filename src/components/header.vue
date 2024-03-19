@@ -58,13 +58,13 @@
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
-                <t-tooltip :content="i18n.chat[i18n.language]" v-if="$route.name !== 'login'">
+                <!-- <t-tooltip :content="i18n.chat[i18n.language]" v-if="$route.name !== 'login'">
                     <t-button variant="text" shape="square" @click="chatPage">
                         <template #icon>
                             <t-icon name="chat-double" />
                         </template>
                     </t-button>
-                </t-tooltip>
+                </t-tooltip> -->
                 <t-tooltip :content="i18n.setting[i18n.language]" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
@@ -161,6 +161,18 @@
     >
         <t-space direction="vertical" style="width: 100%;">
             <t-select
+            label="Language: "
+            v-model="i18n.language"
+            :options="i18n.options"
+            @change="(value) => {
+                changeLanguage({ value })
+            }"
+            >
+                <template #valueDisplay="{ value }">
+                    {{ value ? (i18n.options.find(item => item.value == value) ? i18n.options.find(item => item.value == value).content : '') : '' }}
+                </template>
+            </t-select>
+            <t-select
             :label="i18n.store[i18n.language] + ': '"
             v-model="shop.store"
             :options="shop.storeOptions"
@@ -175,6 +187,9 @@
             <t-link theme="primary" @click="viewCounter" v-if="shop.counter[shop.store + shop.brand]">
                 {{ i18n.viewCounter[i18n.language] }}>>
             </t-link>
+            <t-space size="small" align="center">
+                <t-switch size="small" v-model="showBackground" @change="showBackgroundChange"></t-switch><div>显示背景/Show Background</div>
+            </t-space>
         </t-space>
     </t-dialog>
     <SearchResult
@@ -200,14 +215,7 @@ export default {
         const i18n = inject('i18n')
         i18n.language = i18n.language
         const changeLanguage = (item) => {
-            if(i18n.language == item.value){
-                return
-            }
-
-            i18n.language = item.value
-            i18n.language = item.value
             localStorage.setItem('language', item.value)
-
             translate('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', i18n.language)
             .then(res => {
                 MessagePlugin.success(res.trans_result[0].dst)
@@ -258,10 +266,32 @@ export default {
             window.open('https://wxchat.fixeam.com/?access_token=' + localStorage.getItem('access_token'))
         }
 
+        const showBackground = ref(true)
+        const showBackgroundChange = (value) => {
+            if(value){
+                localStorage.setItem('show-background', '1')
+
+                document.body.style.backgroundImage = 'url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg")'
+                document.body.style.backgroundRepeat = 'no-repeat'
+                document.body.style.backgroundAttachment = 'fixed'
+                document.body.style.backgroundPosition = 'center'
+                document.body.style.backgroundColor = "transparent"
+            } else {
+                localStorage.setItem('show-background', '0')
+
+                document.body.style.backgroundImage = ''
+                document.body.style.backgroundColor = "#f2f3ff"
+            }
+        }
         onMounted(() => {
             if(!localStorage.getItem('setting-button-attention')){
                 COUNT.value = 'new'
             }
+            var shbc = localStorage.getItem('show-background')
+            if(shbc && shbc == '0'){
+                showBackground.value = false
+            }
+            showBackgroundChange(showBackground.value)
         })
 
         return {
@@ -282,7 +312,9 @@ export default {
             COUNT,
             clickSet,
             searchResult,
-            chatPage
+            chatPage,
+            showBackground,
+            showBackgroundChange
         }
     }
 }

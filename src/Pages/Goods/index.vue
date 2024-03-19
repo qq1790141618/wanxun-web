@@ -43,8 +43,7 @@
                 }"
                 max-height="calc(100vh - 200px)"
                 row-key="stylenumber"
-                v-model:selected-row-keys="selectKey"
-                >
+                v-model:selected-row-keys="selectKey" >
                     <template #image="{ row }">
                         <t-image-viewer
                         v-if="row['main-image'] !== null"
@@ -273,6 +272,7 @@ export default {
             pageSize: 20,
             pageSizeOptions: [20, 30, 50, 100]
         })
+        const router = useRouter()
         
         const getSearchGoods = async (isExport) => {
             let con = new Object
@@ -305,6 +305,7 @@ export default {
                 }
             }
             
+            router.push({ query: { page: pagination.value.current } })
             let start = (pagination.value.current - 1) * pagination.value.pageSize
             let number = pagination.value.pageSize
             let result = await getGoods(shop.store, shop.brand, con, start, number, isExport)
@@ -366,11 +367,16 @@ export default {
         onMounted(() => {
             getOptions()
 
-            if(route.query.stylenumber){
-                condition.value.type = 'stylenumber'
-                condition.value.content = route.query.stylenumber
-            }
-            getSearchGoods()
+            setTimeout(() => {
+                if(route.query.stylenumber){
+                    condition.value.type = 'stylenumber'
+                    condition.value.content = route.query.stylenumber
+                }
+                if(route.query.page){
+                    pagination.value.current = route.query.page * 1
+                }
+                getSearchGoods()
+            }, 300)
         })
 
         return {

@@ -159,6 +159,16 @@ export default [
                         label: 'index.js',
                         value: '/src/hooks/index.js',
                         type: 'js'
+                    },
+                    {
+                        label: 'serve.js',
+                        value: '/src/hooks/serve.js',
+                        type: 'js'
+                    },
+                    {
+                        label: 'shop.js',
+                        value: '/src/hooks/shop.js',
+                        type: 'js'
                     }
                 ]
             },
@@ -518,8 +528,38 @@ export default [
                         type: 'fold',
                         children: [
                             {
+                                label: 'ErrorDialog.vue',
+                                value: '/src/Pages/Import/ErrorDialog.vue',
+                                type: 'vue'
+                            },
+                            {
                                 label: 'index.vue',
                                 value: '/src/Pages/Import/index.vue',
+                                type: 'vue'
+                            },
+                            {
+                                label: 'ListDisplay.vue',
+                                value: '/src/Pages/Import/ListDisplay.vue',
+                                type: 'vue'
+                            },
+                            {
+                                label: 'RemoveOrder.vue',
+                                value: '/src/Pages/Import/RemoveOrder.vue',
+                                type: 'vue'
+                            },
+                            {
+                                label: 'submitUpload.js',
+                                value: '/src/Pages/Import/submitUpload.js',
+                                type: 'js'
+                            },
+                            {
+                                label: 'tableParse.js',
+                                value: '/src/Pages/Import/tableParse.js',
+                                type: 'js'
+                            },
+                            {
+                                label: 'UploadTips.vue',
+                                value: '/src/Pages/Import/UploadTips.vue',
                                 type: 'vue'
                             }
                         ]

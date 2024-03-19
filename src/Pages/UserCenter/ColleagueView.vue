@@ -7,10 +7,10 @@
         :key="item.uid"
         v-show="item.uid !== user.inform.uid"
         >
-            <t-avatar size="60px" :image="item.headsrc" style="margin-top: 30px;">
+            <t-avatar size="60px" :image="item.headsrc" style="margin-top: 30px;" @click="() => { if(item.headsrc != null) { images = [item.headsrc]; imagePreview = true } }">
                 {{ item.realname.substr(0, 1) }}
             </t-avatar>
-            <div>
+            <div style="margin-bottom: 12px;">
                 <h2>
                     {{ item.realname }}
                 </h2>
@@ -37,6 +37,11 @@
             </div>
         </div>
     </div>
+    <t-image-viewer
+    v-model="imagePreview"
+    :images="images"
+    >
+    </t-image-viewer>
 </template>
 
 <script setup>
@@ -45,6 +50,8 @@ const i18n = inject('i18n')
 const user = inject('user')
 const data = ref([])
 const loading = ref(false)
+const images = ref([])
+const imagePreview = ref(false)
 
 const getData = async () => {
     loading.value = true
@@ -60,20 +67,16 @@ onMounted(() => {
 
 <style scoped>
 .flexb{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: grid;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
 }
 .inform-card {
-    flex-grow: 1;
-    width: 270px;
-    height: 210px;
-    background-color: rgba(255, 255, 255, 0.25);
+    height: auto;
+    background-color: rgba(255, 255, 255);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: rgba(142, 142, 142, 0.19) 0px 6px 15px 0px;
-    -webkit-box-shadow: rgba(142, 142, 142, 0.19) 0px 6px 15px 0px;
     border-radius: 12px;
     -webkit-border-radius: 12px;
     color: rgba(50, 50, 50, 0.75);
