@@ -127,6 +127,35 @@
     :supplierOptions="supplierOptions"
     @reload="getSearchGoods()"
     />
+    <t-dialog
+    v-model:visible="exportDialogShow"
+    :close-on-esc-keydown="false"
+    :close-on-overlay-click="false"
+    :close-btn="false"
+    :footer="false">
+        <template #header>
+            {{ i18n.exportQueryGoods[i18n.language] }}
+        </template>
+        <t-loading v-if="exportLoading" size="small" :text="i18n.exporting[i18n.language]" style="width: 100%; margin: 50px 0;" />
+        <div v-if="!exportLoading" style="margin-bottom: 8px">
+            <t-icon name="check-double" />
+            {{ i18n.goods[i18n.language] }}{{ i18n.data[i18n.language] }}{{ i18n.exportSuccess[i18n.language] }}!
+        </div>
+        <t-space v-if="!exportLoading" size="8px">
+            <t-button size="small" theme="primary" @click="openUrl(exportFileUrl)">
+                <template #icon>
+                    <t-icon name="download" />
+                </template>
+                {{ i18n.download[i18n.language] }}
+            </t-button>
+            <t-button size="small" variant="outline" @click="exportDialogShow = false">
+                <template #icon>
+                    <t-icon name="close" />
+                </template>
+                {{ i18n.close[i18n.language] }}
+            </t-button>
+        </t-space>
+    </t-dialog>
 </template>
 
 <script>
@@ -327,13 +356,18 @@ export default {
             loading.value = false
         }
         const exportLoading = ref(false)
+
+        const exportDialogShow = ref(false)
+        const exportFileUrl = ref(null)
+        const openUrl = (url) => {
+            window.open(url)
+        }
         const exportToFiles = async () => {
             exportLoading.value = true
-
+            exportDialogShow.value = true
             let res = await getSearchGoods(true)
-            MessagePlugin.success(i18n.exportSuccess[i18n.language])
-            window.open(serve + '/download?filename=' + res)
-
+            exportFileUrl.value = '/download?filename=' + res
+            console.log(exportFileUrl.value)
             exportLoading.value = false
         }
         
@@ -407,7 +441,11 @@ export default {
             viewGoods,
             goodsEdit,
             be,
-            spm
+            spm,
+
+            exportDialogShow,
+            exportFileUrl,
+            openUrl
         }
     }
 }

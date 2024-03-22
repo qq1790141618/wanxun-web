@@ -220,5 +220,6 @@
     "verifycode": "Verification code",
     "phoneHasChanged": "Your bound phone number has been successfully reset",
     "colleagueInfo":"Colleague information",
-    "uid":"User ID"
+    "uid":"User ID",
+    "download": "Download"
 }

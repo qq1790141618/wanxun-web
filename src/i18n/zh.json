@@ -220,5 +220,6 @@
     "verifycode": "验证码",
     "phoneHasChanged": "您的绑定手机号码已经成功重置",
     "colleagueInfo": "同事信息",
-    "uid": "用户ID"
+    "uid": "用户ID",
+    "download": "下载"
 }

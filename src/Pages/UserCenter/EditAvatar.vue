@@ -16,6 +16,7 @@
         </template>
         <t-upload
         style="margin: 10px 3px; "
+        ref="uploader"
         @change="async (value) => {
             resourse = await imageFileToBase(value)
         }"
@@ -93,15 +94,20 @@ export default {
         const resourse = ref(null)
         const isImage = ref(null)
         const files = ref([])
+        const uploader = ref(null)
 
         const showResult = () => {
             isImage.value = cropper.getDataURL()
         }
 
         const open = (url) => {
-            if(url){
+            visible.value = true
+            if(url && url !== ''){
                 resourse.value = url
-                visible.value = true
+            } else {
+                setTimeout(() => {
+                    uploader.value.triggerUpload()
+                }, 300)
             }
         }
         const loading = ref(false)
@@ -150,7 +156,8 @@ export default {
             confirm,
             loading,
             files,
-            imageFileToBase
+            imageFileToBase,
+            uploader
         }
     }
 }

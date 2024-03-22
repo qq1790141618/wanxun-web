@@ -220,5 +220,6 @@
     "verifycode": "Code de vérification",
     "phoneHasChanged": "Votre numéro de téléphone BIND a été réinitialisé avec succès",
     "colleagueInfo":"Informations sur les collègues",
-    "uid":"ID utilisateur"
+    "uid":"ID utilisateur",
+    "download": "Télécharger"
 }

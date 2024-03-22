@@ -159,7 +159,7 @@ export async function getGoods(store, brand, condition, start, number, isExport)
     })
     .then(response => {
         if(isExport){
-            return Promise.resolve(response.text())
+            return Promise.resolve(serve + response.text())
         }
         return Promise.resolve(response.json())
     })

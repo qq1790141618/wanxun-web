@@ -201,5 +201,6 @@
     "verifycode": "驗證碼",
     "phoneHasChanged": "您的綁定手機號碼已經成功重置",
     "colleagueInfo": "同事資訊",
-    "uid": "用戶ID"
+    "uid": "用戶ID",
+    "download": "下載"
 }

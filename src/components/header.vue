@@ -85,6 +85,9 @@
                                 <template #loading>
                                     ...
                                 </template>
+                                <template #error>
+                                    ×
+                                </template>
                             </t-image>
                         </template>
                         &nbsp;

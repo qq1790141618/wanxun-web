@@ -15,7 +15,11 @@
                                 :src="user.inform.headsrc"
                                 class="user-avatar"
                                 shape="circle"
-                                @click="open"
+                                @click="() => {
+                                    if(user.inform.headsrc){
+                                        open
+                                    }
+                                }"
                                 >
                                     <template #overlay-content>
                                         <t-button

@@ -1,5 +1,5 @@
 <template>
-    <t-config-provider :global-config="globalConfig">
+    <t-config-provider v-show="!bunch" :global-config="globalConfig">
         <router-view v-if="frameLessPage.indexOf($route.name) >= 0"/>
         <div v-if="frameLessPage.indexOf($route.name) < 0">
             <header-component />
@@ -92,7 +92,7 @@ export default {
                 user.inform = res.user
                 user.status = 'loged'
                 localStorage.setItem('user', JSON.stringify(res.user))
-                MessagePlugin.success(i18n.welcomeBack[i18n.language] + '！' + res.user.nickname)
+                MessagePlugin.success(i18n.welcomeBack[i18n.language] + '！' + res.user.realname)
             })
             .catch(() => {
                 MessagePlugin.info(i18n.loginFailure[i18n.language])

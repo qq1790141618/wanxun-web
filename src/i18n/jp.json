@@ -220,5 +220,6 @@
     "verifycode": "認証コード",
     "phoneHasChanged": "バインドされた携帯電話番号のリセットに成功しました",
     "colleagueInfo":"同僚情報",
-    "uid":"ユーザID"
+    "uid":"ユーザID",
+    "download": "ダウンロード"
 }

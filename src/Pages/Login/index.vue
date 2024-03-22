@@ -6,7 +6,10 @@
                 <div data-v-d8f37094="" class="title margin-no">{{ i18n.logto[i18n.language] }}</div>
                 <div data-v-d8f37094="" class="title">Miaostreet Sales Analysis</div>
                 <div data-v-d8f37094="" class="sub-title">
-                    <p data-v-d8f37094="" class="tip">{{ i18n.administratorManagement[i18n.language] }}</p>
+                    <p data-v-d8f37094="" class="tip">
+                        {{ i18n.administratorManagement[i18n.language] }}
+                        <t-icon name="scan" style="cursor: pointer; margin-left: 5px;" @click="mode = 3" />
+                    </p>
                 </div>
             </div>
             <t-form :colon="true" :label-width="0" v-if="mode == 1" @submit="login">
@@ -74,6 +77,36 @@
                     <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode1[i18n.language] }}</t-link>
                 </t-form-item>
             </t-form>
+            <div v-if="mode == 3">
+                <t-card style="text-align: center; margin-bottom: 5px;" :key="qrcodeV">
+                    <QRCodeVue3
+                    :width="160"
+                    :height="160"
+                    :value="'fc3ff98e8c6a0d3087d515c0473f8677' + qrcodeV"
+                    :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
+                    :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 0 }"
+                    :dotsOptions="{
+                        type: 'dots',
+                        color: '#0052d9',
+                        gradient: {
+                        type: 'linear',
+                        rotation: 0,
+                        colorStops: [
+                            { offset: 0, color: '#0052d9' },
+                            { offset: 1, color: '#0052d9' },
+                        ],
+                        },
+                    }"
+                    :cornersSquareOptions="{ type: 'dot', color: '#000000' }"
+                    :cornersDotOptions="{ type: undefined, color: '#000000' }"
+                    fileExt="png"
+                    :download="false"
+                    :downloadOptions="{ name: 'vqr', extension: 'png' }"
+                    />
+                    使用安卓App扫描二维码
+                </t-card>
+                <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode1[i18n.language] }}</t-link>
+            </div>
         </div>
     </div>
 </template>
@@ -81,10 +114,13 @@
 <script>
 import { sendCode, translate, verifyUser } from '../../hooks'
 import headerComponent from '../../components/header.vue'
+import QRCodeVue3 from "qrcode-vue3"
+import { watch } from 'vue'
 
 export default {
     components: {
-        headerComponent
+        headerComponent,
+        QRCodeVue3
     },
     setup(){
         const serve = inject('serve')
@@ -148,6 +184,56 @@ export default {
                 })
             })
         }
+
+        const qrcodeV = ref(null)
+        const createLoginQRcodeR = async () => {
+            return fetch(serve + '/user/scan/create')
+            .then(response => {
+                return Promise.resolve(response.text())
+            })
+        }
+        const fetchScanedR = async () => {
+            return fetch(serve + '/user/scan/get?scan-id=' + qrcodeV.value)
+            .then(response => {
+                return Promise.resolve(response.json())
+            })
+        }
+        const createLoginQRcode = async () => {
+            var res = await createLoginQRcodeR()
+            qrcodeV.value = res
+        }
+        const fetchScaned = async () => {
+            var res = await fetchScanedR()
+            if(res.access_token && res.access_token != null){
+                closeScanViewOpen()
+                localStorage.setItem('access_token', res.access_token)
+                setTimeout(() => {
+                    loginVerify()
+                }, 100)
+            }
+        }
+        createLoginQRcode()
+        setInterval(() => {
+            createLoginQRcode()
+        }, 1000 * 60 * 5)
+        let timer = null
+        const createScanViewOpen = () => {
+            timer = setInterval(() => {
+                fetchScaned()
+            }, 1000)
+        }
+        const closeScanViewOpen = () => {
+            clearInterval(timer)
+            timer = null
+        }
+        watch(() => mode.value, (newVal) => {
+            if(newVal == 3){
+                createScanViewOpen()
+            } else {
+                closeScanViewOpen()
+            }
+        })
+
         const router = useRouter()
         const login = async () => {
             let fun = mode.value == 1 ? 'password' : 'code'
@@ -226,7 +312,9 @@ export default {
             phoneInput,
             codeInput,
 
-            login
+            login,
+            qrcodeV,
+            createLoginQRcode
         }
     }
 }
