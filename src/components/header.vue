@@ -125,7 +125,7 @@
         <div style="text-align: center;">
             <t-icon name="scan" />
             {{ i18n.scanToDownload[i18n.language] }}
-            <img src="../assets/Android.png" style="width: 200px;" >
+            <img src="../assets/QRcode_A2.svg" style="width: 240px;" >
             <div>
                 <t-button @click="downloadApk">
                     <template #icon>
@@ -233,7 +233,7 @@ export default {
         }
         const downloadAndroidApp = ref(false)
         const downloadApk = () => {
-            window.open('https://cdn.fixeam.com/tw/application/android/2023102016/wanxun_tools_version110_release_arm64_v7a.apk')
+            window.open('https://cdn.fixeam.com/tw/application/android/2024032311/app-release.apk')
         }
         const mobileWeb = ref(false)
 
