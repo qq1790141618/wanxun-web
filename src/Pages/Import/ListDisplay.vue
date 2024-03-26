@@ -7,14 +7,7 @@
     max-height="calc(100vh - 240px)"
     style="max-width: 1000px; margin: 0 auto;"
     rowKey="id"
-    :pagination="{
-        size: 'small',
-        total: data.length,
-        showJumper: true,
-        defaultCurrent: 1,
-        defaultPageSize: 30,
-        pageSizeOptions: [30, 50, 100, 200]
-    }"
+    :pagination="false"
     hover
     >
         <template #type-show="{ row }">

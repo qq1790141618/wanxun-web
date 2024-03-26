@@ -101,7 +101,10 @@
             :total="pagination.total"
             :page-size-options="pagination.pageSizeOptions"
             @current-change="getSearchGoods()"
-            @page-size-change="getSearchGoods()"
+            @page-size-change="() => {
+                pagination.current = 1
+                getSearchGoods()
+            }"
             style="position: sticky; bottom: 10px;"
             />
         </div>

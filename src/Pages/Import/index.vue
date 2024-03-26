@@ -76,6 +76,19 @@
                     </div>
                     <div id="content-table">
                         <list-display :data="res" :loading="loading" />
+                        <t-pagination
+                            size="small"
+                            :disabled="loading"
+                            v-model:current="pagination.current"
+                            v-model:page-size="pagination.pageSize"
+                            :total="pagination.total"
+                            :page-size-options="pagination.pageSizeOptions"
+                            @current-change="initData()"
+                            @page-size-change="() => {
+                                pagination.current = 1
+                                initData()
+                            }"
+                            style="max-width: 1000px; margin: 12px auto;" />
                     </div>
                 </t-tab-panel>
                 <t-tab-panel
@@ -221,6 +234,12 @@ export default {
 
         const res = ref([])
         const loading = ref(false)
+        const pagination = ref({
+            total: 0,
+            current: 1,
+            pageSize: 20,
+            pageSizeOptions: [20, 30, 50, 100]
+        })
 
         const allowType = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv']
         const allowSize = 10
@@ -574,22 +593,31 @@ export default {
         })
 
         const createLoading = ref(false)
-
         const getData = async () => {
-            return fetch(serve + "/import/task")
+            let start = (pagination.value.current - 1) * pagination.value.pageSize
+            return fetch(`${serve}/import/task?start=${start}&number=${pagination.value.pageSize}`)
             .then((response) => {
                 return Promise.resolve(response.json())
             })
         }
         const initData = async () => {
             loading.value = true
-            res.value = await getData()
+            let response = await getData()
+            res.value = response.data
+            pagination.value.total = response.total
             loading.value = false
         }
+        let timerRefresh = null
         const autoFresh = () => {
-            setInterval(async () => {
-                res.value = await getData()
-            }, 2000)
+            timerRefresh = setInterval(async () => {
+                let response = await getData()
+                res.value = response.data
+                pagination.value.total = response.total
+            }, 1000)
+        }
+        const clearFresh = () => {
+            clearInterval(timerRefresh)
+            timerRefresh = null
         }
         const addTab = () => {
             let value
@@ -769,7 +797,12 @@ export default {
 
         onMounted(() => {
             initData()
+        })
+        onActivated(() => {
             autoFresh()
+        })
+        onDeactivated(() => {
+            clearFresh()
         })
         
         return {
@@ -795,7 +828,8 @@ export default {
             submitOrder,
             tableParse,
             removeOrder,
-            DialogPlugin
+            DialogPlugin,
+            pagination
         }
     }
 }
