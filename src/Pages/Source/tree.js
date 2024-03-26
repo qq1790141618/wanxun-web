@@ -553,11 +553,6 @@ export default [
                                 type: 'js'
                             },
                             {
-                                label: 'tableParse.js',
-                                value: '/src/Pages/Import/tableParse.js',
-                                type: 'js'
-                            },
-                            {
                                 label: 'UploadTips.vue',
                                 value: '/src/Pages/Import/UploadTips.vue',
                                 type: 'vue'

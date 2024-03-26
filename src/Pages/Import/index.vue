@@ -243,6 +243,7 @@ export default {
                     '颜色代码': 'colorid',
                     '尺码': 'size',
                     '尺码代码': 'sizeid',
+                    '标准售价': 'price',
                     '吊牌价(云)': 'tagprice',
                     '可售库存': 'inventory',
                     '叶子类目': 'category',
@@ -257,13 +258,13 @@ export default {
                 },
                 computer: {
                     'combination-products': (value) => {
-                        return value['是否组合商品'] == '是'? 1 : 0
+                        return value['是否组合商品'] === '是'? 1 : 0
                     },
                     'miaostreet-listing-status': (value) => {
-                        return value['喵街上架状态'] == '上架'? 1 : 0
+                        return value['喵街上架状态'] === '上架'? 1 : 0
                     },
                     'tmall-listing-status': (value) => {
-                        return value['天猫上架状态'] == '上架'? 1 : 0
+                        return value['天猫上架状态'] === '上架'? 1 : 0
                     },
                     'season': (value) => {
                         let goodsName = value['商品SKU名称']
@@ -283,7 +284,7 @@ export default {
                         }
 
                         for (var key in maybeSeason) {
-                            if (goodsName && goodsName != null && goodsName != undefined && goodsName.indexOf(key) >= 0) {
+                            if (goodsName && goodsName.indexOf(key) >= 0) {
                                 return maybeSeason[key]
                             }
                         }
@@ -305,10 +306,10 @@ export default {
                         }
 
                         for (var key in maybeSex) {
-                            if (forTheCrowd && forTheCrowd != null && forTheCrowd != undefined && forTheCrowd.indexOf(key) >= 0) {
+                            if (forTheCrowd && forTheCrowd.indexOf(key) >= 0) {
                                 return maybeSex[key]
                             }
-                            if (goodsName && goodsName != null && goodsName != undefined && goodsName.indexOf(key) >= 0) {
+                            if (goodsName && goodsName.indexOf(key) >= 0) {
                                 return maybeSex[key]
                             }
                         }
@@ -453,8 +454,7 @@ export default {
                         '发货拦截': 'shipment-interception',
                         '规格': 'specifications',
                         '商品单价': 'item-pricing',
-                        '实际售价': 'order-amount',
-                        '商品单价': 'actual-selling-price'
+                        '实际售价': 'order-amount'
                     },
                     computer: {
                         brand: (value) => {
