@@ -61,7 +61,13 @@ export default {
 
         const data = ref({
             famousWord: '',
-            day: {},
+            day: {
+                income: 0,
+                refundsAmount: 0,
+                refundsCount: 0,
+                salesAmount: 0,
+                salesCount: 0
+            },
             week: [],
             goods: [],
             supplier: [],
@@ -78,15 +84,6 @@ export default {
             return fetch(serve + "/famous-word")
             .then((response) => {
                 return Promise.resolve(response.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
-        const daySales = async () => {
-            return fetch(serve + '/analysis/sum?store-id=' + shop.store + '&brand=' + shop.brand + '&mode=日&time=' + dayjs().subtract(1, 'day').format('YYYY-MM-DD'))
-            .then(res => {
-                return Promise.resolve(res.json())
             })
             .catch(() => {
                 MessagePlugin.error(i18n.httpFail[i18n.language])
@@ -114,7 +111,7 @@ export default {
         const initF = async () => {
             let f = await famousWord()
             data.value.famousWord = f.hitokoto + ' 来自《' + f.works + '》'
-            if(f.author && f.author != undefined && f.author != null){
+            if(f.author){
                 data.value.famousWord += f.author
             }
             data.value.famousWord += '。'
@@ -129,19 +126,18 @@ export default {
             loading.value = true
 
             await initF()
-            percent.value = 25
+            percent.value = 10
 
-            data.value.day = await daySales()
-            for (const sum in data.value.day) {
-                for (const key in data.value.day[sum]) {
-                    if (data.value.day[sum][key] == null) {
-                        data.value.day[sum][key] = 0
-                    }
+            let timer = setInterval(() => {
+                percent.value += 1
+
+                if(percent.value >= 90){
+                    clearInterval(timer)
                 }
-            }
-            percent.value = 50
+            }, 50)
 
             let ao = await annualOverview()
+
             data.value.year.income = ao.income
             data.value.year.ordersCount = ao.ordersCount
             data.value.year.salesCount = ao.salesCount
@@ -149,8 +145,20 @@ export default {
             data.value.week = ao.nearlyWeek
             data.value.supplier = ao.ms.supplier
             data.value.goods = ao.ms.product
-            percent.value = 75
 
+            let y = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+            for (let i = 0; i < data.value.week.length; i++){
+                if (y === data.value.week[i].time){
+                    data.value.day = data.value.week[i]
+                }
+            }
+
+            clearInterval(timer)
+            percent.value = 100
+
+            loading.value = false
+        }
+        const runGetGoodsRank = async () => {
             let ranks = await goodsRanks()
             data.value.ranks = {
                 KCOR: [],
@@ -161,13 +169,12 @@ export default {
             for (let i = 0; i < ranks.length; i++) {
                 data.value.ranks[ranks[i].brand].push(ranks[i])
             }
-            percent.value = 1
-
-            loading.value = false
         }
+
 
         onMounted(() => {
             initData()
+            runGetGoodsRank()
         })
         watch(() => shop.store, () => {
             initData()

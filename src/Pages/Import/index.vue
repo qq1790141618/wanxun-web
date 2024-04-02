@@ -656,9 +656,15 @@ export default {
 
                             break
                         }
-                        thead[i] = tabPanels.value[index].data.content[i][0]
+                        let tempHead = tabPanels.value[index].data.content[i][0]
+                        thead[i] = []
+                        for (let th = 0; th < tempHead.length; th++){
+                            if(tempHead[th]){
+                                thead[i].push(tempHead[th])
+                            }
+                        }
 
-                        if(thead[i][0] != temp[i].theadstart || thead[i][thead[i].length - 1] != temp[i].theadend){
+                        if(thead[i][0] !== temp[i].theadstart || thead[i][thead[i].length - 1] !== temp[i].theadend){
                             isThis = false
 
                             break
@@ -679,11 +685,17 @@ export default {
                         return
                     }
                 } else {
-                    thead = tabPanels.value[index].data.content[0][0]
+                    let tempHead = tabPanels.value[index].data.content[0][0]
+                    thead = []
+                    for (let th = 0; th < tempHead.length; th++){
+                        if(tempHead[th]){
+                            thead.push(tempHead[th])
+                        }
+                    }
 
                     if(
-                        (thead[0] == temp.theadstart && thead[thead.length - 1] == temp.theadend)
-                        || (temp.theadendn && thead[0] == temp.theadstart && thead[thead.length - 1] == temp.theadendn)
+                        (thead[0] === temp.theadstart && thead[thead.length - 1] === temp.theadend)
+                        || (temp.theadendn && thead[0] === temp.theadstart && thead[thead.length - 1] === temp.theadendn)
                     ){
                         MessagePlugin.info('识别到的表格为' + temp.name)
                         let body = initTable(tabPanels.value[index].data.content[0], temp.corresponding, temp.computer)
