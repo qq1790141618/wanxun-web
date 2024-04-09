@@ -125,6 +125,7 @@ import Channel from './Channel.vue'
 import Sex from './Sex.vue'
 import Season from './Season.vue'
 import Supplier from './Supplier.vue'
+import {useRouter} from "vue-router";
 
 export default {
     components: {
@@ -145,15 +146,6 @@ export default {
         const parameter = ref(false)
         const router = useRouter()
         const tabId = ref(1)
-
-        const initMargin = () => {
-            let h = document.documentElement.clientHeight
-            let el = document.querySelector('.analysis-tab')
-            if(!el || el === null || h - 785 < 0){
-                return
-            }
-            el.style.setProperty('--chart-cas-margin-top-bottom', (h - 785) + 'px')
-        }
 
         const initData = () => {
             if(localStorage.getItem('view-task')){

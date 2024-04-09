@@ -6,3 +6,7 @@ export default reactive({
         location.href = location.origin + '/login'
     }
 })
+
+export function getToken(){
+    return localStorage.getItem('access_token')
+}

@@ -2,126 +2,98 @@
     <t-dialog
     v-model:visible="visible"
     :footer="false"
+    width="800"
+    placement="center"
     >
         <template #header>
             🌈
-            {{ title[i18n.language] }}
+            {{ title[i18n.language] }} v{{app.version}}
         </template>
-        <div v-if="i18n.language == 'zh'">
+        <div class="scrollbar">
             <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                新增对于“杭州滨江银泰广场（HZ20）-KCOR（kcor）”的专柜链接
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                新增对于更新优化的内容提示
-            </p>
+            <div class="part" style="width: 100%">
+                <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Manage</t-tag>
+                <div>
+                    <div>
+                        新增菜单“管理”，以及子菜单“用户管理”，“用户组管理”，“App管理”
+                    </div>
+                    <div>
+                        New menu "Management" and submenus "User Management", "User Group Management", "App Management" added.
+                    </div>
+                </div>
+            </div>
+            <div class="part" style="width: 100%">
+                <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Import</t-tag>
+                <div>
+                    <div>
+                        修改导入方式规则，使整体更智能，出错率降低。
+                    </div>
+                    <div>
+                        Modify the import method rules to make the overall system more intelligent and reduce error rates.
+                    </div>
+                </div>
+            </div>
+            <div class="part" style="width: 100%">
+                <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Update</t-tag>
+                <div>
+                    <div>
+                        新增页面更新自动检测
+                    </div>
+                    <div>
+                        Automatic detection of new page updates.
+                    </div>
+                </div>
+            </div>
+            <h3>🌈 Changes</h3>
+            <div class="part" style="width: 100%">
+                <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Frame</t-tag>
+                <div>
+                    <div>
+                        修改API请求方式为带签名请求，使数据更安全，并且权限可控。
+                    </div>
+                    <div>
+                        Modify the API request method to include signed requests to make data more secure and permissions controllable.
+                    </div>
+                </div>
+            </div>
             <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                移除“<t-icon name="chat-double" />即时通讯IM”功能，以及在导航栏的相关链接ICON
-            </p>
+            <div class="part" style="width: 100%">
+                <t-tag theme="danger" variant="light" style="margin-bottom: 5px;">Source</t-tag>
+                <div>
+                    <div>
+                        停用功能“返回旧版网页”
+                    </div>
+                    <div>
+                        Deactivate feature 'Return to old version webpage'.
+                    </div>
+                </div>
+            </div>
+            <div class="part" style="width: 100%">
+                <t-tag theme="danger" variant="light" style="margin-bottom: 5px;">Source</t-tag>
+                <div>
+                    <div>
+                        移除页面“开源代码”
+                    </div>
+                    <div>
+                        Remove page "open source code"
+                    </div>
+                </div>
+            </div>
+            <div class="part" style="width: 100%">
+                <t-tag theme="danger" variant="light" style="margin-bottom: 5px;">Language</t-tag>
+                <div>
+                    <div>
+                        移除语言“泰语”
+                    </div>
+                    <div>
+                        Remove language "Thai"
+                    </div>
+                </div>
+            </div>
         </div>
-        <div v-if="i18n.language == 'en'">
-            <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                Add a counter link for "Hangzhou Binjiang Intime Plaza (HZ20) - KCOR (kcor)"
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                Add content prompts for updating and optimizing
-            </p>
-            <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                Remove the "<t-icon name="chat-double" />instant messaging IM" function and the relevant links in the navigation bar ICON
-            </p>
-        </div>
-        <div v-if="i18n.language == 'jp'">
-            <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                「杭州濱江銀泰広場（HZ 20）-KCOR（KCOR）」カウンターリンクを追加
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                更新と最適化のためのコンテンツプロンプトの追加
-            </p>
-            <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                「インスタントメッセージングIM」機能の削除、およびナビゲーションバーへの関連リンクICON
-            </p>
-        </div>
-        <div v-if="i18n.language == 'kor'">
-            <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                "항저우빈강은태광장(HZ20)-KCOR(KCOR)" 카운터 링크 추가
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                업데이트 및 최적화를 위한 내용 힌트 추가
-            </p>
-            <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                인스턴트 메시징 IM 기능을 제거하고 관련 링크 ICON을 탐색 모음에 연결
-            </p>
-        </div>
-        <div v-if="i18n.language == 'fra'">
-            <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                Ajoutez un lien vers le comptoir "Hangzhou Binjiang yintay Plaza (hz20) - kcor (kcor)"
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                Ajouter des conseils de contenu pour les mises à jour et les optimisations
-            </p>
-            <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                Supprimez la fonction de messagerie instantanée et connectez le lien associé icon à la barre de navigation
-            </p>
-        </div>
-        <div v-if="i18n.language == 'cht'">
-            <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                添加“杭州濱江銀泰廣場（HZ20）-KCOR（KCOR）”櫃檯連結
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                為更新和優化添加內容提示
-            </p>
-            <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                删除即時消息功能並將相關連結圖示連接到巡覽列
-            </p>
-        </div>
-        <div v-if="i18n.language == 'th'">
-            <h3>🚀 Features</h3>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Shop</t-tag>
-                เพิ่มการเชื่อมต่อเคาน์เตอร์ "Yintai Plaza Hangzhou Binjiang (HZ20) - KCOR (KCOR)"
-            </p>
-            <p>
-                <t-tag theme="primary" variant="light" size="small">Dialog</t-tag>
-                เพิ่มเคล็ดลับเนื้อหาสำหรับการอัปเดตและการเพิ่มประสิทธิภาพ
-            </p>
-            <h3>🚫 Removes</h3>
-            <p>
-                <t-tag theme="danger" variant="light" size="small">IM</t-tag>
-                ลบคุณลักษณะการส่งข้อความโต้ตอบแบบทันทีและเชื่อมต่อไอคอนลิงก์ที่เกี่ยวข้องไปยังแถบนำทาง
-            </p>
-        </div>
-        <t-space style="padding: 6px 15px; background-color: var(--td-brand-color-focus); border-radius: 5px;" size="5px" align="center">
+        <div class="sign" size="5px" align="center">
             <t-icon name="chevron-right" /> Powered by Limit Au
-        </t-space>
+        </div>
     </t-dialog>
 </template>
 
@@ -135,18 +107,34 @@ const title = {
     'jp': '更新説明',
     'kor': '업데이트 설명',
     'fra': 'Instructions de mise à jour',
-    'cht': '更新說明',
-    'th': 'คำแนะนำการอัปเดต'
+    'cht': '更新說明'
 }
 onMounted(() => {
-    var version = localStorage.getItem('version')
-    if(version != app.version){
+    const version = localStorage.getItem('version');
+    if(version !== app.version){
         visible.value = true
     }
     localStorage.setItem('version', app.version)
 })
 </script>
 
-<style>
-
+<style scoped>
+.part {
+    font-size: 12px;
+    margin: 12px 0 6px 0;
+    display: flex;
+    gap: 26px;
+}
+.scrollbar {
+    max-height: 65vh;
+    overflow-x: visible;
+    overflow-y: auto;
+}
+.sign {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 15px;
+    background-color: var(--td-brand-color-focus);
+    border-radius: 5px;
+}
 </style>

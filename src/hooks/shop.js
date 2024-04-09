@@ -23,31 +23,37 @@ const shop = reactive({
         {
             label: 'KCOR 107241',
             value: 'KCOR',
+            suffix: '9K',
             logo: 'https://cdn.fixeam.com/tw/KCOR.png'
         },
         {
             label: 'NT 107756',
             value: 'NT',
+            suffix: '9N',
             logo: 'https://cdn.fixeam.com/tw/NT.png'
         },
         {
             label: '兔皇 5649',
             value: '兔皇',
+            suffix: 'TW',
             logo: 'https://cdn.fixeam.com/tw/TW.png'
         },
         {
             label: 'DR 111862',
             value: 'DR',
+            suffix: 'DD',
             logo: 'https://cdn.fixeam.com/tw/DR.png'
         },
         {
             label: '卡莎米亚',
             value: '卡莎米亚',
+            suffix: '',
             logo: 'https://cdn.fixeam.com/tw/CASAMIA.png'
         },
         {
             label: "查尔斯桃心(CHARLES JANG'S HAPPY HEART) 113073",
             value: '查尔斯桃心',
+            suffix: '',
             logo: 'https://cdn.fixeam.com/tw/%E6%9F%A5%E5%B0%94%E6%96%AF%E6%A1%83%E5%BF%83.png'
         }
     ],
@@ -65,3 +71,21 @@ const shop = reactive({
 })
 
 export default shop
+
+export function getStore(){
+    let str = 'HZ13'
+    let local = localStorage.getItem('store')
+    if(local){
+        str = local
+    }
+    return str
+}
+
+export function getBrand(){
+    let str = '兔皇'
+    let local = localStorage.getItem('brand')
+    if(local){
+        str = local
+    }
+    return str
+}

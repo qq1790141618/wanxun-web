@@ -1,5 +1,5 @@
 <template>
-    <div class="logo" title="LOGO">
+    <div class="logo" title="LOGO" @click="$router.push('/')">
         <img src="../assets/logo.png" class="logo-image" >
         <span class="logo-text">
             {{ i18n.websiteName[i18n.language] }}
@@ -17,5 +17,8 @@ export default {
 </script>
 
 <style>
-
+.logo {
+    cursor: pointer;
+    user-select: none;
+}
 </style>

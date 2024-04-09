@@ -3,7 +3,6 @@
         <ConditionBox
         :condition="condition"
         :loading="loading "
-        :export-loading="exportLoading"
         @confirm="() => {
             pagination.current = 1
             selectKey = []
@@ -27,8 +26,6 @@
             :supplierOptions="supplierOptions"
             @batchEdit="be.open()"
             :loading="loading"
-            :export-loading="exportLoading"
-            @exportToFiles="exportToFiles"
             @costHightLightChange="(value) => { columns[11].className = 'goods-table-col ' + value }"
             @supplierMap="spm.open()"
             />
@@ -64,7 +61,13 @@
                         <t-space break-line size="5px">
                             <t-button
                             theme="primary"
-                            @click="goodsEdit.open(row)"
+                            @click="() => {
+                                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/item/get') >= 0){
+                                    goodsEdit.open(row)
+                                } else {
+                                    tips('权限不足', 'error')
+                                }
+                            }"
                             >
                                 {{ i18n.edit[i18n.language] }}
                             </t-button>
@@ -77,8 +80,13 @@
                             </t-button>
                             <t-button
                             variant="outline"
-                            @click="viewGoods.open(row)"
-                            >
+                            @click="() => {
+                                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/item/get') >= 0){
+                                    viewGoods.open(row)
+                                } else {
+                                    tips('权限不足', 'error')
+                                }
+                            }">
                                 {{ i18n.viewGoods[i18n.language] }}
                             </t-button>
                             <t-button
@@ -139,12 +147,11 @@
         <template #header>
             {{ i18n.exportQueryGoods[i18n.language] }}
         </template>
-        <t-loading v-if="exportLoading" size="small" :text="i18n.exporting[i18n.language]" style="width: 100%; margin: 50px 0;" />
-        <div v-if="!exportLoading" style="margin-bottom: 8px">
+        <div style="margin-bottom: 8px">
             <t-icon name="check-double" />
             {{ i18n.goods[i18n.language] }}{{ i18n.data[i18n.language] }}{{ i18n.exportSuccess[i18n.language] }}!
         </div>
-        <t-space v-if="!exportLoading" size="8px">
+        <t-space size="8px">
             <t-button size="small" theme="primary" @click="openUrl(exportFileUrl)">
                 <template #icon>
                     <t-icon name="download" />
@@ -163,7 +170,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { getCategoryOptions, getSupplierOptions, getGoods, copy, miaostreetGoodsLink } from '../../hooks'
+import { copy, miaostreetGoodsLink } from '../../hooks'
 import confirmBar from '../../components/confirmBar.vue'
 import ConditionBox from './ConditionBox.vue'
 import OperateBar from './OperateBar.vue'
@@ -171,8 +178,11 @@ import BatchEdit from './BatchEdit.vue'
 import SupplierMap from './SupplierMap.vue'
 import ViewGoods from './ViewGoods.vue'
 import EditGoods from './EditGoods.vue'
+import service from "../../api/service.js";
+import {tips} from "../../hooks/tips.js";
 
 export default {
+    methods: {tips},
     components: {
         confirmBar,
         ConditionBox,
@@ -184,8 +194,8 @@ export default {
     },
     setup(){
         const i18n = inject('i18n')
-        const serve = inject('serve')
         const shop = inject('shop')
+        const user = inject('user')
 
         const condition = ref({
             type: 'stylenumber',
@@ -197,9 +207,22 @@ export default {
         const frozenCondition = ref({})
         const categoryOptions = ref([])
         const supplierOptions = ref([])
+
         const getOptions = async () => {
-            categoryOptions.value = await getCategoryOptions(serve)
-            supplierOptions.value = await getSupplierOptions(serve)
+            let c = await service.api.goods.categoryOptions()
+            if(c.result){
+                categoryOptions.value = c.content
+            } else {
+                tips(c.error.message, 'error')
+            }
+
+            let s = await service.api.goods.supplierOptions()
+            if(s.result){
+                supplierOptions.value = s.content
+            } else {
+                tips(s.error.message, 'error')
+            }
+
             supplierOptions.value.splice(0, 1)
         }
 
@@ -306,18 +329,13 @@ export default {
         })
         const router = useRouter()
         
-        const getSearchGoods = async (isExport) => {
-            let con = new Object
-            let recon
-            if(!isExport){
-                loading.value = true
-                recon = condition.value
-                data.value = []
-            } else {
-                recon = frozenCondition.value
-            }
+        const getSearchGoods = async () => {
+            let con = {}
+            let recon = condition.value
+            loading.value = true
+            data.value = []
 
-            if(recon.content != null && recon.content != ''){
+            if(recon.content != null && recon.content !== ''){
                 con[recon.type] = []
                 let content1 = recon.content.split(',')
                 for (let i = 0; i < content1.length; i++) {
@@ -325,10 +343,10 @@ export default {
                     con[recon.type] = con[recon.type].concat(content2)
                 }
             }
-            if(recon.category != null && recon.category != ''){
+            if(recon.category != null && recon.category !== ''){
                 con['category-id'] = recon.category
             }
-            if(recon.supplier != null && recon.supplier != ''){
+            if(recon.supplier != null && recon.supplier !== ''){
                 con.supplier = recon.supplier
             }
             if(recon.unUpload.length > 0){
@@ -340,13 +358,9 @@ export default {
             router.push({ query: { page: pagination.value.current } })
             let start = (pagination.value.current - 1) * pagination.value.pageSize
             let number = pagination.value.pageSize
-            let result = await getGoods(shop.store, shop.brand, con, start, number, isExport)
+            let result = await service.api.goods.get(con, start, number)
 
-            if(isExport){
-                return Promise.resolve(result)
-            } else {
-                frozenCondition.value = JSON.parse(JSON.stringify(condition.value))
-            }
+            frozenCondition.value = JSON.parse(JSON.stringify(condition.value))
 
             data.value = result.data
             for (let i = 0; i < data.value.length; i++) {
@@ -358,20 +372,11 @@ export default {
             
             loading.value = false
         }
-        const exportLoading = ref(false)
 
         const exportDialogShow = ref(false)
         const exportFileUrl = ref(null)
         const openUrl = (url) => {
             window.open(url)
-        }
-        const exportToFiles = async () => {
-            exportLoading.value = true
-            exportDialogShow.value = true
-            let res = await getSearchGoods(true)
-            exportFileUrl.value = '/download?filename=' + res
-            console.log(exportFileUrl.value)
-            exportLoading.value = false
         }
         
         const selectKey = ref([])
@@ -419,6 +424,7 @@ export default {
         return {
             dayjs,
             shop,
+            user,
 
             i18n,
             condition,
@@ -433,9 +439,6 @@ export default {
 
             copy,
             miaostreetGoodsLink,
-
-            exportLoading,
-            exportToFiles,
 
             selectKey,
 

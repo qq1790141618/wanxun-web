@@ -72,6 +72,8 @@ import { getQuickDateRangePicker } from '../../../hooks'
 import MainChart from './MainChart.vue'
 import ElseChart from './ElseChart.vue'
 import CategoryDataTable from './CategoryDataTable.vue'
+import service from "../../../api/service.js";
+import {tips} from "../../../hooks/tips.js";
 
 export default {
     components: {
@@ -81,7 +83,6 @@ export default {
     },
     setup() {
         const i18n = inject('i18n')
-        const serve = inject('serve')
         const shop = inject('shop')
 
         const date = ref([
@@ -92,16 +93,16 @@ export default {
         const loading = ref(false)
         const data = ref([])
 
-        const categoryInfrom = async (dateFrom, dateTo) => {
-            return fetch(serve + `/goods/category/inform?store-id=${ shop.store }&brand=${ shop.brand }&from=${ dateFrom }&to=${ dateTo }`)
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
         const matchData = async () => {
             loading.value = true
-            let res = await categoryInfrom(date.value[0], date.value[1])
-            data.value = res.data
+
+            let res = await service.api.analysis.categoryInform(date.value[0], date.value[1])
+            if(res.result){
+                data.value = res.data
+            } else {
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+            }
+
             loading.value = false
         }
         let timer
@@ -123,7 +124,7 @@ export default {
             matchData()
         })
         onMounted(async () => {
-            matchData()
+            await matchData()
             quickDateRangePicker.value = await getQuickDateRangePicker(i18n.language)
         })
 

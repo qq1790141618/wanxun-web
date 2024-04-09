@@ -104,6 +104,8 @@
 <script>
 import dayjs from 'dayjs'
 import confirmBar from '../../components/confirmBar.vue'
+import service from "../../api/service.js";
+import {MessagePlugin} from "tdesign-vue-next";
 
 export default {
     components: {
@@ -128,33 +130,12 @@ export default {
     setup(props, { emit }){
         const i18n = inject('i18n')
         const shop = inject('shop')
-        const serve = inject('serve')
 
         const visible = ref(false)
         const data = ref({})
         const loading = ref(false)
-        const uploadData = async (stylenumbers, content) => {
-            return fetch(serve + '/goods/batch-edit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'store-id': shop.store,
-                    brand: shop.brand,
-                    stylenumbers,
-                    content
-                })
-            })
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
         const done = async () => {
-            if(JSON.stringify(data.value) == "{}"){
+            if(JSON.stringify(data.value) === "{}"){
                 visible.value = false
                 return
             }
@@ -169,12 +150,12 @@ export default {
                 }
             }
 
-            let res = await uploadData(stylenumber, content)
+            let res = await service.api.goods.batchEdit(stylenumber, content)
             if(res.result){
-                MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
+                await MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
                 emit('reload')
             } else {
-                MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
+                await MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
             }
 
             loading.value = false
@@ -192,7 +173,6 @@ export default {
             data,
             loading,
             visible,
-            uploadData,
             done,
             open,
             dayjs

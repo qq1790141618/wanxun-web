@@ -1,7 +1,7 @@
 import md5 from 'md5'
 import fetchJSONP from 'fetch-jsonp'
 import useClipboard from 'vue-clipboard3'
-import i18n from '../i18n'
+import i18n, {getLanguage} from '../i18n'
 import dayjs from 'dayjs'
 
 const serve = 'https://work-serve.fixeam.com/api'
@@ -119,55 +119,6 @@ export function miaostreetGoodsLink(item) {
     localStorage.setItem('history', JSON.stringify(history))
 }
 
-export async function getCategoryOptions(serve) {
-    return fetch(serve + '/goods/category/get')
-    .then(res => {
-        return Promise.resolve(res.json())
-    })
-}
-
-export async function getSupplierOptions(serve) {
-    return fetch(serve + '/goods/supplier/get')
-    .then(res => {
-        return Promise.resolve(res.json())
-    })
-}
-
-export async function getGoods(store, brand, condition, start, number, isExport) {
-    let s = start || 0
-    let num = number || 0
-    let url = serve + '/goods/mul/get?with-sales=cfdd&start=' + s + '&number=' + num
-
-    if(isExport){
-        url += '&export=export'
-    }
-
-    let params = {
-        'store-id': store,
-        condition: !condition ? false : JSON.stringify(condition)
-    }
-    if(brand){
-        params.brand = brand
-    }
-    
-    return fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: JSON.stringify(params)
-    })
-    .then(response => {
-        if(isExport){
-            return Promise.resolve(serve + response.text())
-        }
-        return Promise.resolve(response.json())
-    })
-    .catch(error => {
-        return Promise.resolve(error)
-    })
-}
-
 export function getQuickDateRangePicker(language = 'zh'){
     return new Promise(async (resolve) => {
         let primary = {
@@ -182,7 +133,7 @@ export function getQuickDateRangePicker(language = 'zh'){
             return resolve(primary)
         }
     
-        let res = new Object
+        let res = {}
         for (const key in primary) {
             let f = await translate(key, language)
             let transKey = f.trans_result[0].dst

@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { getGoods } from '../hooks'
+import service from "../api/service.js";
 
 export default {
     setup(){
@@ -164,16 +164,14 @@ export default {
             result.value = options
 
             let styleNumbers = await searchStyleNumber(value)
-            styleNumbers = styleNumbers.length == 0 ? [] : styleNumbers.map(obj => obj.stylenumber)
+            styleNumbers = styleNumbers.length === 0 ? [] : styleNumbers.map(obj => obj.stylenumber)
             let brand = false
             if(options.brand && options.brand.length > 0){
                 brand = options.brand[0].value
             }
-            let goods = await getGoods(
-                shop.store,
-                brand,
-                styleNumbers.length == 0 ? false : {
-                    stylenumber: styleNumbers
+            let goods = await service.api.goods.get(
+                styleNumbers.length === 0 ? {} : {
+                    'stylenumber': styleNumbers
                 },
                 0,
                 20

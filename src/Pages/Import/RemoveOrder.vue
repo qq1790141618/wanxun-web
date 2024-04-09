@@ -38,6 +38,8 @@
 
 <script>
 import dayjs from 'dayjs'
+import {NotifyPlugin} from "tdesign-vue-next";
+import service from "../../api/service.js";
 
 export default {
     setup(){
@@ -52,18 +54,10 @@ export default {
             dateFrom.value = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
             show.value = true
         }
-        const startRemove = async (dateFrom) => {
-            return fetch(serve + `/order/remove?brand=${ shop.brand }&store-id=${ shop.store }&date-from=${ dateFrom }`)
-            .then(response => {
-                return Promise.resolve(response.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
+
         const removeOrder = async () => {
             loading.value = true
-            let res = await startRemove(dateFrom.value)
+            let res = await service.api.imports.removeOrder(dateFrom.value)
             if(res.result){
                 MessagePlugin.success(`删除成功, 总计删除${ res.affected }个订单记录`)
             } else {

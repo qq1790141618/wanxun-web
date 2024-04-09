@@ -91,12 +91,6 @@ const i18n = reactive({
             value: 'jp',
             disabled: false,
             package: jp
-        },
-        {
-            content: 'ภาษาไทย',
-            value: 'th',
-            disabled: false,
-            package: th
         }
     ],
     checkEmpty: async () => {
@@ -106,12 +100,12 @@ const i18n = reactive({
             let hasEmpty = false
         
             for (const key in languagePackage) {
-                if(languagePackage[key] == ''){
+                if(languagePackage[key] === ''){
                     hasEmpty = true
-                    let f = await translate( i18n[key]["zh"], languageCode)
-                    languagePackage[key] = f.trans_result[0].dst
+                    let f = await translate(i18n[key]["zh"], languageCode)
+                    languagePackage[key] = f.trans_result[0].dst
                     i18n[key][languageCode] = f.trans_result[0].dst
-                }
+                }
             }
 
             if(hasEmpty){
@@ -129,7 +123,7 @@ const initLanguage = () => {
     
         for (const key in languagePackage) {
             if(!i18n[key]){
-                i18n[key] = new Object
+                i18n[key] = {}
     
                 for (let l = 0; l < i18n.options.length; l++) {
                     i18n[key][i18n.options[l].value] = ''
@@ -140,5 +134,48 @@ const initLanguage = () => {
     }
 }
 initLanguage()
+
+export const getLanguage = () => {
+    let language = 'en'
+    let localLanguage = localStorage.getItem('language')
+    if(localLanguage){
+        language = localLanguage
+    }
+    return language
+}
+export const getContent = (key) => {
+    let language = getLanguage()
+    let languagePackage = {}
+
+    switch (language) {
+        case 'zh':
+            languagePackage = zh
+            break
+        case 'en':
+            languagePackage = en
+            break
+        case 'cht':
+            languagePackage = cht
+            break
+        case 'fra':
+            languagePackage = fra
+            break
+        case 'jp':
+            languagePackage = jp
+            break
+        case 'th':
+            languagePackage = th
+            break
+        case 'kor':
+            languagePackage = kor
+            break
+        default:
+            languagePackage = zh
+    }
+    if(languagePackage[key]){
+        return languagePackage[key]
+    }
+    return ''
+}
 
 export default i18n

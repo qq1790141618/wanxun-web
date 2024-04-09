@@ -13,10 +13,15 @@
             <t-button
             variant="text"
             theme="primary"
-            @click="$emit('batchEdit')"
-            :disabled="selectKey.length == 0"
+            :disabled="selectKey.length === 0"
             :title="i18n.selected(selectKey.length)[i18n.language]"
-            >
+            @click="() => {
+                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/batch-edit') >= 0){
+                    $emit('batchEdit')
+                } else {
+                    tips('权限不足', 'error')
+                }
+            }">
                 <template #icon>
                     <t-icon name="edit" />
                 </template>
@@ -25,20 +30,13 @@
             <t-button
             variant="text"
             theme="primary"
-            @click="$emit('exportToFiles')"
-            :disabled="loading || exportLoading"
-            :loading="exportLoading"
-            >
-                <template #icon>
-                    <t-icon name="file-export" />
-                </template>
-                {{ exportLoading ? i18n.exporting[i18n.language] : i18n.exportQueryGoods[i18n.language] }}
-            </t-button>
-            <t-button
-            variant="text"
-            theme="primary"
-            @click="$emit('supplierMap')"
-            >
+            @click="() => {
+                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/supplier/map') >= 0){
+                    $emit('supplierMap')
+                } else {
+                    tips('权限不足', 'error')
+                }
+            }">
                 <template #icon>
                     <t-icon name="arrow-up-down-2" />
                 </template>
@@ -59,7 +57,7 @@
                 <span
                 style="vertical-align: middle; margin-left: 6px; color: var(--td-brand-color); user-select: none;"
                 @click="() => {
-                    costHighlight = costHighlight == 'cost-col' ? '' : 'cost-col'
+                    costHighlight = costHighlight === 'cost-col' ? '' : 'cost-col'
                     costHightLightChange(costHighlight)
                 }"
                 >
@@ -71,7 +69,10 @@
 </template>
 
 <script>
+import {tips} from "../../hooks/tips.js";
+
 export default {
+    methods: {tips},
     props: {
         data: {
             type: Array,
@@ -99,9 +100,10 @@ export default {
             default: false
         }
     },
-    emits: ['batchEdit', 'exportToFiles', 'supplierMap', 'costHightLightChange'],
+    emits: ['batchEdit', 'supplierMap', 'costHightLightChange'],
     setup(props, { emit }){
         const i18n = inject('i18n')
+        const user = inject('user')
 
         const costHighlight = ref('cost-col')
         const costHightLightChange = (value) => {
@@ -117,6 +119,7 @@ export default {
 
         return {
             i18n,
+            user,
             costHighlight,
             costHightLightChange
         }

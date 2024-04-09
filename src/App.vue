@@ -1,17 +1,17 @@
 <template>
-    <t-config-provider v-show="!bunch" :global-config="globalConfig">
+    <t-config-provider :global-config="globalConfig">
         <router-view v-if="frameLessPage.indexOf($route.name) >= 0"/>
         <div v-if="frameLessPage.indexOf($route.name) < 0">
             <header-component />
-            <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;">
+            <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;" v-if="$route.name !== 'NotFound'">
                 <t-breadcrumbItem
                 v-if="homeRoute"
-                :to="homeRoute.path"
+                :to="homeRoute['path']"
                 >
                     <template #icon>
-                        <t-icon :name="homeRoute.meta.icon" />
+                        <t-icon :name="homeRoute['meta'].icon" />
                     </template>
-                    {{ i18n[homeRoute.meta.title][i18n.language] }}
+                    {{ i18n[homeRoute['meta'].title][i18n.language] }}
                 </t-breadcrumbItem>
                 <t-breadcrumbItem
                 v-for="item in $route.matched"
@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import { verifyUser } from './hooks'
 import UpdateInfo from './components/UpdateInfo.vue'
 import headerComponent from './components/header.vue'
 import merge from 'lodash/merge'
@@ -45,6 +44,10 @@ import chtConfig from 'tdesign-vue-next/es/locale/zh_TW'
 import enConfig from 'tdesign-vue-next/es/locale/en_US'
 import korConfig from 'tdesign-vue-next/es/locale/ko_KR'
 import jpConfig from 'tdesign-vue-next/es/locale/ja_JP'
+import {DialogPlugin, MessagePlugin} from "tdesign-vue-next"
+import service from "./api/service.js"
+import {getContent} from "./i18n/index.js"
+import {useRoute, useRouter} from "vue-router"
 
 export default {
     components: {
@@ -53,24 +56,24 @@ export default {
     },
     setup(){
         const i18n = inject('i18n')
-        const serve = inject('serve')
         const user = inject('user')
         const shop = inject('shop')
         const router = useRouter()
         const homeRoute = ref(false)
-        for (let i = 0; i < router.getRoutes().length; i++) {
-            if(router.getRoutes()[i].path === '/'){
-                homeRoute.value = router.getRoutes()[i]
+        const routes = router.getRoutes()
+        for (let i = 0; i < routes.length; i++) {
+            if(routes[i].path === '/'){
+                homeRoute.value = routes[i]
             }
         }
 
         const initSet = () => {
             if(localStorage.getItem('lang')){
-                i18n.language = localStorage.getItem('lang')
+                i18n.language = localStorage.getItem('lang') === 'th' ? 'en' : localStorage.getItem('lang')
                 document.documentElement.lang = i18n.languages
             }
             if(localStorage.getItem('language')){
-                i18n.language = localStorage.getItem('language')
+                i18n.language = localStorage.getItem('language') === 'th' ? 'en' : localStorage.getItem('language')
                 document.documentElement.lang = i18n.language
             }
             initLangConfig(i18n.language)
@@ -86,24 +89,29 @@ export default {
         }
         const loginVerify = () => {
             user.status = 'verify'
-            
-            verifyUser(serve)
-            .then(res => {
-                user.inform = res.user
-                user.status = 'loged'
-                localStorage.setItem('user', JSON.stringify(res.user))
-                MessagePlugin.success(i18n.welcomeBack[i18n.language] + '！' + res.user.realname)
-            })
-            .catch(() => {
-                MessagePlugin.info(i18n.loginFailure[i18n.language])
-                user.status = 'unlog'
+
+            let token = localStorage.getItem('access_token')
+            if(!token){
                 router.replace('/login')
-            })
+            }
+
+            service.api.user.inform(token)
+                .then(res => {
+                    user.inform = res.content.user
+                    user.status = 'loged'
+                    localStorage.setItem('user', JSON.stringify(user.inform))
+                    MessagePlugin.success(getContent('welcomeBack') + '！' + user.inform['realname'])
+                })
+                .catch(() => {
+                    MessagePlugin.info(getContent('loginFailure'))
+                    user.status = 'unlog'
+                    router.replace('/login')
+                })
         }
 
         const route = useRoute()
         const historyRecord = () => {
-            if(route.path == '/login' || route.path == '/' || route.path == '/data/analysis-view'){
+            if(route.path === '/login' || route.path === '/' || route.path === '/data/analysis-view'){
                 return
             }
             let history = JSON.parse(localStorage.getItem('history')) || {
@@ -112,7 +120,7 @@ export default {
             }
 
             for (let i = 0; i < history.menus.length; i++) {
-                if(history.menus[i].path == route.path){
+                if(history.menus[i].path === route.path){
                     history.menus.splice(i, 1)
                     history.menus.unshift(route)
                     localStorage.setItem('history', JSON.stringify(history))
@@ -169,12 +177,45 @@ export default {
         initSet()
 
         const frameLessPage = ['login', 'datas-analysis-view']
+        const queryVersion = () => {
+            return new Promise((resolve, reject) => {
+                fetch(`version?ver=${ (new Date()).getTime() }`)
+                    .then(response => {
+                        resolve(response.text())
+                    })
+                    .catch(error => {
+                        console.error(error)
+                        reject(error)
+                    })
+            })
+        }
+        const checkForUpdate = async () => {
+            const application = document.querySelector('#app')
+            const runningVersion = parseInt(application.dataset.version)
+            let newVersion = await queryVersion()
+            if(typeof newVersion == 'string' && /^\d+$/.test(newVersion)){
+                newVersion = parseInt(newVersion)
+                if(newVersion > runningVersion){
+                    DialogPlugin.confirm({
+                        header: '页面更新',
+                        body: '当前页面存在更新版本, 是否立即刷新以获取最新内容?',
+                        onConfirm: () => {
+                            location.reload()
+                        }
+                    })
+                }
+            }
+        }
 
         onMounted(() => {
             i18n.checkEmpty()
             loginVerify()
             setTimeout(() => {
                 historyRecord()
+
+                // setInterval(() => {
+                //     checkForUpdate()
+                // }, 3000)
             }, 1000)
         })
 

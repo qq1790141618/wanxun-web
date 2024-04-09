@@ -147,6 +147,8 @@ import { translate, uniqueArray } from '../../../hooks'
 import GoodsProfitRanks from './GoodsProfitRanks.vue'
 import OperationalContrust from './OperationalContrust.vue'
 import ProfitRatio from './ProfitRatio.vue'
+import service from "../../../api/service.js";
+import {tips} from "../../../hooks/tips.js";
 
 export default {
     components: {
@@ -155,7 +157,6 @@ export default {
         ProfitRatio
     },
     setup(){
-        const serve = inject('serve')
         const shop = inject('shop')
         const store = ref('')
         const brand = ref('')
@@ -215,30 +216,16 @@ export default {
         const errorInfo = ref({})
         
         const loading = ref(false)
-        const fetchData = async (mode, value) => {
-            let url = serve + `/analysis/aooc?brand=${ brand.value }&mode=${ mode }&time=${ value }`
-            if(store.value && store.value !== null){
-                url = url + `&store-id=${ store.value }`
-            }
-
-            return fetch(url)
-            .then(response => {
-                return Promise.resolve(response.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
         const initData = async () => {
             data.value = {}
             errorInfo.value = {}
             loading.value = true
 
             let n = 5
-            if(mode.value == 'year'){
+            if(mode.value === 'year'){
                 n = 2
             }
-            if(mode.value == 'date'){
+            if(mode.value === 'date'){
                 n = 7
             }
             let option = modeOptions.find(obj => obj.value === mode.value)
@@ -248,11 +235,14 @@ export default {
 
             for (let i = 0; i < n; i++) {
                 let matchTime = dayjs(date.value[mode.value]).subtract(i, tag).format(format)
-                results[matchTime] = await fetchData(mode.value, matchTime)
+                let res = await service.api.analysis.operational(brand.value, mode.value, matchTime, store.value ?? "")
 
-                if(results[matchTime].result){
+                if(res.result){
                     continue
+                } else {
+                    tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
                 }
+                results[matchTime] = res
 
                 let ekey
                 if(results[matchTime].message === '部分SKU在品牌的商品列表中未包含'){

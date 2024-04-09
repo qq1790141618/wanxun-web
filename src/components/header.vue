@@ -16,13 +16,6 @@
                         </template>
                     </t-button>
                 </t-tooltip>
-                <t-tooltip :content="i18n.backToOldVersion[i18n.language]">
-                    <t-button variant="text" shape="square" @click="backToOldVersion">
-                        <template #icon>
-                            <t-icon name="history-setting" />
-                        </template>
-                    </t-button>
-                </t-tooltip>
                 <t-dropdown
                 :options="i18n.options"
                 @click="changeLanguage"
@@ -58,13 +51,6 @@
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
-                <!-- <t-tooltip :content="i18n.chat[i18n.language]" v-if="$route.name !== 'login'">
-                    <t-button variant="text" shape="square" @click="chatPage">
-                        <template #icon>
-                            <t-icon name="chat-double" />
-                        </template>
-                    </t-button>
-                </t-tooltip> -->
                 <t-tooltip :content="i18n.setting[i18n.language]" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
@@ -77,7 +63,7 @@
                 <t-dropdown
                 placement="bottom"
                 :min-column-width="130"
-                v-if="user.status == 'loged'"
+                v-if="user.status === 'loged'"
                 >
                     <t-button variant="text">
                         <template #icon>

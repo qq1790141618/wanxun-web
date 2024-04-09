@@ -98,7 +98,7 @@ export default {
                 colKey: 'afterSalesRate',
                 cell: (h, {row}) => {
                     if(row.afterSalesRate){
-                        return Math.round(row.proportion * 10000) / 100 + '%'
+                        return Math.round(row.afterSalesRate * 10000) / 100 + '%'
                     }
                 },
                 sortType: 'all',

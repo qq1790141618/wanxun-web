@@ -23,18 +23,6 @@
                     :presets="quickDateRangePicker"
                     @change="initData"
                     ></t-date-range-picker>
-                    <t-button
-                    size="small"
-                    variant="outline"
-                    style="margin-left: 5px;"
-                    :loading="exportLoading"
-                    @click="exportToFiles"
-                    >
-                        <template #icon>
-                            <t-icon name="file-export" />
-                        </template>
-                        {{ i18n.export[i18n.language] }}
-                    </t-button>
                 </span>
             </template>
             <t-loading
@@ -80,6 +68,9 @@ import TurnoverRateVue from './TurnoverRate.vue'
 import AfterSales from './AfterSales.vue'
 import Sales from './Sales.vue'
 import RefundsReverseFreight from './RefundsReverseFreight.vue'
+import {MessagePlugin} from "tdesign-vue-next";
+import service from "../../../api/service.js";
+import {tips} from "../../../hooks/tips.js";
 
 export default {
     components: {
@@ -92,7 +83,6 @@ export default {
     },
     setup() {
         const i18n = inject('i18n')
-        const serve = inject('serve')
         const shop = inject('shop')
 
         const date = ref([
@@ -102,45 +92,35 @@ export default {
         const loading = ref(false)
         const data = ref([])
 
-        const categoryInfrom = async (dateFrom, dateTo) => {
-            return fetch(serve + `/goods/category/inform?store-id=${ shop.store }&brand=${ shop.brand }&from=${ dateFrom }&to=${ dateTo }`)
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
-        const getData = async (dateFrom, dateTo, isExport = false) => {
-            let url = serve + `/analysis/refunds/get?store-id=${ shop.store }&brand=${ shop.brand }&date=["${ dateFrom }","${ dateTo }"]&start=0&number=9999`
-            if(isExport){
-                url += '&export=export'
-            }
-            return fetch(url)
-            .then(res => {
-                if(isExport){
-                    return Promise.resolve(res.text())
-                }
-                return Promise.resolve(res.json())
-            })
-        }
-        const getFreight = async (dateFrom, dateTo) => {
-            return fetch(serve + `/analysis/refunds/freight?store-id=${ shop.store }&brand=${ shop.brand }&date=["${ dateFrom }","${ dateTo }"]`)
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
         const matchData = async () => {
             loading.value = true
 
-            let d = await getData(date.value[0], date.value[1])
-            data.value.goods = d.data
-            for (let i = 0; i < data.value.goods.length; i++) {
-                data.value.goods[i].actualSalesCount = data.value.goods[i].salesCount - data.value.goods[i].afterSaleCount
-                data.value.goods[i]['store-id'] = shop.store
-                data.value.goods[i].brand = shop.brand
+            let d = await service.api.analysis.refunds(date.value[0], date.value[1])
+            if(d.result){
+                data.value.goods = d.data
+
+                for (let i = 0; i < data.value.goods.length; i++) {
+                    data.value.goods[i].actualSalesCount = data.value.goods[i].salesCount - data.value.goods[i].afterSaleCount
+                    data.value.goods[i]['store-id'] = shop.store
+                    data.value.goods[i].brand = shop.brand
+                }
+            } else {
+                tips(typeof d.error === 'string' ? d.error : d.error.message, 'error')
             }
-            let f = await getFreight(date.value[0], date.value[1])
-            data.value.freight = f
-            let c = await categoryInfrom(date.value[0], date.value[1])
-            data.value.category = c.data
+
+            let f = await service.api.analysis.freights(date.value[0], date.value[1])
+            if(f.result){
+                data.value.freight = f
+            } else {
+                tips(typeof f.error === 'string' ? f.error : f.error.message, 'error')
+            }
+
+            let res = await service.api.analysis.categoryInform(date.value[0], date.value[1])
+            if(res.result){
+                data.value.category = res.data
+            } else {
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+            }
 
             loading.value = false
         }
@@ -150,17 +130,6 @@ export default {
             timer = setTimeout(() => {
                 matchData()
             }, 500)
-        }
-
-        const exportLoading = ref(false)
-        const exportToFiles = async () => {
-            exportLoading.value = true
-
-            let res = await getData(date.value[0], date.value[1], true)
-            MessagePlugin.success(i18n.exportSuccess[i18n.language])
-            window.open(serve + '/download?filename=' + res)
-            
-            exportLoading.value = false
         }
 
         const quickDateRangePicker = ref({})
@@ -174,7 +143,7 @@ export default {
             matchData()
         })
         onMounted(async () => {
-            matchData()
+            await matchData()
             quickDateRangePicker.value = await getQuickDateRangePicker(i18n.language)
         })
 

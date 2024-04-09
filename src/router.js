@@ -2,6 +2,11 @@ import { createRouter, createWebHistory }from 'vue-router'
 
 const routes = [
     {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('./Pages/NotFound/index.vue'),
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('./Pages/Login/index.vue'),
@@ -141,19 +146,6 @@ const routes = [
         }
     },
     {
-        path: '/open-source',
-        name: 'open-source',
-        component: () => import('./Pages/Source/index.vue'),
-        meta: {
-            title: 'openSource',
-            icon: 'code',
-            avatar: 'https://cdn.fixeam.com/tw/colorful/code.png',
-            key: '5',
-            keepAlive: true,
-            menuShow: true
-        }
-    },
-    {
         path: '/user-center',
         name: 'user-center',
         component: () => import('./Pages/UserCenter/index.vue'),
@@ -165,6 +157,58 @@ const routes = [
             keepAlive: true,
             menuShow: true
         }
+    },
+    {
+        path: '/manger',
+        name: 'manger',
+        component: () => import('./Pages/Manger/index.vue'),
+        redirect: '/manger/user',
+        meta: {
+            title: 'manage',
+            icon: 'user-setting',
+            avatar: 'https://cdn.fixeam.com/tw/colorful/set-up-dot.png',
+            key: '7',
+            keepAlive: true,
+            menuShow: true
+        },
+        children: [
+            {
+                path: '/manger/user',
+                name: 'user-manage',
+                component: () => import('./Pages/Manger/User/index.vue'),
+                meta: {
+                    title: "userManage",
+                    icon: 'usergroup-add',
+                    avatar: 'https://cdn.fixeam.com/tw/colorful/data.png',
+                    key: '7-1',
+                    keepAlive: true
+                }
+            },
+            {
+                path: '/manger/user-group',
+                name: 'user-group-manage',
+                component: () => import('./Pages/Manger/UserGroup/index.vue'),
+                meta: {
+                    title: "userGroupMange",
+                    icon: 'usergroup',
+                    avatar: 'https://cdn.fixeam.com/tw/colorful/data.png',
+                    key: '7-2',
+                    keepAlive: true
+                }
+            },
+            {
+                path: '/manger/app',
+                name: 'app-manager',
+                component: () => import('./Pages/Manger/App/index.vue'),
+                meta: {
+                    title: "appManage",
+                    icon: 'app',
+                    avatar: 'https://cdn.fixeam.com/tw/colorful/menu.png',
+                    key: '7-3',
+                    keepAlive: true
+                }
+            },
+        ]
     }
 ]
 

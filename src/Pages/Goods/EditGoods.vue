@@ -637,6 +637,9 @@
 <script>
 import { uniqueArray } from '../../hooks'
 import confirmBar from '../../components/confirmBar.vue'
+import {MessagePlugin} from "tdesign-vue-next";
+import service from "../../api/service.js";
+import {tips} from "../../hooks/tips.js";
 
 export default {
     components: {
@@ -682,46 +685,36 @@ export default {
                 sku.value[i].barcode = stylenumber + colorCode + sizeCode
             }
         }
-        const getData = async (stylenumber) => {
-            return fetch(serve + '/goods/item/get?store-id=' + shop.store + '&brand=' + shop.brand + '&stylenumber=' + stylenumber, {
-                method: 'POST'
-            })
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
-        const create = async () => {
-            return fetch(serve + '/import/task/create?name=morifySku', {
-                method: 'POST',
-                body: JSON.stringify(sku.value)
-            })
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
-        const start = async (id) => {
-            return fetch(serve + '/import/task/sku/start?id=' + id)
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
         const open = async (row) => {
             visible.value = true
             loading.value = true
             sku.value = []
-            let res = await getData(row.stylenumber)
-            for (let i = 0; i < res.length; i++) {
-                res[i]['category-id'] = parseInt(res[i]['category-id'])
+
+            let res = await service.api.goods.getItem(row.stylenumber)
+            if(res.result){
+                for (let i = 0; i < res.data.length; i++) {
+                    res.data[i]['category-id'] = parseInt(res.data[i]['category-id'])
+                }
+                sku.value = res.data
+            } else {
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
             }
-            sku.value = res
+
             loading.value = false
         }
         const set = async () => {
             submit.value = true
-            let id = await create()
-            let res = await start(id)
+
+            let task = await service.api.imports.create('morifySku', sku.value)
+            if(!task.result){
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+                submit.value = false
+                return
+            }
+
+            let res = await service.api.imports.start('sku', task.id)
             if(res.result){
-                MessagePlugin.success(i18n.editSuccess[i18n.language])
+                await MessagePlugin.success(i18n.editSuccess[i18n.language])
             }
             submit.value = false
             visible.value = false

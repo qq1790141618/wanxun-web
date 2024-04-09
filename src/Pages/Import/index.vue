@@ -1,10 +1,19 @@
 <template>
     <div class="main-content" id="import-page">
         <t-card :bordered="false">
-            <t-tabs v-model="tab" placement="left" size="small">
+            <t-tabs v-model="tab" placement="left" size="medium">
                 <t-tab-panel :value="0" label="数据导入任务查询">
                     <div class="headbar">
-                        <t-button @click="addTab" shape="round">
+                        <t-button @click="() => {
+                            if(
+                                !user.inform['need_auth']
+                                || user.inform['api_p'].indexOf('api/v1/import/task/create') >= 0
+                            ){
+                                addTab()
+                            } else {
+                                tips('权限不足', 'error')
+                            }
+                        }" shape="round">
                             <template #icon>
                                 <t-icon name="add" />
                             </template>
@@ -18,8 +27,7 @@
                         </t-button>
                         <t-dropdown
                         :options="[
-                            { content: '商品价格信息及上架时间导入模板', value: 'https://cdn.fixeam.com/tw/template/%E5%95%86%E5%93%81%E4%BB%B7%E6%A0%BC%E4%BF%A1%E6%81%AF%E5%8F%8A%E4%B8%8A%E6%9E%B6%E6%97%B6%E9%97%B4%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx' },
-                            { content: '商品额外信息导入模板', value: serve + '/goods/supplier/template' }
+                            { content: 'SKU信息导入模板', value: 'https://cdn.fixeam.com/tw/template/SKU信息导入模板.xlsx' }
                         ]"
                         trigger="hover"
                         @click="(context) => {
@@ -48,9 +56,18 @@
                             关闭所有Tab
                         </t-button>
                         <t-button
-                        @click="removeOrder.open()"
                         theme="danger"
                         shape="round"
+                        @click="() => {
+                            if(
+                                !user.inform['need_auth']
+                                || user.inform['api_p'].indexOf('api/v1/order/remove') >= 0
+                            ){
+                                removeOrder.open()
+                            } else {
+                                tips('权限不足', 'error')
+                            }
+                        }"
                         >
                             <template #icon>
                                 <t-icon name="clear" />
@@ -104,7 +121,7 @@
                             <t-step-item title="数据确认" content="确认数据是否解析正确, 并提交创建任务"></t-step-item>
                             <t-step-item title="创建完成" content="任务创建完成状态"></t-step-item>
                         </t-steps>
-                        <div v-if="item.current == 0">
+                        <div v-if="item.current === 0">
                             <div style="">
                                 <t-icon name="upload"></t-icon>
                                 表格上传:
@@ -112,7 +129,7 @@
                             </div>
                             <t-upload
                             v-model:files="item.filelist"
-                            :action="serve + '/xlsx/parse'"
+                            :action="`${host}/xlsx/parse?api_sign=${uploadSign}&access_token=${getToken()}`"
                             :accept="allowType.join(',')"
                             :size-limit="allowSize * 1024"
                             @beforeUpload="() => {
@@ -150,19 +167,7 @@
                                     解析到的数据为 {{ tableParse[item.type].name }} : 共{{ item.jsonBody.length }}条数据。
                                 </div>
                                 <t-button
-                                @click="() => {
-                                    const confirmDia = DialogPlugin({
-                                        header: '创建任务',
-                                        body: `确定为(${ shop.store } / ${ shop.brand }) 创建此任务吗?`,
-                                        onConfirm: () => {
-                                            submit(item)
-                                            confirmDia.destroy()
-                                        },
-                                        onClose: () => {
-                                            confirmDia.destroy()
-                                        }
-                                    })
-                                }"
+                                @click="submit(item)"
                                 :loading="createLoading"
                                 style="margin-top: 8px;"
                                 >
@@ -174,19 +179,7 @@
                                     解析到的数据为 {{ tableParse[item.type][0].name }} : {{ item.data.sheets[0] }} 共{{ item.jsonBody[0].length }}条数据, {{ item.data.sheets[1] }} 共{{ item.jsonBody[1].length }}条数据。
                                 </div>
                                 <t-button
-                                @click="() => {
-                                    const confirmDia = DialogPlugin({
-                                        header: '创建任务',
-                                        body: `确定为(${ shop.store } / ${ shop.brand }) 创建此任务吗?`,
-                                        onConfirm: () => {
-                                            submitOrder(item)
-                                            confirmDia.destroy()
-                                        },
-                                        onClose: () => {
-                                            confirmDia.destroy()
-                                        }
-                                    })
-                                }"
+                                @click="submitOrder(item)"
                                 :loading="createLoading"
                                 style="margin-top: 8px;"
                                 >
@@ -220,8 +213,14 @@ import dayjs from 'dayjs'
 import UploadTips from './UploadTips.vue'
 import ListDisplay from './ListDisplay.vue'
 import RemoveOrder from './RemoveOrder.vue'
+import {apiSign} from "../../api/request.js";
+import service from "../../api/service.js";
+import {tips} from "../../hooks/tips.js";
+import host from "../../api/host.js";
+import {getToken} from "../../hooks/user.js";
 
 export default {
+    methods: {tips},
     components: {
         UploadTips,
         ListDisplay,
@@ -229,7 +228,7 @@ export default {
     },
     setup(){
         const i18n = inject('i18n')
-        const serve = inject('serve')
+        const user = inject('user')
         const shop = inject('shop')
 
         const res = ref([])
@@ -248,6 +247,7 @@ export default {
         const tab = ref(0)
         const tableParse = ref({
             sku: {
+                disabled: false,
                 name: 'SKU信息表',
                 task: 'morifySku',
                 theadstart: 'SKU',
@@ -338,6 +338,7 @@ export default {
                 }
             },
             spu: {
+                disabled: false,
                 name: '款信息表',
                 task: 'morifySpu',
                 theadstart: '商品款名称',
@@ -362,6 +363,7 @@ export default {
                 }
             },
             inventory: {
+                disabled: false,
                 name: '库存信息表',
                 task: 'morifySku',
                 theadstart: 'SKU编码',
@@ -380,14 +382,19 @@ export default {
                 }
             },
             cost: {
-                name: '商品价格信息及上架时间导入表',
+                disabled: false,
+                name: 'SKU信息导入模板',
                 task: 'morifySku',
                 theadstart: 'SKU编码',
-                theadend: '上架时间',
+                theadend: '适用季节',
                 corresponding: {
                     'SKU编码': 'SKU',
                     '运营价': 'cost',
-                    '日常销售价': 'price'
+                    '日常销售价': 'price',
+                    '供应商': 'supplier',
+                    '供应商原厂编码': 'supplier-id',
+                    '适用性别': 'sex',
+                    '适用季节': 'season'
                 },
                 computer: {
                     'first-listing-time': (value) => {
@@ -407,6 +414,7 @@ export default {
                 }
             },
             supplier: {
+                disabled: true,
                 name: '商品额外导入表',
                 task: 'morifySupplier',
                 theadstart: '款号',
@@ -422,6 +430,7 @@ export default {
             },
             order: [
                 {
+                    disabled: false,
                     name: '订单信息导入表',
                     task: 'morifyOrderList',
                     theadstart: '父订单号',
@@ -461,6 +470,7 @@ export default {
                     }
                 },
                 {
+                    disabled: false,
                     name: '订单信息导入表',
                     task: 'morifyOrderDetails',
                     theadstart: '子订单号',
@@ -477,12 +487,31 @@ export default {
                     },
                     computer: {
                         brand: (value) => {
+                            if(value['商品名称'] != null){
+                                for (let i = 0; i < shop.brandOptions.length; i++){
+                                    const brand = shop.brandOptions[i]
+                                    if(value['商品名称'].indexOf(brand.value) >= 0){
+                                        return brand.value
+                                    }
+                                    if(value['商品名称'].indexOf(brand.value.toLowerCase()) >= 0){
+                                        return brand.value
+                                    }
+                                    if(value['条码'].substr(0, 2) === brand.suffix){
+                                        return brand.value
+                                    }
+                                }
+                            }
+
+                            if(/^\d+$/.test(value['条码'].substr(0, 3))){
+                                return '查尔斯桃心'
+                            }
                             return shop.brand
-                        }
+                        },
                     }
                 }
             ],
             refunds: {
+                disabled: false,
                 name: '退款信息表',
                 task: 'morifyOrderRefunds',
                 theadstart: '申请单号',
@@ -526,6 +555,7 @@ export default {
                 }
             },
             bills: {
+                disabled: false,
                 name: '销售对账信息表',
                 task: 'morifyOrderBill',
                 theadstart: '订单类型',
@@ -593,16 +623,14 @@ export default {
         })
 
         const createLoading = ref(false)
-        const getData = async () => {
-            let start = (pagination.value.current - 1) * pagination.value.pageSize
-            return fetch(`${serve}/import/task?start=${start}&number=${pagination.value.pageSize}`)
-            .then((response) => {
-                return Promise.resolve(response.json())
-            })
-        }
         const initData = async () => {
             loading.value = true
-            let response = await getData()
+            let response = await service.api.imports.get((pagination.value.current - 1) * pagination.value.pageSize, pagination.value.pageSize)
+            if(!response.result){
+                tips(typeof response.error === 'string' ? response.error : response.error.message, 'error')
+                loading.value = false
+                return
+            }
             res.value = response.data
             pagination.value.total = response.total
             loading.value = false
@@ -610,7 +638,11 @@ export default {
         let timerRefresh = null
         const autoFresh = () => {
             timerRefresh = setInterval(async () => {
-                let response = await getData()
+                let response = await service.api.imports.get((pagination.value.current - 1) * pagination.value.pageSize, pagination.value.pageSize)
+                if(!response.result){
+                    tips(typeof response.error === 'string' ? response.error : response.error.message, 'error')
+                    return
+                }
                 res.value = response.data
                 pagination.value.total = response.total
             }, 1000)
@@ -685,6 +717,10 @@ export default {
                         return
                     }
                 } else {
+                    if(temp.disabled){
+                        continue
+                    }
+
                     let tempHead = tabPanels.value[index].data.content[0][0]
                     thead = []
                     for (let th = 0; th < tempHead.length; th++){
@@ -697,8 +733,32 @@ export default {
                         (thead[0] === temp.theadstart && thead[thead.length - 1] === temp.theadend)
                         || (temp.theadendn && thead[0] === temp.theadstart && thead[thead.length - 1] === temp.theadendn)
                     ){
+                        let data = tabPanels.value[index].data.content[0]
+                        for (let j = data.length - 1; j >= 0; j--){
+                            if(!data[j]){
+                                data.splice(j, 1)
+                            }
+                            let isNull = true
+
+                            for (let q = 0; q < data[j].length; q++){
+                                if(data[j][q]){
+                                    isNull = false
+                                }
+                            }
+
+                            if(isNull){
+                                data.splice(j, 1)
+                            }
+                        }
+
+                        if(data.length < 2){
+                            MessagePlugin.info('表格内容为空')
+                            tabPanels.value[index].current--
+                            return
+                        }
+
                         MessagePlugin.info('识别到的表格为' + temp.name)
-                        let body = initTable(tabPanels.value[index].data.content[0], temp.corresponding, temp.computer)
+                        let body = initTable(data, temp.corresponding, temp.computer)
                         tabPanels.value[index].type = key
                         tabPanels.value[index].jsonBody = body
                         tabPanels.value[index].current++
@@ -717,15 +777,15 @@ export default {
 
             for (let i = 1; i < data.length; i++) {
                 let col = data[i]
-                let item = new Object
-                let real = new Object
+                let item = {}
+                let real = {}
 
                 for (let t = 0; t < header.length; t++) {
                     item[header[t]] = col[t]
 
                     if(
                     corresponding[header[t]]
-                    && col[t] != ''
+                    && col[t] !== ''
                     && col[t] != null
                     ){
                         let property = corresponding[header[t]]
@@ -750,7 +810,7 @@ export default {
             tab.value = 0
 
             for (let i = 0; i < tabPanels.value.length; i++) {
-                if(tabPanels.value[i].value == item.value){
+                if(tabPanels.value[i].value === item.value){
                     tabPanels.value.splice(i, 1)
                     break
                 }
@@ -758,28 +818,11 @@ export default {
 
             initData()
         }
-        const submitUpload = async (data, taskName) => {
-            return fetch(serve + '/import/task/create?name=' + taskName, {
-                method: "POST",
-                mode: "cors",
-                cache: "no-cache",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-                body: JSON.stringify(data)
-            })
-            .then((response) => {
-                return Promise.resolve(response.json())
-            })
-        }
         const submit = async (item) => {
             createLoading.value = true
             let jsonBody
 
-            if(item.type == 'supplier'){
+            if(item.type === 'supplier'){
                 jsonBody = {
                     store: shop.store,
                     brand: shop.brand,
@@ -789,7 +832,7 @@ export default {
                 jsonBody = item.jsonBody
             }
 
-            await submitUpload(jsonBody, tableParse.value[item.type].task)
+            await service.api.imports.create(tableParse.value[item.type].task, jsonBody)
 
             item.current++
             createLoading.value = false
@@ -798,7 +841,7 @@ export default {
             createLoading.value = true
 
             for (let i = item.jsonBody.length - 1; i >= 0; i--) {
-                await submitUpload(item.jsonBody[i], tableParse.value[item.type][i].task)
+                await service.api.imports.create(tableParse.value[item.type][i].task, item.jsonBody[i])
             }
 
             item.current++
@@ -816,11 +859,17 @@ export default {
         onDeactivated(() => {
             clearFresh()
         })
+
+        const uploadSign = ref('')
+        const getUploadSign = async () => {
+            uploadSign.value = await apiSign('/xlsx/parse')
+        }
+        getUploadSign()
         
         return {
+            host,
             i18n,
             shop,
-            serve,
             res,
             tab,
             loading,
@@ -828,7 +877,6 @@ export default {
             allowSize,
             tabPanels,
             createLoading,
-            getData,
             initData,
             autoFresh,
             addTab,
@@ -841,7 +889,10 @@ export default {
             tableParse,
             removeOrder,
             DialogPlugin,
-            pagination
+            pagination,
+            uploadSign,
+            getToken,
+            user
         }
     }
 }

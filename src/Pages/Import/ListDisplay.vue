@@ -9,15 +9,16 @@
     rowKey="id"
     :pagination="false"
     hover
+    table-layout="auto"
     >
         <template #type-show="{ row }">
-            <span v-if="row.type == 'morifySku'"><t-icon name="barcode"></t-icon>&nbsp;导入SKU信息</span>
-            <span v-if="row.type == 'morifySpu'"><t-icon name="system-2"></t-icon>&nbsp;导入SPU/款信息</span>
-            <span v-if="row.type == 'morifySupplier'"><t-icon name="transform-1"></t-icon>&nbsp;导入商品额外信息</span>
-            <span v-if="row.type == 'morifyOrderList'"><t-icon name="assignment"></t-icon>&nbsp;导入订单列表</span>
-            <span v-if="row.type == 'morifyOrderDetails'"><t-icon name="article"></t-icon>&nbsp;导入订单明细</span>
-            <span v-if="row.type == 'morifyOrderRefunds'"><t-icon name="browse-gallery"></t-icon>&nbsp;导入退款信息</span>
-            <span v-if="row.type == 'morifyOrderBill'"><t-icon name="currency-exchange"></t-icon>&nbsp;导入销售对账单</span>
+            <span v-if="row.type === 'morifySku'"><t-icon name="barcode"></t-icon>&nbsp;导入SKU信息</span>
+            <span v-if="row.type === 'morifySpu'"><t-icon name="system-2"></t-icon>&nbsp;导入SPU/款信息</span>
+            <span v-if="row.type === 'morifySupplier'"><t-icon name="transform-1"></t-icon>&nbsp;导入商品额外信息</span>
+            <span v-if="row.type === 'morifyOrderList'"><t-icon name="assignment"></t-icon>&nbsp;导入订单列表</span>
+            <span v-if="row.type === 'morifyOrderDetails'"><t-icon name="article"></t-icon>&nbsp;导入订单明细</span>
+            <span v-if="row.type === 'morifyOrderRefunds'"><t-icon name="browse-gallery"></t-icon>&nbsp;导入退款信息</span>
+            <span v-if="row.type === 'morifyOrderBill'"><t-icon name="currency-exchange"></t-icon>&nbsp;导入销售对账单</span>
         </template>
         <template #progress-show="{ row }">
             <div style="padding: 0 60px;">
@@ -34,6 +35,7 @@
                 theme="danger"
                 shape="round"
                 size="small"
+                :disabled="user.inform['need_auth'] && user.inform['api_p'].indexOf('api/v1/import/task/remove') < 0"
                 >
                     <template #icon>
                         <t-icon name="delete" />
@@ -62,6 +64,9 @@
 <script>
 import { translate } from '../../hooks'
 import ErrorDialog from './ErrorDialog.vue'
+import service from "../../api/service.js";
+import {tips} from "../../hooks/tips.js";
+import {NotifyPlugin} from "tdesign-vue-next";
 
 export default {
     props: ['data', 'loading'],
@@ -69,20 +74,28 @@ export default {
         ErrorDialog
     },
     setup(){
-        const serve = inject('serve')
-        const i18n = inject('i18n')
+        const user = inject('user')
         const columns = [
             {
                 title: '任务编号',
                 colKey: 'id',
-                align: 'center',
-                width: 150
+                align: 'center'
             },
             {
                 title: '任务类型',
                 colKey: 'type-show',
+                align: 'center'
+            },
+            {
+                title: '创建用户',
+                colKey: 'user',
                 align: 'center',
-                width: 180
+                cell: (h, { row }) => {
+                    if(row.user === user.inform.uid){
+                        return '当前帐号'
+                    }
+                    return row.user ?? '未知'
+                }
             },
             {
                 title: '任务进度',
@@ -93,41 +106,37 @@ export default {
             {
                 title: '任务状态',
                 colKey: 'status',
-                align: 'center',
-                width: 150
+                align: 'center'
             },
             {
                 title: '操作',
                 colKey: 'ope',
-                align: 'center',
-                width: 150
+                align: 'center'
             }
         ]
 
-        const startRemove = async (id) => {
-            return fetch(serve + `/import/task/remove?id=${ id }`)
-            .then(response => {
-                return Promise.resolve(response.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
         const removeTask = async (row) => {
             if(row.progress > 0 && row.progress < 1){
-                NotifyPlugin.warning({
+                NotifyPlugin.error({
                     title: '移除失败',
                     content: '不可以移除正在进行中的任务'
                 })
                 return
             }
 
-            let res = await startRemove(row.id)
+            if(row.user !== user.inform.uid){
+                NotifyPlugin.error({
+                    title: '移除失败',
+                    content: '只能移除自己创建的任务'
+                })
+                return
+            }
+
+            let res = await service.api.imports.remove(row.id)
             if(res.result){
-                MessagePlugin.success(i18n.editSuccess[i18n.language])
+                tips('移除成功', 'success')
             } else {
-                let f = translate(res.error, i18n.language)
-                MessagePlugin.error(f.trans_result[0].dst)
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
             }
         }
 
@@ -141,7 +150,8 @@ export default {
             columns,
             removeTask,
             showError,
-            errorDialog
+            errorDialog,
+            user
         }
     }
 }

@@ -59,6 +59,9 @@
 
 <script>
 import confirmBar from '../../components/confirmBar.vue'
+import service from "../../api/service.js";
+import {tips} from "../../hooks/tips.js";
+import {MessagePlugin} from "tdesign-vue-next";
 
 export default {
     components: {
@@ -74,7 +77,6 @@ export default {
     setup(props, { emit }){
         const i18n = inject('i18n')
         const shop = inject('shop')
-        const serve = inject('serve')
 
         const visible = ref(false)
         const loading = ref(false)
@@ -83,20 +85,6 @@ export default {
             to: null,
             onlyStore: true
         })
-        const uploadData = async (from, to, brand) => {
-            let url = serve + '/goods/supplier/map?from=' + from + '&to=' + to + '&brand=' + brand
-            if(data.value.onlyStore){
-                url += '&store=' + shop.store
-            }
-
-            return fetch(url)
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
         const done = async () => {
             if(data.value.to === null || data.value.to === ''){
                 MessagePlugin.error(i18n.supplierMapToEmpty[i18n.language])
@@ -112,15 +100,19 @@ export default {
                         confirm.hide()
 
                         loading.value = true
-                        let res1 = await uploadData(null, data.value.to, shop.brand)
-                        let res2 = await uploadData('', data.value.to, shop.brand)
+                        let res1 = await service.api.goods.supplierMap(null, data.value.to, data.value.onlyStore)
+                        let res2 = await service.api.goods.supplierMap('', data.value.to, data.value.onlyStore)
                         let count = 0
 
                         if(res1.result){
                             count += res1.vol
+                        } else {
+                            tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
                         }
                         if(res2.result){
                             count += res2.vol
+                        } else {
+                            tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
                         }
 
                         MessagePlugin.success(i18n.batchEdited(count)[i18n.language])
@@ -138,12 +130,12 @@ export default {
                 })
             } else {
                 loading.value = true
-                let res = await uploadData(data.value.from, data.value.to, shop.brand)
+                let res = await service.api.goods.supplierMap(data.value.from, data.value.to, data.value.onlyStore)
                 if(res.result){
-                    MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
+                    await MessagePlugin.success(i18n.batchEdited(res.vol)[i18n.language])
                     emit('reload')
                 } else {
-                    MessagePlugin.info(i18n.batchEdited(0)[i18n.language])
+                    tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
                 }
 
                 close()

@@ -43,6 +43,11 @@ import RecentData from './RecentData.vue'
 import FastRankTable from './FastRankTable.vue'
 import FastLink from './FastLink.vue'
 import StyleRecommed from './StyleRecommed.vue'
+import service from "../../api/service.js";
+import {getMirrors} from "../../api/goodsApi.js";
+import {tips} from "../../hooks/tips.js";
+import host from "../../api/host.js";
+import {MessagePlugin} from "tdesign-vue-next";
 
 export default {
     components: {
@@ -55,7 +60,6 @@ export default {
     setup(){
         const loading = ref(true)
         const percent = ref(0)
-        const serve = inject('serve')
         const shop = inject('shop')
         const i18n = inject('i18n')
 
@@ -80,45 +84,22 @@ export default {
             year: {}
         })
 
-        const famousWord = async () => {
-            return fetch(serve + "/famous-word")
-            .then((response) => {
-                return Promise.resolve(response.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
-        const annualOverview = async () => {
-            return fetch(serve + '/analysis/annual-overview?store-id=' + shop.store + '&brand=' + shop.brand)
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
-        const goodsRanks = async () => {
-            return fetch(serve + '/goods/mirros')
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
-
         const initF = async () => {
-            let f = await famousWord()
-            data.value.famousWord = f.hitokoto + ' 来自《' + f.works + '》'
-            if(f.author){
-                data.value.famousWord += f.author
+            let f = await service.api.analysis.famousWord()
+
+            if(!f.result){
+                tips(typeof f.error === 'string' ? f.error : f.error.message, 'error')
+            }
+
+            data.value.famousWord = f.content.hitokoto + ' 来自《' + f.content.works + '》'
+            if(f.content.author){
+                data.value.famousWord += f.content.author
             }
             data.value.famousWord += '。'
+
             translate(data.value.famousWord, i18n.language)
             .then(res => {
-                data.value.famousWord = res.trans_result[0].dst
-
+                data.value.famousWord = res['trans_result'][0]['dst']
                 return Promise.resolve()
             })
         }
@@ -136,20 +117,24 @@ export default {
                 }
             }, 50)
 
-            let ao = await annualOverview()
+            let ao = await service.api.analysis.annualOverview()
 
-            data.value.year.income = ao.income
-            data.value.year.ordersCount = ao.ordersCount
-            data.value.year.salesCount = ao.salesCount
-            data.value.year.productsCount = ao.productsCount
-            data.value.week = ao.nearlyWeek
-            data.value.supplier = ao.ms.supplier
-            data.value.goods = ao.ms.product
+            if(!ao.result){
+                tips(typeof ao.error === 'string' ? ao.error : ao.error.message, 'error')
+            } else {
+                data.value.year.income = ao.income
+                data.value.year.ordersCount = ao.ordersCount
+                data.value.year.salesCount = ao.salesCount
+                data.value.year.productsCount = ao.productsCount
+                data.value.week = ao.nearlyWeek
+                data.value.supplier = ao.ms.supplier
+                data.value.goods = ao.ms.product
 
-            let y = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-            for (let i = 0; i < data.value.week.length; i++){
-                if (y === data.value.week[i].time){
-                    data.value.day = data.value.week[i]
+                let y = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+                for (let i = 0; i < data.value.week.length; i++){
+                    if (y === data.value.week[i].time){
+                        data.value.day = data.value.week[i]
+                    }
                 }
             }
 
@@ -159,16 +144,28 @@ export default {
             loading.value = false
         }
         const runGetGoodsRank = async () => {
-            let ranks = await goodsRanks()
-            data.value.ranks = {
+            let res = await service.api.goods.getMirrors(getMirrors)
+
+            if(!res.result){
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+                return
+            }
+
+            let ranks = {
                 KCOR: [],
                 NT: [],
                 '兔皇': [],
                 DR: []
             }
-            for (let i = 0; i < ranks.length; i++) {
-                data.value.ranks[ranks[i].brand].push(ranks[i])
+            for (let i = 0; i < res.content.length; i++) {
+                for (const ranksKey in ranks) {
+                    if(res.content[i].brand.indexOf(ranksKey) >= 0){
+                        ranks[ranksKey].push(res.content[i])
+                    }
+                }
             }
+
+            data.value.ranks = ranks
         }
 
 

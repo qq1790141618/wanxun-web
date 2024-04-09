@@ -1,12 +1,12 @@
 <template>
     <div class="datas-analysis">
         <t-dialog
-        visible
+        :visible="true"
         mode="modeless"
-        draggable
+        :draggable="true"
         class="create-analysis"
         attach="datas-analysis"
-        show-in-attached-element
+        :show-in-attached-element="true"
         :footer="false"
         :close-btn="false"
         style="user-select: none;"
@@ -26,7 +26,7 @@
             <t-space
             direction="vertical"
             class="create-analysis-input"
-            v-if="current == 1"
+            v-if="current === 1"
             >
                 <div style="font-size: 14px;">
                     <t-icon name="shop-5" />
@@ -69,12 +69,12 @@
                 :loading="create.loading"
                 @click="create.confirm"
                 shape="round"
-                block
+                :block="true"
                 >
                     {{ i18n.nextStep[i18n.language] }}
                 </t-button>
             </t-space>
-            <div v-if="current == 2" style="padding: 20px 0;">
+            <div v-if="current === 2" style="padding: 20px 0;">
                 <t-progress
                 theme="circle"
                 :percentage="create.percent"
@@ -84,7 +84,7 @@
                     {{ i18n.tip4[i18n.language] }}...
                 </div>
             </div>
-            <div v-if="current == 3" style="padding: 20px 0;">
+            <div v-if="current === 3" style="padding: 20px 0;">
                 {{ i18n.tip5[i18n.language] }}!
             </div>
         </t-dialog>
@@ -94,10 +94,13 @@
 <script>
 import dayjs from 'dayjs'
 import { getQuickDateRangePicker } from '../../../hooks'
+import {MessagePlugin} from "tdesign-vue-next";
+import {useRouter} from "vue-router";
+import service from "../../../api/service.js";
+import {tips} from "../../../hooks/tips.js";
 
 export default {
     setup() {
-        const serve = inject('serve')
         const shop = inject('shop')
         const i18n = inject('i18n')
         const router = useRouter()
@@ -116,53 +119,32 @@ export default {
             },
             loading: false,
             percent: 0,
-            createTask: async () => {
-                return fetch(serve + '/analysis/sales/create?store-id=' + create.store + '&brand=' + create.brand + '&date=' + JSON.stringify(create.date))
-                .then(response => {
-                    return Promise.resolve(response.json())
-                })
-                .catch(() => {
-                    MessagePlugin.error(i18n.httpFail[i18n.language])
-                })
-            },
-            startTask: () => {
-                fetch(serve + '/analysis/sales/task')
-                .then(response => {
-                    return response.json()
-                })
-                .catch(() => {
-                    MessagePlugin.error(i18n.httpFail[i18n.language])
-                })
-            },
-            queryProgress: async (id) => {
-                return fetch(serve + '/analysis/sales/task/result?id=' + id)
-                .then(response => {
-                    return Promise.resolve(response.json())
-                })
-                .catch(() => {
-                    MessagePlugin.error(i18n.httpFail[i18n.language])
-                })
-            },
             confirm: async () => {
                 create.loading = true
-                let task = await create.createTask()
+                let task = await service.api.analysis.createTask(create.date)
+                if(!task.result){
+                    tips(task.error.message, 'error')
+                    create.loading = false
+                    return
+                }
+
                 create.loading = false
                 current.value++
 
-                let id = task.id
-                create.startTask()
+                let id = task.content.id
+                service.api.analysis.startTask()
 
                 let timer = setInterval(async () => {
-                    let t = await create.queryProgress(id)
+                    let t = await service.api.analysis.queryProgress(id)
                     task = t.data
                     create.percent = Math.round(task.progress * 100)
 
-                    if(task.progress == 1){
+                    if(task.progress === 1){
                         clearInterval(timer)
                         current.value++
                         localStorage.setItem('view-task', JSON.stringify(task))
 
-                        MessagePlugin.success(i18n.tip5[i18n.language] + '! ' + i18n.tip6[i18n.language] + '.')
+                        await MessagePlugin.success(i18n['tip5'][i18n.language] + '! ' + i18n['tip6'][i18n.language] + '.')
                         setTimeout(() => {
                             router.push('/data/analysis-view')
                             create.initialization()

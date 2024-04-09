@@ -8,7 +8,7 @@
         </template>
         <t-tabs :default-value="shop.brand">
             <t-tab-panel
-            v-for="item, index in shop.brandOptions"
+            v-for="(item, index) in shop.brandOptions"
             :key="index"
             :value="item.value"
             :label="item.label"

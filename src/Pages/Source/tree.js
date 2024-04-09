@@ -675,8 +675,8 @@ export default [
                 type: 'css'
             },
             {
-                label: 'user.js',
-                value: '/src/user.js',
+                label: 'userApi.js',
+                value: '/src/userApi.js',
                 type: 'js'
             }
         ]

@@ -29,7 +29,7 @@
                 variant="outline"
                 shape="square"
                 @click="changeMonth(-1)"
-                :disabled="useMonth == '2021-11'"
+                :disabled="useMonth === '2021-11'"
                 >
                     <template #icon>
                         <t-icon name="chevron-left"></t-icon>
@@ -61,7 +61,7 @@
                 variant="outline"
                 shape="square"
                 @click="changeMonth(1)"
-                :disabled="useMonth == dayjs().format('YYYY-MM')"
+                :disabled="useMonth === dayjs().format('YYYY-MM')"
                 >
                     <template #icon>
                         <t-icon name="chevron-right"></t-icon>
@@ -75,11 +75,12 @@
 <script>
 import dayjs from 'dayjs'
 import { sort } from '../../../hooks'
+import service from "../../../api/service.js";
+import {tips} from "../../../hooks/tips.js";
 
 export default {
     setup(){
         const i18n = inject('i18n')
-        const serve = inject('serve')
         const shop = inject('shop')
 
         const loading = ref(false)
@@ -141,15 +142,6 @@ export default {
             }
         })
 
-        const getSummary = async (month) => {
-            return fetch(serve + "/analysis/summary/month?id=1000000073&store-id=" + shop.store + "&brand=" + shop.brand + "&month=" + month)
-            .then((response) => {
-                return Promise.resolve(response.json())
-            })
-            .catch(() => {
-                MessagePlugin.error(i18n.httpFail[i18n.language])
-            })
-        }
         const computeFootData = (data) => {
             let countData = {}
             countData.date = '合计'
@@ -176,10 +168,16 @@ export default {
                 return
             }
             loading.value = true
+
             footData.value = []
-            let res = await getSummary(useMonth.value)
-            data.value[useMonth.value] = res
-            footData.value = computeFootData(res)
+            let res = await service.api.analysis.summaryDayOfMonth(useMonth.value)
+            if(res.result){
+                data.value[useMonth.value] = res.data
+                footData.value = computeFootData(res.data)
+            } else {
+                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+            }
+
             loading.value = false
         }
         const cantChangeMonth = ref(false)
