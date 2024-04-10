@@ -8,7 +8,7 @@ import cht from './cht.json'
 import { translate } from '../hooks'
 
 function batchEdited(number) {
-    if(number == 0){
+    if(number === 0){
         return {
             zh: '未修改任何数据',
             en: 'No data edited',
@@ -29,8 +29,9 @@ function batchEdited(number) {
         fra: `${number} SKU modifié`
     }
 }
+
 function selected(number) {
-    if(number == 0){
+    if(number === 0){
         return {
             zh: '未选择任何数据',
             en: 'No data selected',
@@ -51,6 +52,7 @@ function selected(number) {
         fra: `${number} item données sélectionnées`
     }
 }
+
 const i18n = reactive({
     language: 'en',
     batchEdited,
@@ -135,6 +137,10 @@ const initLanguage = () => {
 }
 initLanguage()
 
+export const getLanguageOptionItem = (value) => {
+    return i18n.options.find(item => item.value === value) ? i18n.options.find(item => item.value === value).content : ''
+}
+
 export const getLanguage = () => {
     let language = 'en'
     let localLanguage = localStorage.getItem('language')
@@ -143,6 +149,7 @@ export const getLanguage = () => {
     }
     return language
 }
+
 export const getContent = (key) => {
     let language = getLanguage()
     let languagePackage = {}
@@ -175,7 +182,8 @@ export const getContent = (key) => {
     if(languagePackage[key]){
         return languagePackage[key]
     }
-    return ''
+
+    return key
 }
 
 export default i18n

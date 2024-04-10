@@ -15,23 +15,23 @@
                     {{ item.realname }}
                 </h2>
                 <div>
-                    {{ i18n.uid[i18n.language] }}:
+                    {{ getContent('uid') }}:
                     {{ item.uid }}
                 </div>
                 <div>
-                    {{ i18n.nickname[i18n.language] }}:
+                    {{ getContent('nickname') }}:
                     {{ item.nickname }}
                 </div>
                 <div>
-                    {{ i18n.phone[i18n.language] }}:
+                    {{ getContent('phone') }}:
                     {{ item.phone }}
                 </div>
                 <div>
-                    {{ i18n.hiredate[i18n.language] }}:
+                    {{ getContent('hiredate') }}:
                     {{ item.hiredate }}
                 </div>
                 <div>
-                    {{ i18n.mail[i18n.language] }}:
+                    {{ getContent('mail') }}:
                     {{ item.mail }}
                 </div>
             </div>
@@ -45,8 +45,10 @@
 </template>
 
 <script setup>
-import { GetAllUserInform } from '../../hooks'
-const i18n = inject('i18n')
+import service from "../../api/service.js"
+import {tips} from "../../hooks/tips.js"
+import {getContent} from "../../i18n/index.js"
+
 const user = inject('user')
 const data = ref([])
 const loading = ref(false)
@@ -55,8 +57,12 @@ const imagePreview = ref(false)
 
 const getData = async () => {
     loading.value = true
-    let res = await GetAllUserInform()
-    data.value = res.user
+    let res = await service.api.userE.userView()
+    if(!res.result){
+        tips(res.error.message, 'error')
+        return
+    }
+    data.value = res.content
     loading.value = false
 }
 
@@ -67,7 +73,6 @@ onMounted(() => {
 
 <style scoped>
 .flexb{
-    display: grid;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;

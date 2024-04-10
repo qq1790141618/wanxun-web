@@ -78,7 +78,7 @@ const connectToSocket = () => {
         }
         if(data['type'] === 'upload token'){
             localStorage.setItem('access_token', data['content'])
-            service.api.user.inform(token)
+            service.api.user.inform(data['content'])
                 .then(res => {
                     user.inform = res.content.user
                     user.status = 'loged'

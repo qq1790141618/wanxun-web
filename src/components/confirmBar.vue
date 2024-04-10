@@ -7,10 +7,10 @@
         :disabled="confirmLoading"
         :loading="confirmLoading"
         >
-            {{ i18n.confirm[i18n.language] }}
+            {{ getContent('confirm') }}
         </t-button>
         <t-popconfirm
-        :content="i18n.cancelConfirm[i18n.language]"
+        :content="getContent('cancelConfirm')"
         @confirm="$emit('close')"
         v-if="!nocancel && nocancel !== ''"
         >
@@ -18,7 +18,7 @@
             :size="size"
             theme="danger"
             >
-                {{ i18n.cancel[i18n.language] }}
+                {{ getContent('cancel') }}
             </t-button>
         </t-popconfirm>
         <t-button
@@ -28,19 +28,20 @@
         @click="$emit('reset')"
         v-if="!noreset && noreset !== ''"
         >
-            {{ i18n.reset[i18n.language] }}
+            {{ getContent('reset') }}
         </t-button>
     </t-space>
 </template>
 
 <script>
+import { getContent } from "../i18n/index.js"
+
 export default {
+    methods: {
+        getContent
+    },
     props: ['confirmLoading', 'noreset', 'nocancel', 'size'],
-    emits: ['confirm', 'close', 'reset'],
-    setup(){
-        const i18n = inject('i18n')
-        return { i18n }
-    }
+    emits: ['confirm', 'close', 'reset']
 }
 </script>
 

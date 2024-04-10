@@ -4,7 +4,7 @@
     ref="searchBox"
     class="search-box"
     v-model="searchValue"
-    :placeholder="i18n.search[i18n.language]"
+    :placeholder="getContent('search')"
     :style="{ width: searchWidth + 'px', marginRight: '20px', transition: 'all .3s' }"
     @focus="searchWidth = 270"
     @blur="searchWidth = 200"
@@ -13,7 +13,7 @@
         searchWidth = 200
         $emit('search', searchValue)
     }"
-    clearable
+    :clearable="true"
     >
         <template #prefixIcon>
             <t-icon name="search" :style="{ cursor: 'pointer' }" />
@@ -26,33 +26,23 @@
     </t-input>
 </template>
 
-<script>
-export default {
-    emits: ['search'],
-    setup(){
-        const i18n = inject('i18n')
+<script setup>
+import {getContent} from "../i18n/index.js"
 
-        const searchBox = ref(null)
-        const searchValue = ref(null)
-        const searchWidth = ref(200)
+const emit = defineEmits(['search'])
 
-        onMounted(() => {
-            document.addEventListener('keydown', function(event) {
-                if(event.ctrlKey && event.key === 'k') {
-                    searchBox.value.focus()
-                    event.preventDefault()
-                }
-            })
-        })
+const searchBox = ref(null)
+const searchValue = ref(null)
+const searchWidth = ref(200)
 
-        return {
-            i18n,
-            searchBox,
-            searchValue,
-            searchWidth
+onMounted(() => {
+    document.addEventListener('keydown', function(event) {
+        if(event.ctrlKey && event.key === 'k') {
+            searchBox.value['focus']()
+            event.preventDefault()
         }
-    }
-}
+    })
+})
 </script>
 
 <style>

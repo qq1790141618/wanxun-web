@@ -1,31 +1,8 @@
 import md5 from 'md5'
 import fetchJSONP from 'fetch-jsonp'
 import useClipboard from 'vue-clipboard3'
-import i18n, {getLanguage} from '../i18n'
+import {getContent} from '../i18n'
 import dayjs from 'dayjs'
-
-const serve = 'https://work-serve.fixeam.com/api'
-
-export function sendCode(serve, target, lang = 'zh'){
-    return new Promise((resolve, reject) => {
-        const pattern = {
-            phone: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-            mail: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-        }
-
-        if(!pattern.phone.test(target) && !pattern.mail.test(target)){
-            return reject(i18n.targetIsFail[lang])
-        }
-
-        fetch(serve + '/user/send-code?target=' + target)
-        .then(response => {
-            return resolve(response.json())
-        })
-        .catch(() => {
-            return reject(i18n.httpFail[lang])
-        })
-    })
-}
 
 export function translate(text, lang){
     return new Promise((resolve, reject) => {
@@ -42,27 +19,10 @@ export function translate(text, lang){
     })
 }
 
-export function verifyUser(serve) {
-    return new Promise((resolve, reject) => {
-        let access_token = localStorage.getItem('access_token')
-        if(!access_token){
-            return reject(false)
-        }
-        
-        fetch(serve + '/user/login/verify?token=' + access_token)
-        .then(response => {
-            return resolve(response.json())
-        })
-        .catch(() => {
-            return reject(false)
-        })
-    })
-}
-
 const { toClipboard } = useClipboard()
 export async function copy(value, lang = 'zh') {
     await toClipboard(value)
-    MessagePlugin.success(i18n.copySuccess[lang])
+    MessagePlugin.success(getContent('copySuccess'))
 }
 
 export function sort(val, sortArray, defaultSort = { sortBy: 'salesCount', descending: true }) {
@@ -172,71 +132,11 @@ export function imageFileToBase(file) {
     })
 }
 
-export function getGreeting() {
-    var date = new Date()
-    var hour = date.getHours()
-    var greeting = ''
-
-    if (hour >= 0 && hour < 5) {
-        greeting = 'before dawn'
-    } else if (hour >= 5 && hour < 11) {
-        greeting = 'morning'
-    } else if (hour >= 11 && hour < 13) {
-        greeting = 'noon'
-    } else if (hour >= 13 && hour < 18) {
-        greeting = 'afternoon'
-    } else if (hour >= 18 && hour < 24) {
-        greeting = 'night'
-    }
-
-    return greeting
-}
-
-export async function updateUserInfo(inform) {
-    if(!inform.uid){
-        return Promise.reject('Propertype `uid` is not found in inform')
-    }
-    let access_token = localStorage.getItem('access_token')
-    inform = JSON.stringify(inform)
-
-    return fetch(serve + `/user/inform/update?token=${ access_token }&user-inform=${ inform }`)
-    .then(response => {
-        return Promise.resolve(response.json())
-    })
-    .catch(() => {
-        MessagePlugin.error(i18n.httpFail[i18n.language])
-    })
-}
-
-export async function updateUser(inform) {
-    if(!inform.uid){
-        return Promise.reject('Propertype `uid` is not found in inform')
-    }
-    let access_token = localStorage.getItem('access_token')
-    inform = JSON.stringify(inform)
-
-    return fetch(serve + `/user/base/update?token=${ access_token }&user=${ inform }`)
-    .then(response => {
-        return Promise.resolve(response.json())
-    })
-    .catch(() => {
-        MessagePlugin.error(i18n.httpFail[i18n.language])
-    })
-}
-
 export function delay(timeout) {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve()
         }, timeout)
-    })
-}
-
-export async function GetAllUserInform() {
-    let access_token = localStorage.getItem('access_token')
-    return fetch(serve + '/user/inform/all?token=' + access_token)
-    .then(response => {
-        return Promise.resolve(response.json())
     })
 }
 

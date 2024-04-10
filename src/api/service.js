@@ -1,6 +1,7 @@
 import * as user from "./userApi.js"
 import * as userM from "./userMApi.js"
 import * as userE from "./userEApi.js"
+import * as userS from "./userSApi.js"
 import * as app from "./appApi.js"
 import * as analysis from "./analysisApi.js"
 import * as goods from "./goodsApi.js"
@@ -15,7 +16,8 @@ const api = {
     imports,
     user,
     userM,
-    userE
+    userE,
+    userS
 }
 
 const service = {

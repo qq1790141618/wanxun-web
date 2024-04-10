@@ -11,5 +11,7 @@ export const appView = async () => {
 export const appPublish = async (info) => {
     let path = '/app/version/publish'
     let sign = await apiSign(path)
-    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&info=${JSON.stringify(info)}`)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`, 'POST', 'application/json', {
+        info
+    })
 }

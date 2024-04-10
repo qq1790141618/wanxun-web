@@ -50,8 +50,14 @@ export const supplierMap = async (from, to, onlyStore = true) => {
     return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&from=${from}&to=${to}&store=${ onlyStore ? getStore() : '' }&brand=${getBrand()}`)
 }
 
-export const getMirrors = async (stylenumber) => {
+export const getMirrors = async () => {
     let path = '/goods/mirrors'
     let sign = await apiSign(path)
     return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`)
+}
+
+export const getGoodsByStyOrCID = async (styleKeyword, start = 0, number = 10) => {
+    let path = '/goods/get/by_sty_or_cid'
+    let sign = await apiSign(path)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&style-keyword=${styleKeyword}&store-id=${getStore()}&start=${start}&number=${number}`)
 }

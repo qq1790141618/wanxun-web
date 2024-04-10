@@ -6,11 +6,11 @@
     :close-on-esc-keydown="false"
     :close-on-overlay-click="false"
     width="600px"
-    destroy-on-close
+    :destroy-on-close="true"
     >
         <template #header>
             <div style="width: 100%;">
-                {{ i18n.editPassword[i18n.language] }}
+                {{ getContent('editPassword') }}
 
                 <t-button
                 @click="async () => {
@@ -37,13 +37,13 @@
             layout="vertical"
             theme="dot"
             :current="current"
-            readonly
+            :readonly="true"
             style="flex-shrink: 0;"
             >
-                <t-step-item :content="i18n.verifyEnvironmentalSecurity[i18n.language]" />
-                <t-step-item :content="i18n.verifyIndentiy[i18n.language]" />
-                <t-step-item :content="i18n.editPassword[i18n.language]" />
-                <t-step-item :content="i18n.result[i18n.language]" />
+                <t-step-item :content="getContent('verifyEnvironmentalSecurity')" />
+                <t-step-item :content="getContent('verifyIndentiy')" />
+                <t-step-item :content="getContent('editPassword')" />
+                <t-step-item :content="getContent('result')" />
             </t-steps>
 
             <div
@@ -58,30 +58,33 @@
 
                 <OpenAuthentication
                 v-if="current === 1"
-                use-password
-                @verified="current = 2"
+                action="ChangePassword"
+                @verified="(token) => {
+                    authToken = token
+                    current = 2
+                }"
                 />
 
                 <div v-if="current === 2">
                     <t-space align="center">
-                        {{ i18n.newPassword[i18n.language] }}:
+                        {{ getContent('newPassword') }}:
                         <t-input style="width: 340px;" type="password" v-model="newPassword" ></t-input>
                     </t-space>
                     <t-button @click="changeToNew" :loading="changeLoading" style="margin-top: 5px;">
-                        {{ i18n.confirm[i18n.language] }}
+                        {{ getContent('confirm') }}
                     </t-button>
                 </div>
 
                 <div v-if="current === 3" style="text-align: center; margin-top: 20px;">
                     <t-icon name="check-circle" size="80px" color="var(--td-success-color)" />
                     <div style="margin: 10px 0; font-size: 14px;">
-                        {{ i18n.passwordHasChanged[i18n.language] }}!
+                        {{ getContent('passwordHasChanged') }}!
                     </div>
                     <t-button @click="visible = false">
                         <template #icon>
                             <t-icon name="close" />
                         </template>
-                        {{ i18n.close[i18n.language] }}
+                        {{ getContent('close') }}
                     </t-button>
                 </div>
             </div>
@@ -89,90 +92,67 @@
     </t-dialog>
 </template>
 
-<script>
-import { updateUser, translate, delay } from '../../hooks'
+<script setup>
 import EnvironmentalSecurity from './EnvironmentalSecurity.vue'
 import OpenAuthentication from './OpenAuthentication.vue'
-import md5 from 'md5'
+import {getContent} from "../../i18n/index.js";
+import {MessagePlugin} from "tdesign-vue-next";
+import {tips} from "../../hooks/tips.js";
+import service from "../../api/service.js";
 
-export default {
-    components: {
-        OpenAuthentication,
-        EnvironmentalSecurity
-    },
-    setup(){
-        const i18n = inject('i18n')
-        const user = inject('user')
+const user = inject('user')
 
-        const visible = ref(false)
-        const current = ref(0)
+const visible = ref(false)
+const current = ref(0)
 
-        const open = async () => {
-            current.value = 0
-            visible.value = true
-        }
-
-        const close = () => {
-            return new Promise((resolve, reject) => {
-                if(current.value === 3){
-                    return resolve(true)
-                }
-                const confirmDialog = DialogPlugin.confirm({
-                    header: '关闭对话框',
-                    body: '操作尚未完成，确认关闭当前对话框？关闭后编辑内容将消失',
-                    onConfirm: () => {
-                        confirmDialog.destroy()
-                        return resolve(true)
-                    },
-                    onCancel: () => {
-                        confirmDialog.destroy()
-                        return reject(false)
-                    }
-                })
-            })
-        }
-
-        const newPassword  = ref('')
-        const changeLoading = ref(false)
-        const changeToNew = async () => {
-            if(newPassword.value.length < 6){
-                MessagePlugin.error(i18n.newPasswordError[i18n.language])
-                return
-            }
-
-            changeLoading.value = true
-            let newp = md5(newPassword.value)
-            let res = await updateUser({
-                uid: user.inform.uid,
-                password: newp
-            })
-            if(res.result){
-                MessagePlugin.success(i18n.editSuccess[i18n.language])
-
-                user.inform.password = newp
-                localStorage.setItem('user', JSON.stringify(user.inform))
-
-                current.value++
-            } else {
-                let f = await translate(res.error, i18n.language)
-                MessagePlugin.error(f.trans_result[0].dst)
-            }
-
-            changeLoading.value = false
-        }
-
-        return {
-            i18n,
-            visible,
-            open,
-            current,
-            close,
-            newPassword,
-            changeToNew,
-            changeLoading
-        }
-    }
+const open = async () => {
+    current.value = 0
+    visible.value = true
 }
+
+const close = () => {
+    return new Promise((resolve, reject) => {
+        if(current.value === 3){
+            return resolve(true)
+        }
+        const confirmDialog = DialogPlugin.confirm({
+            header: '关闭对话框',
+            body: '操作尚未完成，确认关闭当前对话框？关闭后编辑内容将消失',
+            onConfirm: () => {
+                confirmDialog.destroy()
+                return resolve(true)
+            },
+            onCancel: () => {
+                confirmDialog.destroy()
+                return reject(false)
+            }
+        })
+    })
+}
+
+const newPassword  = ref('')
+const changeLoading = ref(false)
+const authToken = ref(null)
+
+const changeToNew = async () => {
+    if(newPassword.value.length < 6){
+        await MessagePlugin.error(getContent('newPasswordError'))
+        return
+    }
+    changeLoading.value = true
+
+    let res = await service.api.userS.changePassword(authToken.value, newPassword.value)
+    if(res.result){
+        await MessagePlugin.success(getContent('editSuccess'))
+        current.value++
+    } else {
+        tips(res.error.message, 'error')
+    }
+
+    changeLoading.value = false
+}
+
+defineExpose({ open })
 </script>
 
 <style>

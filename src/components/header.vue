@@ -39,19 +39,19 @@
                     <t-dropdown-menu>
                         <t-dropdown-item @click="downloadClient">
                             <t-icon name="desktop" style="margin-right: 5px;" />
-                            {{ i18n.windows[i18n.language] }}
+                            {{ getContent('windows') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="downloadAndroidApp = true">
                             <t-icon name="logo-android" style="margin-right: 5px;" />
-                            {{ i18n.android[i18n.language] }}
+                            {{ getContent('android') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="mobileWeb = true">
                             <t-icon name="mobile" style="margin-right: 5px;" />
-                            {{ i18n.mobile[i18n.language] }}
+                            {{ getContent('mobile') }}
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
-                <t-tooltip :content="i18n.setting[i18n.language]" v-if="$route.name !== 'login'">
+                <t-tooltip :content="getContent('setting')" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
                             <template #icon>
@@ -82,20 +82,20 @@
                     <t-dropdown-menu>
                         <t-dropdown-item @click="user.avatarView = true">
                             <t-icon name="browse" style="margin-right: 5px;" />
-                            {{ i18n.viewAvatar[i18n.language] }}
+                            {{ getContent('viewAvatar') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="$router.push('/user-center')">
                             <t-icon name="verify" style="margin-right: 5px;" />
-                            {{ i18n.userCenter[i18n.language] }}
+                            {{ getContent('userCenter') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="user.logout">
                             <t-icon name="logout" style="margin-right: 5px;" />
-                            {{ i18n.logout[i18n.language] }}
+                            {{ getContent('logout') }}
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
                 <t-image-viewer
-                v-if="user.status == 'loged'"
+                v-if="user.status === 'loged'"
                 :images="[ user.inform.headsrc ]"
                 v-model:visible="user.avatarView"
                 >
@@ -105,32 +105,32 @@
     </header>
     <t-dialog
     v-model:visible="downloadAndroidApp"
-    :header="i18n.android[i18n.language]"
+    :header="getContent('android')"
     :footer="false"
     >
         <div style="text-align: center;">
             <t-icon name="scan" />
-            {{ i18n.scanToDownload[i18n.language] }}
+            {{ getContent('scanToDownload') }}
             <img src="../assets/QRcode_sp1.jpg" style="width: 240px;" >
             <div>
                 <t-button @click="downloadApk">
                     <template #icon>
                         <t-icon name="logo-android" />
                     </template>
-                    {{ i18n.downloadApk[i18n.language] }}
+                    {{ getContent('downloadApk') }}
                 </t-button>
             </div>
         </div>
     </t-dialog>
     <t-dialog
     v-model:visible="mobileWeb"
-    :header="i18n.mobile[i18n.language]"
+    :header="getContent('mobile')"
     :footer="false"
     >
         <div style="text-align: center;">
             <t-icon name="scan" />
-            {{ i18n.scanToVisit[i18n.language] }}
-            <img src="../assets/Mobile Web.png" style="width: 200px;" >
+            {{ getContent('scanToVisit') }}
+            <img src="../assets/Mobile Web.png" style="width: 200px;"  alt="">
             <t-link href="https://mobile-work.fixeam.com/" target="_blank" style="margin-right: 5px;">
                 Url:
                 https://mobile-work.fixeam.com/
@@ -144,7 +144,7 @@
     </t-dialog>
     <t-dialog
     v-model:visible="settings"
-    :header="i18n.setting[i18n.language]"
+    :header="getContent('setting')"
     :footer="false"
     :close-on-overlay-click="false"
     >
@@ -158,23 +158,23 @@
             }"
             >
                 <template #valueDisplay="{ value }">
-                    {{ value ? (i18n.options.find(item => item.value == value) ? i18n.options.find(item => item.value == value).content : '') : '' }}
+                    {{ value ? getLanguageOptionItem(value) : '' }}
                 </template>
             </t-select>
             <t-select
-            :label="i18n.store[i18n.language] + ': '"
+            :label="getContent('store') + ': '"
             v-model="shop.store"
             :options="shop.storeOptions"
             @change="saveOptions"
             ></t-select>
             <t-select
-            :label="i18n.brand[i18n.language] + ': '"
+            :label="getContent('brand') + ': '"
             v-model="shop.brand"
             :options="shop.brandOptions"
             @change="saveOptions"
             ></t-select>
             <t-link theme="primary" @click="viewCounter" v-if="shop.counter[shop.store + shop.brand]">
-                {{ i18n.viewCounter[i18n.language] }}>>
+                {{ getContent('viewCounter') }}>>
             </t-link>
             <t-space size="small" align="center">
                 <t-switch size="small" v-model="showBackground" @change="showBackgroundChange"></t-switch><div>显示背景/Show Background</div>
@@ -186,127 +186,85 @@
     />
 </template>
 
-<script>
+<script setup>
 import { copy, translate } from '../hooks'
 import Logo from './Logo.vue'
 import Menu from './Menu.vue'
 import SearchBox from './SearchBox.vue'
 import SearchResult from './SearchResult.vue'
+import {getContent, getLanguageOptionItem} from "../i18n/index.js";
+import {tips} from "../hooks/tips.js";
 
-export default {
-    components: {
-        Logo,
-        Menu,
-        SearchBox,
-        SearchResult
-    },
-    setup(){
-        const i18n = inject('i18n')
-        i18n.language = i18n.language
-        const changeLanguage = (item) => {
-            localStorage.setItem('language', item.value)
-            translate('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', i18n.language)
-            .then(res => {
-                MessagePlugin.success(res.trans_result[0].dst)
-            })
-        }
-        watch(() => i18n.language, () => {
-            i18n.language = i18n.language
-        })
+const i18n = inject('i18n')
+const user = inject('user')
+const shop = inject('shop')
 
-        const downloadClient = () => {
-            window.open('https://cdn.fixeam.com/tw/application/windows/2023110715/version_1.0.4_release_miaostreet_sales_analysis_wanxun.exe')
-        }
-        const downloadAndroidApp = ref(false)
-        const downloadApk = () => {
-            window.open('https://cdn.fixeam.com/tw/application/android/2024032514/app-release.apk')
-        }
-        const mobileWeb = ref(false)
+const downloadAndroidApp = ref(false)
+const mobileWeb = ref(false)
+const settings = ref(false)
+const COUNT = ref('')
+const searchResult = ref(null)
+const showBackground = ref(true)
 
-        const shop = inject('shop')
-        const settings = ref(false)
-        
-        const saveOptions = () => {
-            localStorage.setItem('store', shop.store)
-            localStorage.setItem('brand', shop.brand)
-        }
+const changeLanguage = (item) => {
+    localStorage.setItem('language', item.value)
+    tips('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', 'success')
+}
 
-        const backToOldVersion = () => {
-            window.open('//dwork.fixeam.com/')
-        }
+const downloadClient = () => {
+    window.open('https://cdn.fixeam.com/tw/application/windows/2023110715/version_1.0.4_release_miaostreet_sales_analysis_wanxun.exe')
+}
 
-        const user = inject('user')
-        const viewCounter = () => {
-            window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
-        }
-        const COUNT = ref('')
-        const clickSet = () => {
-            localStorage.setItem('setting-button-attention', 'clicked')
-            COUNT.value = ''
-            settings.value = true
-        }
-        const searchResult = ref(null)
+const downloadApk = () => {
+    window.open('https://cdn.fixeam.com/tw/application/android/2024032514/app-release.apk')
+}
 
-        const viewOnGithub = () => {
-            window.open('https://github.com/qq1790141618/wanxun-web')
-        }
+const saveOptions = () => {
+    localStorage.setItem('store', shop.store)
+    localStorage.setItem('brand', shop.brand)
+}
 
-        const chatPage = () => {
-            window.open('https://wxchat.fixeam.com/?access_token=' + localStorage.getItem('access_token'))
-        }
+const viewCounter = () => {
+    window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+}
 
-        const showBackground = ref(true)
-        const showBackgroundChange = (value) => {
-            if(value){
-                localStorage.setItem('show-background', '1')
+const clickSet = () => {
+    localStorage.setItem('setting-button-attention', 'clicked')
+    COUNT.value = ''
+    settings.value = true
+}
 
-                document.body.style.backgroundImage = 'url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg")'
-                document.body.style.backgroundRepeat = 'no-repeat'
-                document.body.style.backgroundAttachment = 'fixed'
-                document.body.style.backgroundPosition = 'center'
-                document.body.style.backgroundColor = "transparent"
-            } else {
-                localStorage.setItem('show-background', '0')
+const viewOnGithub = () => {
+    window.open('https://github.com/qq1790141618/wanxun-web')
+}
 
-                document.body.style.backgroundImage = ''
-                document.body.style.backgroundColor = "#f2f3ff"
-            }
-        }
-        onMounted(() => {
-            if(!localStorage.getItem('setting-button-attention')){
-                COUNT.value = 'new'
-            }
-            var shbc = localStorage.getItem('show-background')
-            if(shbc && shbc == '0'){
-                showBackground.value = false
-            }
-            showBackgroundChange(showBackground.value)
-        })
+const showBackgroundChange = (value) => {
+    if(value){
+        localStorage.setItem('show-background', '1')
 
-        return {
-            i18n,
-            viewOnGithub,
-            backToOldVersion,
-            changeLanguage,
-            downloadClient,
-            downloadAndroidApp,
-            downloadApk,
-            mobileWeb,
-            copy,
-            shop,
-            viewCounter,
-            settings,
-            saveOptions,
-            user,
-            COUNT,
-            clickSet,
-            searchResult,
-            chatPage,
-            showBackground,
-            showBackgroundChange
-        }
+        document.body.style.backgroundImage = 'url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg")'
+        document.body.style.backgroundRepeat = 'no-repeat'
+        document.body.style.backgroundAttachment = 'fixed'
+        document.body.style.backgroundPosition = 'center'
+        document.body.style.backgroundColor = "transparent"
+    } else {
+        localStorage.setItem('show-background', '0')
+
+        document.body.style.backgroundImage = ''
+        document.body.style.backgroundColor = "#f2f3ff"
     }
 }
+
+onMounted(() => {
+    if(!localStorage.getItem('setting-button-attention')){
+        COUNT.value = 'new'
+    }
+    const background = localStorage.getItem('show-background')
+    if(background && background === '0'){
+        showBackground.value = false
+    }
+    showBackgroundChange(showBackground.value)
+})
 </script>
 
 <style>

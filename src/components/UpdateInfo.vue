@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <div class="sign" size="5px" align="center">
+        <div class="sign">
             <t-icon name="chevron-right" /> Powered by Limit Au
         </div>
     </t-dialog>

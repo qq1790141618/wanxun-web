@@ -3,12 +3,13 @@
     v-model:visible="visible"
     :footer="false"
     width="620px"
+    placement="center"
     >
         <template #header>
             <span>
                 <t-icon name="search" style="margin-right: 5px;" />
                 <span style="vertical-align: middle; margin-right: 6px;">
-                    {{ i18n.search[i18n.language] }}
+                    {{ getContent('search') }}
                 </span>
                 <t-tag size="small">
                     #
@@ -18,20 +19,20 @@
         </template>
         <t-loading
         v-if="loading"
-        style="width: 100%; min-height: 36vh;"
+        style="width: 100%; min-height: 50vh;"
         size="small"
-        :text="i18n.loading[i18n.language]"
+        :text="getContent('loading')"
         ></t-loading>
         <div
-        style="max-height: 36vh; margin: 10px 0;"
+        style="max-height: 50vh; margin: 10px 0;"
         v-if="!loading"
         >
             <t-card
             size="small"
             v-for="c in ['menus', 'store', 'brand', 'goods']"
             :key="c"
-            :title="i18n[c][i18n.language]"
-            header-bordered
+            :title="getContent(c)"
+            :header-bordered="true"
             :style="{
                 margin: '5px'
             }"
@@ -52,8 +53,18 @@
                             style="background-color: transparent; width: 36px; height: 36px; display: inline-block;"
                             shape="round"
                             fit="contain"
-                            ></t-image>
-                            <span style="margin: 12px; margin-right: 5px;">
+                            >
+                                <template #error>
+                                    <t-image
+                                    v-if="c === 'goods'"
+                                    src="https://cdn.fixeam.com/tw/colorful/shopping.png"
+                                    style="background-color: transparent; width: 36px; height: 36px; display: inline-block;"
+                                    shape="round"
+                                    fit="contain"
+                                    />
+                                </template>
+                            </t-image>
+                            <span style="margin: 12px 5px 12px 12px;">
                                 {{ item.label }}
                             </span>
                             <t-tag
@@ -76,175 +87,166 @@
     </t-dialog>
 </template>
 
-<script>
-import service from "../api/service.js";
+<script setup>
+import service from "../api/service.js"
+import {useRouter} from "vue-router"
+import {tips} from "../hooks/tips.js"
+import {getContent} from "../i18n/index.js";
 
-export default {
-    setup(){
-        const visible = ref(false)
-        const i18n = inject('i18n')
-        const shop = inject('shop')
-        const serve = inject('serve')
-        const router = useRouter()
+const visible = ref(false)
+const shop = inject('shop')
+const router = useRouter()
 
-        const loading = ref(false)
-        const result = ref({})
-        const lastValue = ref('')
+const loading = ref(false)
+const result = ref({})
+const lastValue = ref('')
 
-        const searchStyleNumber = async (value) => {
-            if(!value){
-                return []
+const searchStyleNumber = async (value) => {
+    if(!value){
+        return []
+    }
+    let response = await service.api.goods.getGoodsByStyOrCID(value)
+    if(!response.result){
+        tips(response.error.message, 'error')
+        return []
+    }
+    return response.content.data
+}
+
+const search = async (value) => {
+    if(value == null){
+        value = false
+    }
+
+    let options = {}
+    loading.value = true
+    visible.value = true
+    lastValue.value = value
+
+    // 搜索路由
+    const routes = router.getRoutes()
+    for (let i = 0; i < routes.length; i++) {
+        if(routes[i].name === 'login'){
+            continue
+        }
+
+        const name = getContent(routes[i].meta['title']) ?? ''
+        if(!value || name.indexOf(value) >= 0 || routes[i].name.indexOf(value) >= 0){
+            if(!options.menus){
+                options.menus = []
             }
-            let params = '?keyword=' + value
-            return fetch(serve + '/goods/sty' + params)
-            .then(response => {
-                return Promise.resolve(response.json())
+            options.menus.push({
+                label: name,
+                value: name,
+                description: getContent('menus'),
+                route: routes[i],
+                type: 'menus',
+                avatar: routes[i].meta['avatar']
             })
         }
-        const search = async (value) => {
-            if(value == null || value == undefined){
-                value = false
-            }
-            let options = {}
-            loading.value = true
-            visible.value = true
-            lastValue.value = value
-            
-            const routes = router.getRoutes()
-            for (let i = 0; i < routes.length; i++) {
-                if(routes[i].name == 'login'){
-                    continue
-                }
-                if(!value || i18n[routes[i].meta.title][i18n.language].indexOf(value) >= 0 || routes[i].name.indexOf(value) >= 0){
-                    if(!options.menus){
-                        options.menus = []
-                    }
-                    options.menus.push({
-                        label: i18n[routes[i].meta.title][i18n.language],
-                        value: i18n[routes[i].meta.title][i18n.language],
-                        description: i18n.menus[i18n.language],
-                        route: routes[i],
-                        type: 'menus',
-                        avatar: routes[i].meta.avatar
-                    })
-                }
-            }
-            result.value = options
+    }
+    result.value = options
 
-            for (let i = 0; i < shop.brandOptions.length; i++) {
-                if(!value || shop.brandOptions[i].label.indexOf(value) >= 0){
-                    if(!options.brand){
-                        options.brand = []
-                    }
-                    options.brand.push({
-                        label: shop.brandOptions[i].label,
-                        value: shop.brandOptions[i].value,
-                        description: i18n.brand[i18n.language],
-                        type: 'brand',
-                        avatar: shop.brandOptions[i].logo
-                    })
-                }
+    // 搜索品牌
+    for (let i = 0; i < shop.brandOptions.length; i++) {
+        if(!value || shop.brandOptions[i].label.indexOf(value) >= 0){
+            if(!options.brand){
+                options.brand = []
             }
-            result.value = options
-
-            for (let i = 0; i < shop.storeOptions.length; i++) {
-                if(!value || shop.storeOptions[i].label.indexOf(value) >= 0){
-                    if(!options.store){
-                        options.store = []
-                    }
-                    options.store.push({
-                        label: shop.storeOptions[i].label,
-                        value: shop.storeOptions[i].value,
-                        description: i18n.store[i18n.language],
-                        type: 'store',
-                        avatar: 'https://cdn.fixeam.com/tw/colorful/factory.png'
-                    })
-                }
-            }
-            result.value = options
-
-            let styleNumbers = await searchStyleNumber(value)
-            styleNumbers = styleNumbers.length === 0 ? [] : styleNumbers.map(obj => obj.stylenumber)
-            let brand = false
-            if(options.brand && options.brand.length > 0){
-                brand = options.brand[0].value
-            }
-            let goods = await service.api.goods.get(
-                styleNumbers.length === 0 ? {} : {
-                    'stylenumber': styleNumbers
-                },
-                0,
-                20
-            )
-            for (let i = 0; i < goods.data.length; i++) {
-                if(!options.goods){
-                    options.goods = []
-                }
-
-                let goodsbrand = shop.brandOptions.find(obj => goods.data[i].brand.indexOf(obj.value) >= 0)
-                if(!options.brand){
-                    options.brand = []
-                }
-                if(options.brand.map(obj => obj.value).indexOf(goodsbrand.value) < 0){
-                    options.brand.push({
-                        label: goodsbrand.label,
-                        value: goodsbrand.value,
-                        description: i18n.brand[i18n.language],
-                        type: 'brand',
-                        avatar: goodsbrand.logo
-                    })
-                }
-
-                options.goods.push({
-                    label: goods.data[i].stylenumber,
-                    value: goods.data[i].stylenumber,
-                    description: goods.data[i]['store-id'],
-                    otherTag: goodsbrand.value,
-                    type: 'goods',
-                    avatar: goods.data[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods.data[i]['main-image'])[0]
-                })
-            }
-
-            result.value = options
-            loading.value = false
-        }
-        const selected = (option) => {
-            if(option.type == 'goods'){
-                shop.brand = option.otherTag
-                localStorage.setItem('brand', shop.brand)
-
-                router.push({
-                    path: '/goods',
-                    query: {
-                        stylenumber: option.label
-                    }
-                })
-            }
-            if(option.type == 'brand'){
-                shop.brand = option.value
-                localStorage.setItem('brand', shop.brand)
-            }
-            if(option.type == 'store'){
-                shop.store = option.value
-                localStorage.setItem('store', shop.store)
-            }
-            if(option.type == 'menus'){
-                router.push(option.route.path)
-            }
-            visible.value = false
-        }
-
-        return {
-            i18n,
-            visible,
-            search,
-            lastValue,
-            result,
-            selected,
-            loading
+            options.brand.push({
+                label: shop.brandOptions[i].label,
+                value: shop.brandOptions[i].value,
+                description: getContent('brand'),
+                type: 'brand',
+                avatar: shop.brandOptions[i].logo
+            })
         }
     }
+    result.value = options
+
+    // 搜索店铺
+    for (let i = 0; i < shop.storeOptions.length; i++) {
+        if(!value || shop.storeOptions[i].label.indexOf(value) >= 0){
+            if(!options.store){
+                options.store = []
+            }
+            options.store.push({
+                label: shop.storeOptions[i].label,
+                value: shop.storeOptions[i].value,
+                description: getContent('store'),
+                type: 'store',
+                avatar: 'https://cdn.fixeam.com/tw/colorful/factory.png'
+            })
+        }
+    }
+    result.value = options
+
+    // 搜索商品
+    let goods = await searchStyleNumber(value)
+    for (let i = 0; i < goods.length; i++) {
+        if(!options.goods){
+            options.goods = []
+        }
+
+        // 添加商品的品牌到列表
+        let brandOfGoods = shop.brandOptions.find(obj => goods[i].brand.indexOf(obj.value) >= 0)
+        if(!options.brand){
+            options.brand = []
+        }
+        if(options.brand.map(obj => obj.value).indexOf(brandOfGoods.value) < 0){
+            options.brand.push({
+                label: brandOfGoods.label,
+                value: brandOfGoods.value,
+                description: getContent('brand'),
+                type: 'brand',
+                avatar: brandOfGoods.logo
+            })
+        }
+
+        // 添加商品到列表
+        options.goods.push({
+            label: goods[i].stylenumber,
+            value: goods[i].stylenumber,
+            description: goods[i]['store-id'],
+            otherTag: brandOfGoods.value,
+            type: 'goods',
+            avatar: goods[i]['main-image'] == null ? 'https://cdn.fixeam.com/tw/colorful/shopping.png' : JSON.parse(goods[i]['main-image'])[0]
+        })
+    }
+
+    result.value = options
+    loading.value = false
 }
+
+const selected = (option) => {
+    if(option.type === 'goods'){
+        shop.brand = option.otherTag
+        localStorage.setItem('brand', shop.brand)
+
+        router.push({
+            path: '/goods',
+            query: {
+                stylenumber: option.label
+            }
+        })
+    }
+    if(option.type === 'brand'){
+        shop.brand = option.value
+        localStorage.setItem('brand', shop.brand)
+    }
+    if(option.type === 'store'){
+        shop.store = option.value
+        localStorage.setItem('store', shop.store)
+    }
+    if(option.type === 'menus'){
+        router.push(option.route.path)
+    }
+    visible.value = false
+}
+
+defineExpose({
+    search
+})
 </script>
 
 <style>

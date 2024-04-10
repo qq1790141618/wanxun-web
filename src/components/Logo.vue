@@ -1,14 +1,17 @@
 <template>
     <div class="logo" title="LOGO" @click="$router.push('/')">
-        <img src="../assets/logo.png" class="logo-image" >
+        <img src="../assets/logo.png" class="logo-image"  alt="logo">
         <span class="logo-text">
-            {{ i18n.websiteName[i18n.language] }}
+            {{ getContent('websiteName') }}
         </span>
     </div>
 </template>
 
 <script>
+import {getContent} from "../i18n/index.js"
+
 export default {
+    methods: {getContent},
     setup(){
         const i18n = inject('i18n')
         return { i18n }
