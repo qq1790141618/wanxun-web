@@ -17,7 +17,7 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "qrcode-vue3": "^1.6.8",
-    "tdesign-vue-next": "^1.7.2",
+    "tdesign-vue-next": "^1.9.3",
     "unplugin-auto-import": "^0.17.1",
     "unplugin-vue-components": "^0.25.2",
     "vue": "^3.3.8",

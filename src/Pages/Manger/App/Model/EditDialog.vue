@@ -2,7 +2,7 @@
     <t-dialog
     v-model:visible="visible"
     placement="center"
-    width="600"
+    width="700"
     :header="getString('editPackage')"
     :footer="null"
     :close-btn="false"
@@ -13,7 +13,7 @@
         <t-form
         :data="formData"
         :rules="rules"
-        :label-width="150"
+        :label-width="200"
         :colon="true"
         resetType="initial"
         @submit="onSubmit"
