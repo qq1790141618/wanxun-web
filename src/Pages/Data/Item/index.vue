@@ -112,7 +112,7 @@ export default {
 
             let f = await service.api.analysis.freights(date.value[0], date.value[1])
             if(f.result){
-                data.value.freight = f
+                data.value.freight = f.data
             } else {
                 tips(typeof f.error === 'string' ? f.error : f.error.message, 'error')
             }
@@ -156,9 +156,7 @@ export default {
             shop,
             loading,
             data,
-            initData,
-            exportLoading,
-            exportToFiles
+            initData
         }
     }
 }

@@ -33,6 +33,7 @@ import { sort, miaostreetGoodsLink } from '../../../hooks'
 import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     props: {
         data: {
             type: Object,
