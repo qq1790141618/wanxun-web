@@ -6,7 +6,7 @@
         <template #header>
             <span>
                 <t-icon name="search"></t-icon>
-                {{ i18n.condition[i18n.language] }}
+                {{ getString('condition') }}
             </span>
         </template>
         <t-form label-width="0" style="height: calc(100vh - 250px); overflow-y: auto;">
@@ -15,11 +15,11 @@
                 v-model="condition.type"
                 :options="[
                     {
-                        label: i18n.stylenumber[i18n.language],
+                        label: getString('stylenumber'),
                         value: 'stylenumber'
                     },
                     {
-                        label: i18n.productnumber[i18n.language],
+                        label: getString('productnumber'),
                         value: 'productnumber'
                     },
                     {
@@ -31,7 +31,7 @@
                         value: 'spuid'
                     },
                     {
-                        label: i18n['miaostreet-id'][i18n.language],
+                        label: getString('miaostreet-id'),
                         value: 'miaostreet-id'
                     }
                 ]"
@@ -41,7 +41,7 @@
             <t-form-item>
                 <t-textarea
                 v-model="condition.content"
-                :placeholder="i18n.tip1[i18n.language]"
+                :placeholder="getString('tip1')"
                 :autosize="{ minRows: 5, maxRows: 15 }"
                 >
                 </t-textarea>
@@ -52,7 +52,7 @@
                 :options="categoryOptions"
                 clearable
                 filterable
-                :placeholder="i18n.choose[i18n.language] + i18n.category[i18n.language]"
+                :placeholder="getString('choose') + getString('category')"
                 >
                 </t-cascader>
             </t-form-item>
@@ -62,34 +62,34 @@
                 :options="supplierOptions"
                 clearable
                 filterable
-                :placeholder="i18n.choose[i18n.language] + i18n.supplier[i18n.language]"
+                :placeholder="getString('choose') + getString('supplier')"
                 >
                 </t-select>
             </t-form-item>
             <t-form-item>
                 <div>
-                    {{ i18n.unUpload[i18n.language] }}:
+                    {{ getString('unUpload') }}:
                     <t-check-tag-group
                     v-model="condition.unUpload"
                     :options="[
                         {
-                            label: i18n.supplier[i18n.language],
+                            label: getString('supplier'),
                             value: 'supplier'
                         },
                         {
-                            label: i18n.mainImage[i18n.language],
+                            label: getString('mainImage'),
                             value: 'main-image'
                         },
                         {
-                            label: i18n.price[i18n.language],
+                            label: getString('price'),
                             value: 'price'
                         },
                         {
-                            label: i18n.cost[i18n.language],
+                            label: getString('cost'),
                             value: 'cost'
                         },
                         {
-                            label: i18n.firstListingTime[i18n.language],
+                            label: getString('firstListingTime'),
                             value: 'first-listing-time'
                         }
                     ]"
@@ -127,8 +127,10 @@
 
 <script>
 import confirmBar from '../../components/confirmBar.vue'
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         confirmBar
     },

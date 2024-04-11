@@ -1,7 +1,7 @@
 <template>
     <t-row :gutter="[20, 20]">
         <t-col
-        v-for="item, index in group"
+        v-for="(item, index) in group"
         :key="index"
         :span="4"
         >

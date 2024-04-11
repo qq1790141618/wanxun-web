@@ -1,7 +1,7 @@
 import md5 from 'md5'
 import fetchJSONP from 'fetch-jsonp'
 import useClipboard from 'vue-clipboard3'
-import {getContent} from '../i18n'
+import {getString} from '../i18n'
 import dayjs from 'dayjs'
 
 export function translate(text, lang){
@@ -22,7 +22,7 @@ export function translate(text, lang){
 const { toClipboard } = useClipboard()
 export async function copy(value, lang = 'zh') {
     await toClipboard(value)
-    MessagePlugin.success(getContent('copySuccess'))
+    MessagePlugin.success(getString('copySuccess'))
 }
 
 export function sort(val, sortArray, defaultSort = { sortBy: 'salesCount', descending: true }) {

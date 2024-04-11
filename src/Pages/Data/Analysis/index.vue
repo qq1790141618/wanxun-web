@@ -19,7 +19,7 @@
                     >
                     </t-image>
                     <span>
-                        {{ i18n[$route.meta.title][i18n.language] }}
+                        {{ getString($route.meta.title) }}
                     </span>
                 </div>
             </template>
@@ -31,7 +31,7 @@
                 <div style="font-size: 14px;">
                     <t-icon name="shop-5" />
                     <span style="margin-left: 5px;">
-                        {{ i18n.choose[i18n.language] }}{{ i18n.counter[i18n.language] }}
+                        {{ getString('choose') }}{{ getString('counter') }}
                     </span>
                     <t-button
                     v-if="lastTime"
@@ -46,12 +46,12 @@
                     </t-button>
                 </div>
                 <t-select
-                :label="i18n.store[i18n.language] + ': '"
+                :label="getString('store') + ': '"
                 v-model="create.store"
                 :options="shop.storeOptions"
                 ></t-select>
                 <t-select
-                :label="i18n.brand[i18n.language] + ': '"
+                :label="getString('brand') + ': '"
                 v-model="create.brand"
                 :options="shop.brandOptions"
                 ></t-select>
@@ -61,7 +61,7 @@
                 >
                     <template #prefix-icon>
                         <div style="width: 100%; text-align: right;" >
-                            {{ i18n.time[i18n.language] + ': ' }}
+                            {{ getString('time') + ': ' }}
                         </div>
                     </template>
                 </t-date-range-picker>
@@ -71,7 +71,7 @@
                 shape="round"
                 :block="true"
                 >
-                    {{ i18n.nextStep[i18n.language] }}
+                    {{ getString('nextStep') }}
                 </t-button>
             </t-space>
             <div v-if="current === 2" style="padding: 20px 0;">
@@ -81,11 +81,11 @@
                 style="margin: 0 auto; width: 112px;"
                 />
                 <div style="text-align: center; margin: 6px;">
-                    {{ i18n.tip4[i18n.language] }}...
+                    {{ getString('tip4') }}...
                 </div>
             </div>
             <div v-if="current === 3" style="padding: 20px 0;">
-                {{ i18n.tip5[i18n.language] }}!
+                {{ getString('tip5') }}!
             </div>
         </t-dialog>
     </div>
@@ -98,8 +98,10 @@ import {MessagePlugin} from "tdesign-vue-next";
 import {useRouter} from "vue-router";
 import service from "../../../api/service.js";
 import {tips} from "../../../hooks/tips.js";
+import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     setup() {
         const shop = inject('shop')
         const i18n = inject('i18n')
@@ -144,7 +146,7 @@ export default {
                         current.value++
                         localStorage.setItem('view-task', JSON.stringify(task))
 
-                        await MessagePlugin.success(i18n['tip5'][i18n.language] + '! ' + i18n['tip6'][i18n.language] + '.')
+                        await MessagePlugin.success(getString('tip5') + '! ' + getString('tip6') + '.')
                         setTimeout(() => {
                             router.push('/data/analysis-view')
                             create.initialization()

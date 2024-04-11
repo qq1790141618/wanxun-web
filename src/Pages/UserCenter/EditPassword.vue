@@ -5,12 +5,12 @@
     :close-btn="false"
     :close-on-esc-keydown="false"
     :close-on-overlay-click="false"
-    width="600px"
+    width="800px"
     :destroy-on-close="true"
     >
         <template #header>
             <div style="width: 100%;">
-                {{ getContent('editPassword') }}
+                {{ getString('editPassword') }}
 
                 <t-button
                 @click="async () => {
@@ -40,10 +40,10 @@
             :readonly="true"
             style="flex-shrink: 0;"
             >
-                <t-step-item :content="getContent('verifyEnvironmentalSecurity')" />
-                <t-step-item :content="getContent('verifyIndentiy')" />
-                <t-step-item :content="getContent('editPassword')" />
-                <t-step-item :content="getContent('result')" />
+                <t-step-item :content="getString('verifyEnvironmentalSecurity')" />
+                <t-step-item :content="getString('verifyIndentiy')" />
+                <t-step-item :content="getString('editPassword')" />
+                <t-step-item :content="getString('result')" />
             </t-steps>
 
             <div
@@ -67,24 +67,24 @@
 
                 <div v-if="current === 2">
                     <t-space align="center">
-                        {{ getContent('newPassword') }}:
+                        {{ getString('newPassword') }}:
                         <t-input style="width: 340px;" type="password" v-model="newPassword" ></t-input>
                     </t-space>
                     <t-button @click="changeToNew" :loading="changeLoading" style="margin-top: 5px;">
-                        {{ getContent('confirm') }}
+                        {{ getString('confirm') }}
                     </t-button>
                 </div>
 
                 <div v-if="current === 3" style="text-align: center; margin-top: 20px;">
                     <t-icon name="check-circle" size="80px" color="var(--td-success-color)" />
                     <div style="margin: 10px 0; font-size: 14px;">
-                        {{ getContent('passwordHasChanged') }}!
+                        {{ getString('passwordHasChanged') }}!
                     </div>
                     <t-button @click="visible = false">
                         <template #icon>
                             <t-icon name="close" />
                         </template>
-                        {{ getContent('close') }}
+                        {{ getString('close') }}
                     </t-button>
                 </div>
             </div>
@@ -95,7 +95,7 @@
 <script setup>
 import EnvironmentalSecurity from './EnvironmentalSecurity.vue'
 import OpenAuthentication from './OpenAuthentication.vue'
-import {getContent} from "../../i18n/index.js";
+import {getString} from "../../i18n/index.js";
 import {MessagePlugin} from "tdesign-vue-next";
 import {tips} from "../../hooks/tips.js";
 import service from "../../api/service.js";
@@ -116,8 +116,8 @@ const close = () => {
             return resolve(true)
         }
         const confirmDialog = DialogPlugin.confirm({
-            header: '关闭对话框',
-            body: '操作尚未完成，确认关闭当前对话框？关闭后编辑内容将消失',
+            header: getString('closeDialog'),
+            body: getString('confirmCloseDialog'),
             onConfirm: () => {
                 confirmDialog.destroy()
                 return resolve(true)
@@ -136,14 +136,14 @@ const authToken = ref(null)
 
 const changeToNew = async () => {
     if(newPassword.value.length < 6){
-        await MessagePlugin.error(getContent('newPasswordError'))
+        await MessagePlugin.error(getString('newPasswordError'))
         return
     }
     changeLoading.value = true
 
     let res = await service.api.userS.changePassword(authToken.value, newPassword.value)
     if(res.result){
-        await MessagePlugin.success(getContent('editSuccess'))
+        await MessagePlugin.success(getString('editSuccess'))
         current.value++
     } else {
         tips(res.error.message, 'error')

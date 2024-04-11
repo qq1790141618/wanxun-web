@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import { getContent } from "../i18n/index.js"
+import { getString } from "../i18n/index.js"
 
 export default {
     methods: {
-        getContent
+        getContent: getString
     },
     props: ['confirmLoading', 'noreset', 'nocancel', 'size'],
     emits: ['confirm', 'close', 'reset']

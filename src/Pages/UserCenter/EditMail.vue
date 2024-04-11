@@ -5,13 +5,13 @@
     :close-btn="false"
     :close-on-esc-keydown="false"
     :close-on-overlay-click="false"
-    width="600px"
+    width="800px"
     :destroy-on-close="true"
     >
         <template #header>
             <div style="width: 100%;">
-                {{ getContent('edit') }}
-                {{ getContent('mail') }}
+                {{ getString('edit') }}
+                {{ getString('mail') }}
 
                 <t-button
                 @click="async () => {
@@ -41,10 +41,10 @@
             :readonly="true"
             style="flex-shrink: 0;"
             >
-                <t-step-item :content="getContent('verifyEnvironmentalSecurity')" />
-                <t-step-item :content="getContent('verifyIndentiy')" />
-                <t-step-item :content="getContent('edit') + getContent('mail')" />
-                <t-step-item :content="getContent('result')" />
+                <t-step-item :content="getString('verifyEnvironmentalSecurity')" />
+                <t-step-item :content="getString('verifyIndentiy')" />
+                <t-step-item :content="getString('edit') + getString('mail')" />
+                <t-step-item :content="getString('result')" />
             </t-steps>
 
             <div
@@ -74,15 +74,15 @@
                             :options="newMailOptions"
                             @change="onNewMailChange"
                             :input-props="{
-                                label: getContent('newMail')
+                                label: getString('newMail')
                             }"
                             ></t-auto-complete>
                         </t-col>
                         <t-col :span="8">
                             <t-input
-                            :label="getContent('verifycode')"
+                            :label="getString('verifycode')"
                             v-model="code"
-                            :placeholder="getContent('code')"
+                            :placeholder="getString('code')"
                             >
                             </t-input>
                         </t-col>
@@ -94,12 +94,14 @@
                             :disabled="codeSendCd > 0"
                             :block="true"
                             >
-                                {{ codeSendCd > 0 ? codeSendCd + 's' + getContent('secondReSend') : getContent('sendCode') }}
+                                {{
+                                    codeSendCd > 0 ? codeSendCd + 's' + getString('secondReSend') : getString('sendCode')
+                                }}
                             </t-button>
                         </t-col>
                         <t-col :span="12">
                             <t-button @click="changeToNew" :loading="changeLoading">
-                                {{ getContent('confirm') }}
+                                {{ getString('confirm') }}
                             </t-button>
                         </t-col>
                     </t-row>
@@ -108,13 +110,13 @@
                 <div v-if="current === 3" style="text-align: center; margin-top: 20px;">
                     <t-icon name="check-circle" size="80px" color="var(--td-success-color)" />
                     <div style="margin: 10px 0; font-size: 14px;">
-                        {{ getContent('mailHasChanged') }}!
+                        {{ getString('mailHasChanged') }}!
                     </div>
                     <t-button @click="visible = false">
                         <template #icon>
                             <t-icon name="close" />
                         </template>
-                        {{ getContent('close') }}
+                        {{ getString('close') }}
                     </t-button>
                 </div>
             </div>
@@ -125,7 +127,7 @@
 <script setup>
 import EnvironmentalSecurity from './EnvironmentalSecurity.vue'
 import OpenAuthentication from './OpenAuthentication.vue'
-import {getContent} from "../../i18n/index.js"
+import {getString} from "../../i18n/index.js"
 import {MessagePlugin} from "tdesign-vue-next"
 import {tips} from "../../hooks/tips.js"
 import service from "../../api/service.js"
@@ -148,8 +150,8 @@ const closeDialog = () => {
             return resolve(true)
         }
         const confirmDialog = DialogPlugin.confirm({
-            header: '关闭对话框',
-            body: '操作尚未完成，确认关闭当前对话框？关闭后编辑内容将消失',
+            header: getString('closeDialog'),
+            body: getString('confirmCloseDialog'),
             onConfirm: () => {
                 confirmDialog.destroy()
                 return resolve(true)
@@ -204,15 +206,15 @@ const pattern = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 
 const changeToNew = async () => {
     if(newMail.value.length < 6 || !pattern.test(newMail.value)){
-        await MessagePlugin.error(getContent('newMailError'))
+        await MessagePlugin.error(getString('newMailError'))
         return
     }
     if(verifyId.value == null){
-        await MessagePlugin.error(getContent('notSendToLog'))
+        await MessagePlugin.error(getString('notSendToLog'))
         return
     }
     if(code.value == null || code.value.length !== 6){
-        await MessagePlugin.error(getContent('codeError'))
+        await MessagePlugin.error(getString('codeError'))
         return
     }
 
@@ -220,7 +222,7 @@ const changeToNew = async () => {
 
     let res = await service.api.userS.changeBind(authToken.value, 'mail', newMail.value, verifyId.value, code.value)
     if(res.result){
-        await MessagePlugin.success(getContent('editSuccess'))
+        await MessagePlugin.success(getString('editSuccess'))
         current.value++
 
         service.api.user.inform(getToken())
@@ -242,7 +244,7 @@ const sendVerifyCode = async () => {
 
     let response = await service.api.user.codeSend(newMail.value)
     if(response.result){
-        await MessagePlugin.success(getContent('sended'))
+        await MessagePlugin.success(getString('sended'))
         codeSendCd.value = 60
         let timer = setInterval(() => {
             codeSendCd.value--

@@ -12,7 +12,7 @@
             <template #icon>
                 <t-icon name="add-circle" />
             </template>
-            {{ i18n['publishNewVersion'][i18n.language] }}
+            {{ getString('publishNewVersion') }}
         </t-button>
         <t-button
         @click="$emit('reload')"
@@ -21,16 +21,16 @@
             <template #icon>
                 <t-icon name="refresh" />
             </template>
-            {{ i18n['refresh'][i18n.language] }}
+            {{ getString('refresh') }}
         </t-button>
     </t-space>
 </template>
 
 <script setup>
-import {tips} from "../../../../hooks/tips.js";
+import {tips} from "../../../../hooks/tips.js"
+import {getString} from "../../../../i18n/index.js"
 
 const emits = defineEmits(["addNew", "reload"])
-const i18n = inject('i18n')
 const user = inject('user')
 </script>
 

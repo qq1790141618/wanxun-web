@@ -7,10 +7,10 @@
     @change="initData"
     >
         <t-radio-button value="salesCount">
-            {{ i18n.salesCount[i18n.language] }}
+            {{ getString('salesCount') }}
         </t-radio-button>
         <t-radio-button value="actualSalesCount">
-            {{ i18n.actualSalesCount[i18n.language] }}
+            {{ getString('actualSalesCount') }}
         </t-radio-button>
     </t-radio-group>
     <t-table
@@ -27,8 +27,10 @@
 
 <script>
 import { sort, miaostreetGoodsLink } from '../../../hooks'
+import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     props: {
         data: {
             type: Object,
@@ -43,13 +45,13 @@ export default {
         const columns = ref([
             {
                 colKey: 'stylenumber',
-                title: i18n.stylenumber[i18n.language],
+                title: getString('stylenumber'),
                 width: 100,
                 align: 'center'
             },
             {
                 colKey: 'category',
-                title: i18n.category[i18n.language],
+                title: getString('category'),
                 ellipsis: true,
                 tooltip: true,
                 width: 120,
@@ -57,19 +59,19 @@ export default {
             },
             {
                 colKey: 'salesCount',
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 width: 80,
                 align: 'center'
             },
             {
                 colKey: 'salesAmount',
-                title: i18n.salesAmount[i18n.language],
+                title: getString('salesAmount'),
                 width: 80,
                 align: 'center'
             },
             {
                 colKey: 'actualSalesCount',
-                title: i18n.actualSalesCount[i18n.language],
+                title: getString('actualSalesCount'),
                 width: 80,
                 align: 'center'
             }

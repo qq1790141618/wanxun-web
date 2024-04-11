@@ -7,6 +7,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -16,7 +17,6 @@ export default {
         }
     },
     setup(props){
-        const i18n = inject('i18n')
 
         const chartEl = ref(null)
         const chartOption = ref({
@@ -25,8 +25,8 @@ export default {
             },
             legend: {
                 data: [
-                    i18n.styleCount[i18n.language],
-                    i18n.actualSalesCount[i18n.language]
+                    getString('styleCount'),
+                    getString('actualSalesCount')
                 ]
             },
             radar: {
@@ -39,11 +39,11 @@ export default {
                     data: [
                         {
                             value: [],
-                            name: i18n.styleCount[i18n.language]
+                            name: getString('styleCount')
                         },
                         {
                             value: [],
-                            name: i18n.actualSalesCount[i18n.language]
+                            name: getString('actualSalesCount')
                         }
                     ]
                 }
@@ -57,7 +57,7 @@ export default {
             }
 
             let chartData = props.data
-            let other = i18n.other[i18n.language]
+            let other = getString('other')
             let maxRadar = 6
 
             for (let i = 0; i < chartData.length; i++) {

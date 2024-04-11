@@ -17,6 +17,7 @@
 
 <script>
 import { sort } from '../../../hooks'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -32,21 +33,21 @@ export default {
         const footData = ref([])
         const columns = ref([
             {
-                title: i18n.category[i18n.language],
+                title: getString('category'),
                 colKey: 'category',
                 ellipsis: true,
                 tooltip: true,
                 width: 150
             },
             {
-                title: i18n.styleCount[i18n.language],
+                title: getString('styleCount'),
                 colKey: 'stylenumber',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.ratio[i18n.language],
+                title: getString('ratio'),
                 colKey: 'stylenumber-proportion',
                 cell: (h, {row}) => {
                     if(row['stylenumber-proportion']){
@@ -58,28 +59,28 @@ export default {
                 width: 100
             },
             {
-                title: i18n.productCount[i18n.language],
+                title: getString('productCount'),
                 colKey: 'productnumber',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.barcode[i18n.language] + i18n.count[i18n.language],
+                title: getString('barcode') + getString('count'),
                 colKey: 'barcode',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.quantityOfDynamicSalesStyles[i18n.language],
+                title: getString('quantityOfDynamicSalesStyles'),
                 colKey: 'already-saled-stylenumber',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.turnoverRate[i18n.language],
+                title: getString('turnoverRate'),
                 colKey: 'turnover-rate',
                 cell: (h, {row}) => {
                     if(row['turnover-rate'] !== false){
@@ -91,35 +92,35 @@ export default {
                 width: 100
             },
             {
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 colKey: 'sales-count',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.salesAmount[i18n.language],
+                title: getString('salesAmount'),
                 colKey: 'sales-amount',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.refundsCount[i18n.language],
+                title: getString('refundsCount'),
                 colKey: 'after-sale-count',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.refundsAmount[i18n.language],
+                title: getString('refundsAmount'),
                 colKey: 'after-sale-amount',
                 sortType: 'all',
                 sorter: true,
                 width: 100
             },
             {
-                title: i18n.salesCount[i18n.language] + ' ' + i18n.ratio[i18n.language],
+                title: getString('salesCount') + ' ' + getString('ratio'),
                 colKey: 'saled-stylenumber-rate',
                 cell: (h, {row}) => {
                     if(row['saled-stylenumber-rate'] !== false){
@@ -155,7 +156,7 @@ export default {
 
             primaryData.value = props.data
             footData.value = [{
-                category: i18n.summary[i18n.language],
+                category: getString('summary'),
                 stylenumber: 0,
                 productnumber: 0,
                 barcode: 0,

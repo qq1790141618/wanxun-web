@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import {getContent} from "../i18n/index.js"
+import {getString} from "../i18n/index.js"
 
 export default {
-    methods: {getContent},
+    methods: {getContent: getString},
     setup(){
         const i18n = inject('i18n')
         return { i18n }

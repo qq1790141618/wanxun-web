@@ -9,7 +9,7 @@
     :loading="loading"
     :loading-props="{
         indicator: false,
-        text: i18n['loading'][i18n.language]
+        text: getString('loading')
     }"
     >
         <template #operate="scope">
@@ -22,7 +22,7 @@
                     <template #icon>
                         <t-icon name="download" />
                     </template>
-                    {{ i18n['downloadPackage'][i18n.language] }}
+                    {{ getString('downloadPackage') }}
                 </t-button>
                 <t-button
                 v-if="!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/app/version/publish') >= 0"
@@ -32,7 +32,7 @@
                     <template #icon>
                         <t-icon name="edit" />
                     </template>
-                    {{ i18n['editPackage'][i18n.language] }}
+                    {{ getString('editPackage') }}
                 </t-button>
             </t-space>
         </template>
@@ -42,10 +42,9 @@
 <script setup>
 import { Icon } from 'tdesign-vue-next'
 import Controller from '../Controller.js'
-import {getContent} from "../../../../i18n/index.js";
+import {getString} from "../../../../i18n/index.js";
 import {tips} from "../../../../hooks/tips.js";
 
-const i18n = inject('i18n')
 const user = inject('user')
 const props = defineProps({
     data: {
@@ -61,12 +60,12 @@ const emits = defineEmits(['edit'])
 const columns = [
     {
         colKey: 'package_id',
-        title: getContent('packageId'),
+        title: getString('packageId'),
         align: 'center'
     },
     {
         colKey: 'platform',
-        title: getContent('platform'),
+        title: getString('platform'),
         align: 'center',
         cell: (_, { row }) => {
             var platform = Controller.platformOptions.find(item => item.value === row.platform)
@@ -84,17 +83,17 @@ const columns = [
     },
     {
         colKey: 'version',
-        title: getContent('version'),
+        title: getString('version'),
         align: 'center'
     },
     {
         colKey: 'version_id',
-        title: getContent('versionId'),
+        title: getString('versionId'),
         align: 'center'
     },
     {
         colKey: 'platform',
-        title: getContent('versionType'),
+        title: getString('versionType'),
         align: 'center',
         cell: (_, { row }) => {
             const versionType = Controller.versionTypeOptions.find(item => item.value === row.version_type);
@@ -103,7 +102,7 @@ const columns = [
     },
     {
         colKey: 'size',
-        title: getContent('packageSize'),
+        title: getString('packageSize'),
         align: 'center',
         cell: (_, { row }) => {
             return h('span', row.package_size + ' Byte')
@@ -111,17 +110,17 @@ const columns = [
     },
     {
         colKey: 'publish',
-        title: getContent('publishTime'),
+        title: getString('publishTime'),
         align: 'center'
     },
     {
         colKey: 'package_update_information',
-        title: getContent('updateInfo'),
+        title: getString('updateInfo'),
         align: 'center'
     },
     {
         colKey: 'operate',
-        title: getContent('operate'),
+        title: getString('operate'),
         align: 'center'
     }
 ]
@@ -131,7 +130,6 @@ const pagination = {
     showSizePicker: true,
     pageSizes: [5, 10, 15, 20],
     total: props.data.length,
-    showTotal: (total) => `共 ${total} 条数据`
 }
 const openUrl = (url) => {
     window.open(url, '_blank')

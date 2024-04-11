@@ -3,18 +3,18 @@
         <header-component />
         <div class="login-container">
             <div class="title-container">
-                <div class="title margin-no">{{ i18n.logto[i18n.language] }}</div>
+                <div class="title margin-no">{{ getString('logto') }}</div>
                 <div class="title">Miaostreet Sales Analysis</div>
                 <div class="sub-title">
                     <p class="tip">
-                        {{ i18n.administratorManagement[i18n.language] }}
+                        {{ getString('administratorManagement') }}
                         <t-icon name="scan" style="cursor: pointer; margin-left: 5px;" v-if="mode !== 3" @click="mode = 3" />
                     </p>
                 </div>
             </div>
             <t-form :colon="true" :label-width="0" v-if="mode === 1" @submit="login">
                 <t-form-item name="account">
-                    <t-input ref="accountInput" v-model="account" :placeholder="i18n.accountWidthUsername[i18n.language]" @enter="() => {
+                    <t-input ref="accountInput" v-model="account" :placeholder="getString('accountWidthUsername')" @enter="() => {
                         $refs.accountInput.blur()
                         $refs.passwordInput.focus()
                     }">
@@ -24,7 +24,7 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item name="password">
-                    <t-input ref="passwordInput" v-model="password" type="password" :placeholder="i18n.password[i18n.language]" @enter="() => {
+                    <t-input ref="passwordInput" v-model="password" type="password" :placeholder="getString('password')" @enter="() => {
                         $refs.passwordInput.blur()
                         login()
                     }">
@@ -34,15 +34,15 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item>
-                    <t-button theme="primary" type="submit" :block="true">{{ i18n.login[i18n.language] }}</t-button>
+                    <t-button theme="primary" type="submit" :block="true">{{ getString('login') }}</t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-link theme="primary" @click="mode = 2">{{ i18n.changeMode1[i18n.language] }}</t-link>
+                    <t-link theme="primary" @click="mode = 2">{{ getString('changeMode1') }}</t-link>
                 </t-form-item>
             </t-form>
             <t-form :colon="true" :label-width="0" v-if="mode === 2" @submit="login">
                 <t-form-item name="account">
-                    <t-input ref="phoneInput" v-model="account" :placeholder="i18n.account[i18n.language]" @enter="() => {
+                    <t-input ref="phoneInput" v-model="account" :placeholder="getString('account')" @enter="() => {
                         $refs.phoneInput.blur()
                         sendVerifyCode()
                     }">
@@ -52,7 +52,7 @@
                     </t-input>
                 </t-form-item>
                 <t-form-item name="password">
-                    <t-input ref="codeInput" v-model="code" :placeholder="i18n.code[i18n.language]" @enter="() => {
+                    <t-input ref="codeInput" v-model="code" :placeholder="getString('code')" @enter="() => {
                         $refs.codeInput.blur()
                         login()
                     }" style="margin-right: 10px;">
@@ -70,19 +70,19 @@
                     :disabled="codeSendCd > 0"
                     style="min-width: 135px;"
                     >
-                        {{ codeSendCd > 0 ? codeSendCd + 's' + i18n.secondReSend[i18n.language] : i18n.sendCode[i18n.language] }}
+                        {{ codeSendCd > 0 ? codeSendCd + 's' + getString('secondReSend') : getString('sendCode') }}
                     </t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-button theme="primary" type="submit" :block="true">{{ i18n.login[i18n.language] }}</t-button>
+                    <t-button theme="primary" type="submit" :block="true">{{ getString('login') }}</t-button>
                 </t-form-item>
                 <t-form-item>
-                    <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode2[i18n.language] }}</t-link>
+                    <t-link theme="primary" @click="mode = 1">{{ getString('changeMode2') }}</t-link>
                 </t-form-item>
             </t-form>
             <div v-if="mode === 3">
                 <ScanCard />
-                <t-link theme="primary" @click="mode = 1">{{ i18n.changeMode2[i18n.language] }}</t-link>
+                <t-link theme="primary" @click="mode = 1">{{ getString('changeMode2') }}</t-link>
             </div>
         </div>
     </div>
@@ -95,9 +95,10 @@ import service from "../../api/service.js"
 import {MessagePlugin} from "tdesign-vue-next"
 import {useRouter} from "vue-router"
 import {tips} from "../../hooks/tips.js"
-import {getContent} from "../../i18n/index.js"
+import {getString} from "../../i18n/index.js"
 
 export default {
+    methods: {getString},
     components: {
         headerComponent,
         ScanCard
@@ -119,7 +120,7 @@ export default {
             service.api.user.codeSend(account.value)
                 .then(response => {
                     if(response.result){
-                        getContent('sended')
+                        getString('sended')
                         codeSendCd.value = 60
                         let timer = setInterval(() => {
                             codeSendCd.value--
@@ -148,12 +149,12 @@ export default {
         const router = useRouter()
         const login = async () => {
             if(account.value == null || account.value === ''){
-                await MessagePlugin.error(getContent('accountEmpty'))
+                await MessagePlugin.error(getString('accountEmpty'))
                 return
             }
             if(mode.value === 1){
                 if(password.value == null || password.value === ''){
-                    await MessagePlugin.error(getContent('passwordEmpty'))
+                    await MessagePlugin.error(getString('passwordEmpty'))
                     return
                 }
                 service.api.user.passwordLogin(account.value, password.value)
@@ -161,11 +162,11 @@ export default {
                     .catch(error => MessagePlugin.error(error))
             } else {
                 if(verifyId.value == null){
-                    await MessagePlugin.error(getContent('notSendToLog'))
+                    await MessagePlugin.error(getString('notSendToLog'))
                     return
                 }
                 if(code.value == null || code.value.length !== 6){
-                    await MessagePlugin.error(getContent('codeError'))
+                    await MessagePlugin.error(getString('codeError'))
                     return
                 }
                 service.api.user.verifyCodeLogin(account.value, verifyId.value, code.value)
@@ -175,17 +176,11 @@ export default {
         }
         const loginThen = (response) => {
             if(response.result){
-                MessagePlugin.success(getContent('loged'))
+                MessagePlugin.success(getString('loged'))
 
                 const token = response.content['token']
                 localStorage.setItem('access_token', token)
-                service.api.user.inform(token)
-                    .then(res => {
-                        user.inform = res.content.user
-                        user.status = 'loged'
-                        localStorage.setItem('user', JSON.stringify(user.inform))
-                        router.push('/')
-                    })
+                location.href = location.origin
             } else {
                 tips(response.error.message, 'error')
             }

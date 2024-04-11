@@ -72,10 +72,10 @@
                         </t-button>
                     </template>
                     <t-row style="margin-top: -10px;" :gutter="[12, 8]">
-                        <t-col :span="3" class="description-title">{{ getContent('username') }}</t-col>
-                        <t-col :span="3" class="description-title">{{ getContent('nickname') }}</t-col>
-                        <t-col :span="3" class="description-title">{{ getContent('phone') }}</t-col>
-                        <t-col :span="3" class="description-title">{{ getContent('mail') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('username') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('nickname') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('phone') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('mail') }}</t-col>
                         <t-col :span="3">{{ user.inform.username }}</t-col>
                         <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.nickname }}</t-col>
                         <t-col :span="3" v-if="informEdit.isEdit">
@@ -83,9 +83,9 @@
                         </t-col>
                         <t-col :span="3">{{ user.inform.phone }}</t-col>
                         <t-col :span="3">{{ user.inform.mail }}</t-col>
-                        <t-col :span="3" class="description-title">{{ getContent('hiredate') }}</t-col>
-                        <t-col :span="3" class="description-title">{{ getContent('birthday') }}</t-col>
-                        <t-col :span="6" class="description-title">{{ getContent('location') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('hiredate') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('birthday') }}</t-col>
+                        <t-col :span="6" class="description-title">{{ getString('location') }}</t-col>
                         <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.hiredate }}</t-col>
                         <t-col :span="3" v-if="informEdit.isEdit">
                             <t-date-picker v-model="informEdit.data.hiredate" size="small" :clearable="true" style="width: 100%;"></t-date-picker>
@@ -128,7 +128,7 @@
                 :bordered="false"
                 >
                     <template #header>
-                        <span>{{ getContent('moreOperate') }}</span>
+                        <span>{{ getString('moreOperate') }}</span>
                     </template>
                     <t-space direction="vertical" style="margin-top: -10px; width: 100%;" size="8px">
                         <t-button
@@ -139,7 +139,7 @@
                             <template #icon>
                                 <t-icon name="user-locked" />
                             </template>
-                            {{ getContent('editPassword') }}
+                            {{ getString('editPassword') }}
                         </t-button>
                         <t-button
                         variant="outline"
@@ -149,8 +149,8 @@
                             <template #icon>
                                 <t-icon name="mobile" />
                             </template>
-                            {{ getContent('edit') }}
-                            {{ getContent('phone') }}
+                            {{ getString('edit') }}
+                            {{ getString('phone') }}
                         </t-button>
                         <t-button
                         variant="outline"
@@ -160,8 +160,8 @@
                             <template #icon>
                                 <t-icon name="mail" />
                             </template>
-                            {{ getContent('edit') }}
-                            {{ getContent('mail') }}
+                            {{ getString('edit') }}
+                            {{ getString('mail') }}
                         </t-button>
                         <t-button @click="bubbleShooterHdClick" shape="round" :block="true" style="margin-top: 10px;">
                             Bubble Shooter HD
@@ -184,7 +184,7 @@ import EditPassword from './EditPassword.vue'
 import EditMail from './EditMail.vue'
 import EditPhone from './EditPhone.vue'
 import ColleagueView from './ColleagueView.vue'
-import { getContent } from "../../i18n/index.js"
+import { getString } from "../../i18n/index.js"
 import { MessagePlugin } from "tdesign-vue-next"
 import service from "../../api/service.js";
 import {tips} from "../../hooks/tips.js";
@@ -227,7 +227,7 @@ const informEdit = ref({
         informEdit.value.loading = false
         informEdit.value.isEdit = false
 
-        await MessagePlugin.success(getContent('editSuccess'))
+        await MessagePlugin.success(getString('editSuccess'))
         await initLocation()
     }
 })

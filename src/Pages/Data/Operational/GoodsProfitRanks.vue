@@ -18,6 +18,7 @@
 
 <script>
 import { sort, miaostreetGoodsLink } from '../../../hooks'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -36,32 +37,32 @@ export default {
         const columns = ref([
             {
                 colKey: 'stylenumber',
-                title: i18n.stylenumber[i18n.language],
+                title: getString('stylenumber'),
                 width: 100
             },
             {
                 colKey: 'actualSalesCount',
-                title: i18n.actualSalesCount[i18n.language],
+                title: getString('actualSalesCount'),
                 width: 80
             },
             {
                 colKey: 'actualSalesAmount',
-                title: i18n.actualSalesAmount[i18n.language],
+                title: getString('actualSalesAmount'),
                 width: 80
             },
             {
                 colKey: 'income',
-                title: i18n.income[i18n.language],
+                title: getString('income'),
                 width: 80
             },
             {
                 colKey: 'profit',
-                title: i18n.profit[i18n.language],
+                title: getString('profit'),
                 width: 80
             },
             {
                 colKey: 'profitRatio',
-                title: i18n.profit[i18n.language] + i18n.ratio[i18n.language],
+                title: getString('profit') + getString('ratio'),
                 cell: (h, {row}) => {
                     if(row.profitRatio !== false){
                         if(row.profitRatio == -Infinity || row.profitRatio == Infinity){
@@ -84,7 +85,7 @@ export default {
                 let list = chartData[key].data
 
                 primaryData.value = list
-                footData.value[0] = { stylenumber: i18n.summary[i18n.language] }
+                footData.value[0] = { stylenumber: getString('summary') }
                 for (let i = 0; i < primaryData.value.length; i++) {
                     for (const key in primaryData.value[i]) {
                         if(key !== 'profitRatio' && typeof(primaryData.value[i][key]) === 'number' && !isNaN(primaryData.value[i][key])){

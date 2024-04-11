@@ -25,7 +25,7 @@
                 <template #icon>
                     <t-icon name="edit" />
                 </template>
-                {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
+                {{ getString('batch') }}{{ getString('edit') }}
             </t-button>
             <t-button
             variant="text"
@@ -40,7 +40,7 @@
                 <template #icon>
                     <t-icon name="arrow-up-down-2" />
                 </template>
-                {{ i18n.supplier[i18n.language] }}{{ i18n.mapping[i18n.language] }}
+                {{ getString('supplier') }}{{ getString('mapping') }}
             </t-button>
             <t-button
             variant="text"
@@ -50,7 +50,7 @@
                 <template #icon>
                     <t-icon name="upload" />
                 </template>
-                {{ i18n.informationImport[i18n.language] }}
+                {{ getString('informationImport') }}
             </t-button>
             <span style="line-height: 30px; cursor: pointer;">
                 <t-switch :custom-value="['cost-col', '']" v-model="costHighlight" @change="costHightLightChange" />
@@ -61,7 +61,7 @@
                     costHightLightChange(costHighlight)
                 }"
                 >
-                    {{ i18n.cost[i18n.language] }}{{ i18n.highlight[i18n.language] }}
+                    {{ getString('cost') }}{{ getString('highlight') }}
                 </span>
             </span>
         </t-space>
@@ -70,9 +70,10 @@
 
 <script>
 import {tips} from "../../hooks/tips.js";
+import {getString} from "../../i18n/index.js";
 
 export default {
-    methods: {tips},
+    methods: {getString, tips},
     props: {
         data: {
             type: Array,

@@ -3,7 +3,7 @@
         <template #title>
             <t-icon name="shop"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ i18n.recommend[i18n.language] }}
+                {{ getString('recommend') }}
             </span>
         </template>
         <t-tabs :default-value="shop.brand">
@@ -27,8 +27,10 @@
 
 <script>
 import StyleRecommedItem from './StyleRecommedItem.vue'
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         StyleRecommedItem
     },

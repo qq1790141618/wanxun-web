@@ -9,31 +9,31 @@
     >
         <template #header>
             <t-icon name="browse" style="margin-right: 5px;" />
-            {{ i18n.viewGoods[i18n.language] }}
+            {{ getString('viewGoods') }}
         </template>
         <t-loading
         v-if="loading"
         style="width: 100%; min-height: 40vh;"
         size="small"
-        :text="i18n.loading[i18n.language]"
+        :text="getString('loading')"
         ></t-loading>
         <div style="max-height: 60vh; overflow-y: auto; ">
             <t-row :gutter="[12, 12]" style="width: 100%;" v-if="!loading">
                 <t-col :span="9">
                     <t-row :gutter="[12, 4]" style="width: 100%;">
-                        <t-col :span="2" class="description-title">{{ i18n.stylenumber[i18n.language] }}</t-col>
-                        <t-col :span="5" class="description-title">{{ i18n.goodName[i18n.language] }}</t-col>
-                        <t-col :span="2" class="description-title">{{ i18n.tagPrice[i18n.language] }}</t-col>
-                        <t-col :span="3" class="description-title">{{ i18n.category[i18n.language] }}</t-col>
+                        <t-col :span="2" class="description-title">{{ getString('stylenumber') }}</t-col>
+                        <t-col :span="5" class="description-title">{{ getString('goodName') }}</t-col>
+                        <t-col :span="2" class="description-title">{{ getString('tagPrice') }}</t-col>
+                        <t-col :span="3" class="description-title">{{ getString('category') }}</t-col>
                         <t-col :span="2">{{ data.stylenumber }}</t-col>
                         <t-col :span="5">{{ data.name }}</t-col>
                         <t-col :span="2">{{ data.tagprice }}</t-col>
                         <t-col :span="3">{{ data.category }}</t-col>
-                        <t-col :span="5" class="description-title">{{ i18n.size[i18n.language] }}</t-col>
-                        <t-col :span="4" class="description-title">{{ i18n.color[i18n.language] }}</t-col>
-                        <t-col :span="1" class="description-title">{{ i18n.inventory[i18n.language] }}</t-col>
-                        <t-col :span="1" class="description-title">{{ i18n.cost[i18n.language] }}</t-col>
-                        <t-col :span="1" class="description-title">{{ i18n.price[i18n.language] }}</t-col>
+                        <t-col :span="5" class="description-title">{{ getString('size') }}</t-col>
+                        <t-col :span="4" class="description-title">{{ getString('color') }}</t-col>
+                        <t-col :span="1" class="description-title">{{ getString('inventory') }}</t-col>
+                        <t-col :span="1" class="description-title">{{ getString('cost') }}</t-col>
+                        <t-col :span="1" class="description-title">{{ getString('price') }}</t-col>
                         <t-col :span="5">{{ data.size }}</t-col>
                         <t-col :span="4">
                             {{ data.color }}
@@ -55,19 +55,19 @@
                                     :data="sku"
                                     :columns="[
                                         {
-                                            title: i18n.color[i18n.language],
+                                            title: getString('color'),
                                             colKey: 'color',
                                             width: '150px',
                                             align: 'center'
                                         },
                                         {
-                                            title: i18n.color[i18n.language],
+                                            title: getString('color'),
                                             colKey: 'colorid',
                                             width: '70px',
                                             align: 'center'
                                         },
                                         {
-                                            title: i18n.productnumber[i18n.language],
+                                            title: getString('productnumber'),
                                             colKey: 'productnumber',
                                             width: '150px',
                                             align: 'center'
@@ -100,13 +100,13 @@
                                     :data="sku"
                                     :columns="[
                                         {
-                                            title: i18n.barcode[i18n.language],
+                                            title: getString('barcode'),
                                             colKey: 'barcode',
                                             width: '150px',
                                             align: 'center'
                                         },
                                         {
-                                            title: i18n.inventory[i18n.language],
+                                            title: getString('inventory'),
                                             colKey: 'inventory',
                                             width: '70px',
                                             align: 'center'
@@ -131,7 +131,7 @@
                         <t-col :span="1" v-if="Math.min(...sku.map(obj => obj.price * 1)) === Math.max(...sku.map(obj => obj.price * 1))">
                             {{ sku[0].price }}
                         </t-col>
-                        <t-col :span="1" class="description-title">{{ i18n.mainImage[i18n.language] }}</t-col>
+                        <t-col :span="1" class="description-title">{{ getString('mainImage') }}</t-col>
                         <t-col :span="4">
                             <t-swiper :height="300" style="width: 100%;">
                                 <t-swiper-item v-for="item in data['main-image']" :key="item" style="padding: 10px 0;">
@@ -145,7 +145,7 @@
                     </t-row>
                 </t-col>
                 <t-col :span="3">
-                    <t-card :title="i18n.detailImage[i18n.language]">
+                    <t-card :title="getString('detailImage')">
                         <div style="max-height: 40vh; overflow-y: auto; ">
                             <t-image
                             v-for="item in data['detail-image']"
@@ -162,7 +162,10 @@
 </template>
 
 <script>
+import {getString} from "../../i18n/index.js";
+
 export default {
+    methods: {getString},
     setup(){
         const i18n = inject('i18n')
         const serve = inject('serve')

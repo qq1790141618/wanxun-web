@@ -1,29 +1,32 @@
 <template>
     <t-list split v-if="data">
         <t-list-item>
-            <span>{{ i18n.reverseFreight[i18n.language] }}</span>
+            <span>{{ getString('reverseFreight') }}</span>
         </t-list-item>
         <t-list-item>
-            <span>{{ i18n.allRefundsCount[i18n.language] }}</span>
+            <span>{{ getString('allRefundsCount') }}</span>
             <span>{{ data.allRefundsCount }}</span>
         </t-list-item>
         <t-list-item>
-            <span>{{ i18n.allRefundsFreight[i18n.language] }}</span>
+            <span>{{ getString('allRefundsFreight') }}</span>
             <span>{{ data.allRefundsFreight }}</span>
         </t-list-item>
         <t-list-item>
-            <span>{{ i18n.allSalesCount[i18n.language] }}</span>
+            <span>{{ getString('allSalesCount') }}</span>
             <span>{{ data.allSalesCount }}</span>
         </t-list-item>
         <t-list-item>
-            <span>{{ i18n.aveShipBorneSales[i18n.language] }}</span>
+            <span>{{ getString('aveShipBorneSales') }}</span>
             <span>{{ data.aveShipBorneSales }}</span>
         </t-list-item>
     </t-list>
 </template>
 
 <script>
+import {getString} from "../../../i18n/index.js";
+
 export default {
+    methods: {getString},
     props: {
         data: {
             type: Object,

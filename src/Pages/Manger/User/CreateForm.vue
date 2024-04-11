@@ -4,23 +4,23 @@
     :colon="true"
     :data="formData"
     :rules="FORM_RULES"
-    @submit="onSubmit"
+    :label-width="150"
     >
-        <t-form-item :label="i18n['username'][i18n.language]" name="username">
+        <t-form-item :label="getString('username')" name="username">
             <t-input
                 v-model="formData.username"
                 @change="$emit('update:form', formData)"
                 style="width: 270px;">
             </t-input>
         </t-form-item>
-        <t-form-item :label="i18n['realname'][i18n.language]" name="realname">
+        <t-form-item :label="getString('realname')" name="realname">
             <t-input
             v-model="formData.realname"
             @change="$emit('update:form', formData)"
             style="width: 270px;">
             </t-input>
         </t-form-item>
-        <t-form-item :label="i18n['userIdentity'][i18n.language]" name="identity">
+        <t-form-item :label="getString('userIdentity')" name="identity">
             <t-select
             :options="identityOptions"
             v-model="formData.identity"
@@ -28,7 +28,7 @@
             style="width: 180px;"
             ></t-select>
         </t-form-item>
-        <t-form-item :label="i18n['phone'][i18n.language]" name="phone">
+        <t-form-item :label="getString('phone')" name="phone">
             <t-input-number
             v-model="formData.phone"
             @change="$emit('update:form', formData)"
@@ -37,21 +37,21 @@
             style="width: 240px;"
             ></t-input-number>
         </t-form-item>
-        <t-form-item :label="i18n['mail'][i18n.language]" name="mail">
+        <t-form-item :label="getString('mail')" name="mail">
             <t-input
             v-model="formData.mail"
             @change="$emit('update:form', formData)"
             style="width: 270px;"
             ></t-input>
         </t-form-item>
-        <t-form-item :label="i18n['nickname'][i18n.language]" name="nickname">
+        <t-form-item :label="getString('nickname')" name="nickname">
             <t-input
             v-model="formData.nickname"
             @change="$emit('update:form', formData)"
             style="width: 270px;"
             ></t-input>
         </t-form-item>
-        <t-form-item :label="i18n['password'][i18n.language]" name="nickname">
+        <t-form-item :label="getString('password')" name="nickname">
             <t-input
             v-model="formData.nickname"
             @change="$emit('update:form', formData)"
@@ -59,16 +59,17 @@
             style="width: 270px;"
             ></t-input>
         </t-form-item>
-        <t-form-item :label="i18n['hiredate'][i18n.language]" name="hiredate">
+        <t-form-item :label="getString('hiredate')" name="hiredate">
             <t-date-picker v-model="formData.hiredate" @change="$emit('update:form', formData)" ></t-date-picker>
         </t-form-item>
-        <t-form-item :label="i18n['birthday'][i18n.language]" name="birthday">
+        <t-form-item :label="getString('birthday')" name="birthday">
             <t-date-picker v-model="formData.birthday" @change="$emit('update:form', formData)" ></t-date-picker>
         </t-form-item>
     </t-form>
 </template>
 
 <script setup>
+import {getString} from "../../../i18n/index.js";
 
 const props = defineProps({
     form: {
@@ -82,9 +83,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:form'])
 
-const i18n = inject('i18n')
 const formRef = ref(null)
-const formData = ref({
+const formData = reactive({
     username: null,
     phone: null,
     mail: null,

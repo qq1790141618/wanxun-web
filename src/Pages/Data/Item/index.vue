@@ -15,7 +15,7 @@
                 <span>
                     <span style="margin-right: 6px;">
                         <t-icon name="calendar" style="margin-right: 3px;" />
-                        {{ i18n.choose[i18n.language] }}{{ i18n.time[i18n.language] }}:
+                        {{ getString('choose') }}{{ getString('time') }}:
                     </span>
                     <t-date-range-picker
                     size="small"
@@ -29,7 +29,7 @@
             v-if="loading"
             style="width: 100%; min-height: 50vh;"
             size="small"
-            :text="i18n.loading[i18n.language]"
+            :text="getString('loading')"
             ></t-loading>
             <t-row
             :gutter="[18, 12]"
@@ -71,8 +71,10 @@ import RefundsReverseFreight from './RefundsReverseFreight.vue'
 import {MessagePlugin} from "tdesign-vue-next";
 import service from "../../../api/service.js";
 import {tips} from "../../../hooks/tips.js";
+import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         ItemStructure,
         PriceRange,

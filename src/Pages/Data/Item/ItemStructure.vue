@@ -8,6 +8,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -22,14 +23,14 @@ export default {
         const chartOption = ref({
             title: {
                 left: 'center',
-                text: i18n.categoryPriceRange[i18n.language] + ' / ' + i18n.yuan[i18n.language]
+                text: getString('categoryPriceRange') + ' / ' + getString('yuan')
             },
             tooltip: {
                 trigger: 'axis',
                 formatter: function (info) {
                     let d = JSON.parse(JSON.stringify(info[0].data))
                     d.splice(0, 1)
-                    return info[0].axisValue + ': ' + Math.min(...d) + '~' + Math.max(...d) + i18n.yuan[i18n.language]
+                    return info[0].axisValue + ': ' + Math.min(...d) + '~' + Math.max(...d) + getString('yuan')
                 }
             },
             xAxis: {

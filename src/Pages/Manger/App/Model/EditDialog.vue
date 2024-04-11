@@ -3,7 +3,7 @@
     v-model:visible="visible"
     placement="center"
     width="600"
-    :header="i18n['editPackage'][i18n.language]"
+    :header="getString('editPackage')"
     :footer="null"
     :close-btn="false"
     :close-on-esc-keydown="false"
@@ -21,19 +21,19 @@
         scroll-to-first-error="smooth"
         layout="inline"
         >
-            <t-form-item :label="i18n['platform'][i18n.language]" name="platform">
+            <t-form-item :label="getString('platform')" name="platform">
                 <t-select v-model="formData.platform" :options="Controller.platformOptions" style="width: 270px;"  @change="getSuffix" />
             </t-form-item>
-            <t-form-item :label="i18n['version'][i18n.language]" name="version">
+            <t-form-item :label="getString('version')" name="version">
                 <t-input v-model="formData.version" style="width: 270px;" />
             </t-form-item>
-            <t-form-item :label="i18n['versionId'][i18n.language]" name="version_id">
+            <t-form-item :label="getString('versionId')" name="version_id">
                 <t-input-number v-model="formData.version_id"  style="width: 270px;" />
             </t-form-item>
-            <t-form-item :label="i18n['versionType'][i18n.language]" name="version_type">
+            <t-form-item :label="getString('versionType')" name="version_type">
                 <t-select v-model="formData.version_type" :options="Controller.versionTypeOptions" style="width: 270px;" />
             </t-form-item>
-            <t-form-item :label="i18n['packageUpload'][i18n.language]" name="package_resource">
+            <t-form-item :label="getString('packageUpload')" name="package_resource">
                 <t-upload
                 v-model:files="files"
                 theme="file"
@@ -44,7 +44,7 @@
                 >
                 </t-upload>
             </t-form-item>
-            <t-form-item :label="i18n['updateInfo'][i18n.language]" name="package_update_information" style="width: 100%;">
+            <t-form-item :label="getString('updateInfo')" name="package_update_information" style="width: 100%;">
                 <t-textarea v-model="formData.package_update_information" />
             </t-form-item>
             <t-form-item>
@@ -63,10 +63,10 @@ import service from "../../../../api/service.js"
 import host from "../../../../api/host.js"
 import {apiSign} from "../../../../api/request.js"
 import {getToken} from "../../../../hooks/user.js"
+import {getString} from "../../../../i18n/index.js"
 
 const visible = ref(false)
 const user = inject('user')
-const i18n = inject('i18n')
 const props = defineProps({
     data: {
         type: Array,
@@ -131,7 +131,7 @@ const handleSuccess = (context) => {
     formData.value.package_size = context.file.size
 }
 
-const versionIdCheck = (val) => {
+const versionIdCheck = async (val) => {
     if(formData.value.package_id){
         return { result: true }
     }

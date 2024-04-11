@@ -7,6 +7,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../../i18n/index.js";
 
 export default {
     props: ['data'],
@@ -21,8 +22,8 @@ export default {
             },
             legend: {
                 data: [
-                    i18n.salesAmount[i18n.language],
-                    i18n.refundsAmount[i18n.language]
+                    getString('salesAmount'),
+                    getString('refundsAmount')
                 ]
             },
             xAxis: {
@@ -37,7 +38,7 @@ export default {
             series: [
                 {
                     type: 'bar',
-                    name: i18n.salesAmount[i18n.language],
+                    name: getString('salesAmount'),
                     data: [],
                     itemStyle: {
                         borderRadius: 5,
@@ -48,7 +49,7 @@ export default {
                 },
                 {
                     type: 'bar',
-                    name: i18n.refundsAmount[i18n.language],
+                    name: getString('refundsAmount'),
                     data: [],
                     itemStyle: {
                         borderRadius: 5,

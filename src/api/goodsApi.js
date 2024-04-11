@@ -1,7 +1,7 @@
 import { request, apiSign } from "./request.js"
 import {getToken} from "../hooks/user.js"
 import host from "./host.js"
-import {getBrand, getStore} from "../hooks/shop.js"
+import {getBrand, getStore} from "./shop.js"
 
 export const categoryOptions = async () => {
     let path = '/goods/category/get'

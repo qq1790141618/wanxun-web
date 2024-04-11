@@ -2,7 +2,7 @@
     <t-loading
     size="small"
     v-if="verified === 1"
-    :text="i18n.checkingEnvironmentalSecurity[i18n.language] + '...'"
+    :text="getString('checkingEnvironmentalSecurity') + '...'"
     style="width: 100%; height: 240px;"
     />
     <div
@@ -12,7 +12,7 @@
         <t-icon name="check" size="80px" color="var(--td-success-color)" />
 
         <div style="margin: 10px 0; font-size: 14px;">
-            {{ i18n.verified[i18n.language] }}
+            {{ getString('verified') }}
         </div>
     </div>
     <div
@@ -22,22 +22,24 @@
         <t-icon name="close-circle" size="80px" color="var(--td-error-color)" />
 
         <div style="margin: 10px 0; font-size: 14px;">
-            {{ i18n.verifyClosed[i18n.language] }}
+            {{ getString('verifyClosed') }}
         </div>
         
         <t-button @click="$emit('close')">
             <template #icon>
                 <t-icon name="close" />
             </template>
-            {{ i18n.close[i18n.language] }}
+            {{ getString('close') }}
         </t-button>
     </div>
 </template>
 
 <script>
 import { delay } from '../../hooks'
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     emits: ['verified', 'close'],
     setup(props, { emit }){
         const i18n = inject('i18n')

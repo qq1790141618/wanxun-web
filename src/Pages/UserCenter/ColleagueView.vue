@@ -15,23 +15,23 @@
                     {{ item.realname }}
                 </h2>
                 <div>
-                    {{ getContent('uid') }}:
+                    {{ getString('uid') }}:
                     {{ item.uid }}
                 </div>
                 <div>
-                    {{ getContent('nickname') }}:
+                    {{ getString('nickname') }}:
                     {{ item.nickname }}
                 </div>
                 <div>
-                    {{ getContent('phone') }}:
+                    {{ getString('phone') }}:
                     {{ item.phone }}
                 </div>
                 <div>
-                    {{ getContent('hiredate') }}:
+                    {{ getString('hiredate') }}:
                     {{ item.hiredate }}
                 </div>
                 <div>
-                    {{ getContent('mail') }}:
+                    {{ getString('mail') }}:
                     {{ item.mail }}
                 </div>
             </div>
@@ -47,7 +47,7 @@
 <script setup>
 import service from "../../api/service.js"
 import {tips} from "../../hooks/tips.js"
-import {getContent} from "../../i18n/index.js"
+import {getString} from "../../i18n/index.js"
 
 const user = inject('user')
 const data = ref([])

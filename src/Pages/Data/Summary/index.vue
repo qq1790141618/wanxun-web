@@ -3,7 +3,7 @@
         <template #title>
             <t-icon :name="$route.meta.icon"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ i18n[$route.meta.title][i18n.language] }}
+                {{ getString($route.meta.title) }}
                 ({{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}{{ shop.store }} / {{ shop.brand }})
             </span>
         </template>
@@ -13,7 +13,7 @@
         :columns="columns"
         :loading="loading"
         :loading-props="{
-            text: i18n.loading[i18n.language]
+            text: getString('loading')
         }"
         max-height="calc(100vh - 300px)"
         @sort-change="sortConfig.done"
@@ -77,8 +77,10 @@ import dayjs from 'dayjs'
 import { sort } from '../../../hooks'
 import service from "../../../api/service.js";
 import {tips} from "../../../hooks/tips.js";
+import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     setup(){
         const i18n = inject('i18n')
         const shop = inject('shop')

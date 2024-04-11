@@ -29,11 +29,11 @@
 <script>
 import { sort } from '../../../../hooks'
 import * as echarts from 'echarts'
+import {getString} from "../../../../i18n/index.js";
 
 export default {
     props: ['data'],
     setup(props){
-        const i18n = inject('i18n')
         
         const primaryData = ref([])
         const view = ref('chart')
@@ -41,35 +41,35 @@ export default {
         const sortDefault = { sortBy: 'time', descending: false }
         const columns = [
             {
-                title: i18n.time[i18n.language],
+                title: getString('time'),
                 colKey: 'time',
                 ellipsis: true,
                 tooltip: true,
                 align: 'center'
             },
             {
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 colKey: 'salesCount',
                 align: 'center',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.salesAmount[i18n.language],
+                title: getString('salesAmount'),
                 colKey: 'salesAmount',
                 align: 'center',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.refundsCount[i18n.language],
+                title: getString('refundsCount'),
                 colKey: 'refundsCount',
                 align: 'center',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.refundsAmount[i18n.language],
+                title: getString('refundsAmount'),
                 colKey: 'refundsAmount',
                 align: 'center',
                 sortType: 'all',
@@ -84,9 +84,9 @@ export default {
             },
             legend: {
                 data: [
-                    i18n.salesAmount[i18n.language],
-                    i18n.refundsAmount[i18n.language],
-                    i18n.income[i18n.language]
+                    getString('salesAmount'),
+                    getString('refundsAmount'),
+                    getString('income')
                 ]
             },
             xAxis: {
@@ -101,7 +101,7 @@ export default {
             series: [
                 {
                     type: 'line',
-                    name: i18n.salesAmount[i18n.language],
+                    name: getString('salesAmount'),
                     data: [],
                     showSymbol: false,
                     smooth: true,
@@ -109,7 +109,7 @@ export default {
                 },
                 {
                     type: 'line',
-                    name: i18n.refundsAmount[i18n.language],
+                    name: getString('refundsAmount'),
                     data: [],
                     showSymbol: false,
                     smooth: true,
@@ -119,7 +119,7 @@ export default {
                 },
                 {
                     type: 'line',
-                    name: i18n.income[i18n.language],
+                    name: getString('income'),
                     data: [],
                     showSymbol: false,
                     smooth: true,

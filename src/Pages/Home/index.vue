@@ -3,12 +3,12 @@
     v-if="loading"
     class="home-progress"
     :percentage="percent"
-    :label="i18n.loading[i18n.language] + ' ' + Math.ceil(percent) + '%'"
+    :label="getString('loading') + ' ' + Math.ceil(percent) + '%'"
     />
     <t-row :gutter="[12, 12]" v-if="!loading" style="width: 100%; padding: 15px;">
         <t-col :span="12">
             <div style="padding: 0 10px; font-size: 15px;">
-                {{ i18n.welcomeBack[i18n.language] }}！{{ data.famousWord }}
+                {{ getString('welcomeBack') }}！{{ data.famousWord }}
             </div>
         </t-col>
         <t-col :span="9">
@@ -22,7 +22,7 @@
                 >
                     <FastRankTable
                     :data="data[item]"
-                    :title="i18n[item][i18n.language]"
+                    :title="getString(item)"
                     :colKey="item == 'goods' ? 'stylenumber' : item"
                     />
                 </t-col>
@@ -48,8 +48,10 @@ import {getMirrors} from "../../api/goodsApi.js";
 import {tips} from "../../hooks/tips.js";
 import host from "../../api/host.js";
 import {MessagePlugin} from "tdesign-vue-next";
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         FastView,
         RecentData,

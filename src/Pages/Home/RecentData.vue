@@ -3,7 +3,7 @@
         <template #title>
             <t-icon name="chart"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ i18n.recentData[i18n.language] }}
+                {{ getString('recentData') }}
             </span>
         </template>
         <div ref="mainChart" style="width: 100%; height: 450px;"></div>
@@ -12,8 +12,10 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     props: {
         data: {
             type: Object,
@@ -37,9 +39,9 @@ export default {
                 },
                 legend: {
                     data: [
-                        i18n.salesAmount[i18n.language],
-                        i18n.refundsAmount[i18n.language],
-                        i18n.income[i18n.language]
+                        getString('salesAmount'),
+                        getString('refundsAmount'),
+                        getString('income')
                     ]
                 },
                 xAxis: {
@@ -58,7 +60,7 @@ export default {
                         itemStyle: {
                             borderRadius: 5
                         },
-                        name: i18n.salesAmount[i18n.language],
+                        name: getString('salesAmount'),
                         data: [],
                         showSymbol: false,
                         smooth: true
@@ -69,14 +71,14 @@ export default {
                         itemStyle: {
                             borderRadius: 5
                         },
-                        name: i18n.refundsAmount[i18n.language],
+                        name: getString('refundsAmount'),
                         data: [],
                         showSymbol: false,
                         smooth: true
                     },
                     {
                         type: 'line',
-                        name: i18n.income[i18n.language],
+                        name: getString('income'),
                         data: [],
                         showSymbol: false,
                         smooth: true

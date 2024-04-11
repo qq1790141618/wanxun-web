@@ -36,7 +36,7 @@
                 :columns="columns"
                 :loading="loading"
                 :loading-props="{
-                    text: i18n.loading[i18n.language]
+                    text: getString('loading')
                 }"
                 max-height="calc(100vh - 200px)"
                 row-key="stylenumber"
@@ -69,14 +69,14 @@
                                 }
                             }"
                             >
-                                {{ i18n.edit[i18n.language] }}
+                                {{ getString('edit') }}
                             </t-button>
                             <t-button
                             variant="outline"
                             v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
                             @click="miaostreetGoodsLink(row)"
                             >
-                                {{ i18n.viewMiaostreetLink[i18n.language] }}
+                                {{ getString('viewMiaostreetLink') }}
                             </t-button>
                             <t-button
                             variant="outline"
@@ -87,7 +87,7 @@
                                     tips('权限不足', 'error')
                                 }
                             }">
-                                {{ i18n.viewGoods[i18n.language] }}
+                                {{ getString('viewGoods') }}
                             </t-button>
                             <t-button
                             variant="outline"
@@ -95,7 +95,7 @@
                             v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
                             @click="copy(row['miaostreet-id'], i18n.language)"
                             >
-                                {{ i18n.copy[i18n.language] }}{{ i18n['miaostreet-id'][i18n.language] }}
+                                {{ getString('copy') }}{{ getString('miaostreet-id') }}
                             </t-button>
                         </t-space>
                     </template>
@@ -145,24 +145,24 @@
     :close-btn="false"
     :footer="false">
         <template #header>
-            {{ i18n.exportQueryGoods[i18n.language] }}
+            {{ getString('exportQueryGoods') }}
         </template>
         <div style="margin-bottom: 8px">
             <t-icon name="check-double" />
-            {{ i18n.goods[i18n.language] }}{{ i18n.data[i18n.language] }}{{ i18n.exportSuccess[i18n.language] }}!
+            {{ getString('goods') }}{{ getString('data') }}{{ getString('exportSuccess') }}!
         </div>
         <t-space size="8px">
             <t-button size="small" theme="primary" @click="openUrl(exportFileUrl)">
                 <template #icon>
                     <t-icon name="download" />
                 </template>
-                {{ i18n.download[i18n.language] }}
+                {{ getString('download') }}
             </t-button>
             <t-button size="small" variant="outline" @click="exportDialogShow = false">
                 <template #icon>
                     <t-icon name="close" />
                 </template>
-                {{ i18n.close[i18n.language] }}
+                {{ getString('close') }}
             </t-button>
         </t-space>
     </t-dialog>
@@ -180,9 +180,10 @@ import ViewGoods from './ViewGoods.vue'
 import EditGoods from './EditGoods.vue'
 import service from "../../api/service.js";
 import {tips} from "../../hooks/tips.js";
+import {getString} from "../../i18n/index.js";
 
 export default {
-    methods: {tips},
+    methods: {getString, tips},
     components: {
         confirmBar,
         ConditionBox,
@@ -237,84 +238,84 @@ export default {
                 width: 50
             },
             {
-                title: i18n.stylenumber[i18n.language],
+                title: getString('stylenumber'),
                 colKey: 'stylenumber',
                 width: 100,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.image[i18n.language],
+                title: getString('image'),
                 colKey: 'image',
                 width: 120,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.goodName[i18n.language],
+                title: getString('goodName'),
                 colKey: 'name',
                 width: 240,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.tagPrice[i18n.language],
+                title: getString('tagPrice'),
                 colKey: 'tagprice',
                 width: 70,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.category[i18n.language],
+                title: getString('category'),
                 colKey: 'category',
                 width: 180,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n['miaostreet-id'][i18n.language],
+                title: getString('miaostreet-id'),
                 colKey: 'miaostreet-id',
                 width: 120,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 colKey: 'sales-count',
                 width: 90,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.supplier[i18n.language],
+                title: getString('supplier'),
                 colKey: 'supplier',
                 width: 90,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.supplier[i18n.language] + ' ' + i18n.stylenumber[i18n.language],
+                title: getString('supplier') + ' ' + getString('stylenumber'),
                 colKey: 'supplier-id',
                 width: 110,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.price[i18n.language],
+                title: getString('price'),
                 colKey: 'price',
                 width: 90,
                 align: 'center',
                 className: 'goods-table-col'
             },
             {
-                title: i18n.cost[i18n.language],
+                title: getString('cost'),
                 colKey: 'cost',
                 width: 70,
                 align: 'center',
                 className: 'goods-table-col ' + costHighlight.value
             },
             {
-                title: i18n.operate[i18n.language],
+                title: getString('operate'),
                 colKey: 'operate',
                 width: 200,
                 align: 'center',

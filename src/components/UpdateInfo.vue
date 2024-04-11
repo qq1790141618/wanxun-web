@@ -15,10 +15,10 @@
                 <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Manage</t-tag>
                 <div>
                     <div>
-                        新增菜单“管理”，以及子菜单“用户管理”，“用户组管理”，“App管理”
+                        新增菜单“管理”，以及子菜单“用户管理”，“用户组管理”，“App管理”，“店铺管理”
                     </div>
                     <div>
-                        New menu "Management" and submenus "User Management", "User Group Management", "App Management" added.
+                        New menu "Management" and submenus "User Management", "User Group Management", "App Management", "Shop Management" added.
                     </div>
                 </div>
             </div>

@@ -7,18 +7,18 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../../i18n/index.js";
 
 export default {
     props: ['data'],
     setup(props){
-        const i18n = inject('i18n')
         let chart
         let amount = new Object
         const primaryChart = ref(null)
         const chartOptions = ref({
             tooltip: {
                 formatter: function (info) {
-                    return info.name + ' - ' + info.value + ' ' + i18n.piece[i18n.language] + ' / ' + amount[info.name] + ' ' + i18n.yuan[i18n.language]
+                    return info.name + ' - ' + info.value + ' ' + getString('piece') + ' / ' + amount[info.name] + ' ' + getString('yuan')
                 }
             },
             series: [

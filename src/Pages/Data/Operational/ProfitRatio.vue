@@ -8,6 +8,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -22,7 +23,7 @@ export default {
         const chartOption = ref({
             title: {
                 left: 'center',
-                text: i18n.profit[i18n.language] + i18n.ratio[i18n.language]
+                text: getString('profit') + getString('ratio')
             },
             legend: {
                 show: false,
@@ -40,7 +41,7 @@ export default {
                     label: {
                         show: true,
                         formatter(param) {
-                            if(param.name == i18n.profit[i18n.language] + i18n.ratio[i18n.language])
+                            if(param.name == getString('profit') + getString('ratio'))
                                 return param.name + ' (' + param.percent + '%)';
                         }
                     },
@@ -80,7 +81,7 @@ export default {
                 let t = Math.round((actualSalesAmount - profit) * 100) / 100
 
                 chartOption.value.series[0].data.push({
-                    name: i18n.profit[i18n.language] + i18n.ratio[i18n.language],
+                    name: getString('profit') + getString('ratio'),
                     itemStyle: {
                         color: '#37A2DA'
                     },

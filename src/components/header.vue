@@ -39,19 +39,19 @@
                     <t-dropdown-menu>
                         <t-dropdown-item @click="downloadClient">
                             <t-icon name="desktop" style="margin-right: 5px;" />
-                            {{ getContent('windows') }}
+                            {{ getString('windows') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="downloadAndroidApp = true">
                             <t-icon name="logo-android" style="margin-right: 5px;" />
-                            {{ getContent('android') }}
+                            {{ getString('android') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="mobileWeb = true">
                             <t-icon name="mobile" style="margin-right: 5px;" />
-                            {{ getContent('mobile') }}
+                            {{ getString('mobile') }}
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
-                <t-tooltip :content="getContent('setting')" v-if="$route.name !== 'login'">
+                <t-tooltip :content="getString('setting')" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
                             <template #icon>
@@ -82,15 +82,15 @@
                     <t-dropdown-menu>
                         <t-dropdown-item @click="user.avatarView = true">
                             <t-icon name="browse" style="margin-right: 5px;" />
-                            {{ getContent('viewAvatar') }}
+                            {{ getString('viewAvatar') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="$router.push('/user-center')">
                             <t-icon name="verify" style="margin-right: 5px;" />
-                            {{ getContent('userCenter') }}
+                            {{ getString('userCenter') }}
                         </t-dropdown-item>
                         <t-dropdown-item @click="user.logout">
                             <t-icon name="logout" style="margin-right: 5px;" />
-                            {{ getContent('logout') }}
+                            {{ getString('logout') }}
                         </t-dropdown-item>
                     </t-dropdown-menu>
                 </t-dropdown>
@@ -105,31 +105,31 @@
     </header>
     <t-dialog
     v-model:visible="downloadAndroidApp"
-    :header="getContent('android')"
+    :header="getString('android')"
     :footer="false"
     >
         <div style="text-align: center;">
             <t-icon name="scan" />
-            {{ getContent('scanToDownload') }}
+            {{ getString('scanToDownload') }}
             <img src="../assets/QRcode_sp1.jpg" style="width: 240px;" >
             <div>
                 <t-button @click="downloadApk">
                     <template #icon>
                         <t-icon name="logo-android" />
                     </template>
-                    {{ getContent('downloadApk') }}
+                    {{ getString('downloadApk') }}
                 </t-button>
             </div>
         </div>
     </t-dialog>
     <t-dialog
     v-model:visible="mobileWeb"
-    :header="getContent('mobile')"
+    :header="getString('mobile')"
     :footer="false"
     >
         <div style="text-align: center;">
             <t-icon name="scan" />
-            {{ getContent('scanToVisit') }}
+            {{ getString('scanToVisit') }}
             <img src="../assets/Mobile Web.png" style="width: 200px;"  alt="">
             <t-link href="https://mobile-work.fixeam.com/" target="_blank" style="margin-right: 5px;">
                 Url:
@@ -144,7 +144,7 @@
     </t-dialog>
     <t-dialog
     v-model:visible="settings"
-    :header="getContent('setting')"
+    :header="getString('setting')"
     :footer="false"
     :close-on-overlay-click="false"
     >
@@ -162,20 +162,17 @@
                 </template>
             </t-select>
             <t-select
-            :label="getContent('store') + ': '"
+            :label="getString('store') + ': '"
             v-model="shop.store"
             :options="shop.storeOptions"
-            @change="saveOptions"
+            @change="storeChange"
             ></t-select>
             <t-select
-            :label="getContent('brand') + ': '"
+            :label="getString('brand') + ': '"
             v-model="shop.brand"
-            :options="shop.brandOptions"
+            :options="brandOptions"
             @change="saveOptions"
             ></t-select>
-            <t-link theme="primary" @click="viewCounter" v-if="shop.counter[shop.store + shop.brand]">
-                {{ getContent('viewCounter') }}>>
-            </t-link>
             <t-space size="small" align="center">
                 <t-switch size="small" v-model="showBackground" @change="showBackgroundChange"></t-switch><div>显示背景/Show Background</div>
             </t-space>
@@ -192,8 +189,10 @@ import Logo from './Logo.vue'
 import Menu from './Menu.vue'
 import SearchBox from './SearchBox.vue'
 import SearchResult from './SearchResult.vue'
-import {getContent, getLanguageOptionItem} from "../i18n/index.js";
+import {getString, getLanguageOptionItem} from "../i18n/index.js";
 import {tips} from "../hooks/tips.js";
+import service from "../api/service.js";
+import {getToken} from "../hooks/user.js";
 
 const i18n = inject('i18n')
 const user = inject('user')
@@ -206,11 +205,6 @@ const COUNT = ref('')
 const searchResult = ref(null)
 const showBackground = ref(true)
 
-const changeLanguage = (item) => {
-    localStorage.setItem('language', item.value)
-    tips('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', 'success')
-}
-
 const downloadClient = () => {
     window.open('https://cdn.fixeam.com/tw/application/windows/2023110715/version_1.0.4_release_miaostreet_sales_analysis_wanxun.exe')
 }
@@ -220,13 +214,56 @@ const downloadApk = () => {
 }
 
 const saveOptions = () => {
+    localStorage.setItem('language', i18n.language)
     localStorage.setItem('store', shop.store)
     localStorage.setItem('brand', shop.brand)
+    if(getToken()){
+        service.api.user.saveUserInform({
+            setting: JSON.stringify({
+                store: shop.store,
+                brand: shop.brand,
+                language: i18n.language
+            })
+        })
+    }
 }
 
-const viewCounter = () => {
-    window.open(shop.counter[shop.store + shop.brand], "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+const changeLanguage = () => {
+    saveOptions()
+    tips('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', 'success')
 }
+
+const brandOptions = ref([])
+const storeChange = (value) => {
+    let option = shop.storeOptions.find(item => item['value'] === value)
+    if(!option){
+        return
+    }
+    let supportBrand = option.brand
+    let resetBrand = false
+
+    brandOptions.value = []
+    for (let i = 0; i< shop.brandOptions.length; i++){
+        if(supportBrand.indexOf(shop.brandOptions[i].id) >= 0){
+            brandOptions.value.push(shop.brandOptions[i])
+        }
+        if(shop.brandOptions[i].value === shop.brand){
+            if(supportBrand.indexOf(shop.brandOptions[i].id) < 0){
+                resetBrand = true
+            }
+        }
+    }
+
+    if(resetBrand){
+        shop.brand = brandOptions.value[0].value
+    }
+
+    saveOptions()
+}
+storeChange(shop.store)
+watch(() => shop.brand, () => {
+    storeChange(shop.store)
+})
 
 const clickSet = () => {
     localStorage.setItem('setting-button-attention', 'clicked')
@@ -241,16 +278,10 @@ const viewOnGithub = () => {
 const showBackgroundChange = (value) => {
     if(value){
         localStorage.setItem('show-background', '1')
-
-        document.body.style.backgroundImage = 'url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg")'
-        document.body.style.backgroundRepeat = 'no-repeat'
-        document.body.style.backgroundAttachment = 'fixed'
-        document.body.style.backgroundPosition = 'center'
-        document.body.style.backgroundColor = "transparent"
+        document.body.style.background = "transparent url(\"https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg\") center center / cover no-repeat"
     } else {
         localStorage.setItem('show-background', '0')
-
-        document.body.style.backgroundImage = ''
+        document.body.style.background = ''
         document.body.style.backgroundColor = "#f2f3ff"
     }
 }

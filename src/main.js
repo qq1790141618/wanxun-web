@@ -7,12 +7,11 @@ import App from './App.vue'
 import router from './router'
 import user from './hooks/user.js'
 import i18n from './i18n'
-import shop from './hooks/shop'
+import shop from './api/shop.js'
 import service from "./api/service.js"
 
 createApp(App)
     .provide('i18n', i18n)
-    .provide('serve', 'https://work-serve.fixeam.com/api')
     .provide('user', user)
     .provide('shop', shop)
     .use(router)

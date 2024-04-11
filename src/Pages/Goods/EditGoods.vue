@@ -9,13 +9,13 @@
     >
         <template #header>
             <t-icon name="edit" style="margin-right: 5px;" />
-            {{ i18n.edit[i18n.language] }}
+            {{ getString('edit') }}
         </template>
         <t-loading
         v-if="loading"
         style="width: 100%; min-height: 70vh;"
         size="small"
-        :text="i18n.loading[i18n.language]"
+        :text="getString('loading')"
         ></t-loading>
         <t-list
         v-if="!loading"
@@ -23,26 +23,26 @@
         size="small"
         >
             <t-list-item>
-                {{ i18n.store[i18n.language] }}
+                {{ getString('store') }}
                 <template #action>
                     {{ shop.storeOptions.filter(item => item.value === sku[0]['store-id'])[0].label }}
                     {{ sku[0]['store-id'] }}
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.counter[i18n.language] }}
+                {{ getString('counter') }}
                 <template #action>
                     {{ sku[0]['shoppe-id'] }}
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.brand[i18n.language] }}
+                {{ getString('brand') }}
                 <template #action>
                     {{ sku[0].brand }}
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.stylenumber[i18n.language] }}
+                {{ getString('stylenumber') }}
                 <template #action>
                     <t-input
                     v-model="sku[0].stylenumber"
@@ -59,7 +59,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.goodName[i18n.language] }}
+                {{ getString('goodName') }}
                 <template #action>
                     <div style="width: 320px;">
                         <t-textarea
@@ -78,7 +78,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.color[i18n.language] }}
+                {{ getString('color') }}
                 <template #action>
                     <t-space size="3px" direction="vertical">
                         <t-input
@@ -122,7 +122,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.size[i18n.language] }}
+                {{ getString('size') }}
                 <template #action>
                     <t-space size="3px" direction="vertical">
                         <t-input
@@ -166,7 +166,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.barcode[i18n.language] }}
+                {{ getString('barcode') }}
                 <t-popup placement="right" trigger="click">
                     <t-button
                     variant="outline"
@@ -184,10 +184,10 @@
                         >
                             <t-list-item
                             >
-                                {{ i18n.color[i18n.language] }}
-                                {{ i18n.size[i18n.language] }}
+                                {{ getString('color') }}
+                                {{ getString('size') }}
                                 <template #action>
-                                    {{ i18n.barcode[i18n.language] }}
+                                    {{ getString('barcode') }}
                                     <t-button
                                     variant="outline"
                                     size="small"
@@ -218,7 +218,7 @@
                 </t-popup>
             </t-list-item>
             <t-list-item>
-                {{ i18n['miaostreet-id'][i18n.language] }}
+                {{ getString('miaostreet-id') }}
                 <template #action>
                     <t-input
                     v-model="sku[0]['miaostreet-id']"
@@ -235,7 +235,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.category[i18n.language] }}
+                {{ getString('category') }}
                 <template #action>
                     <t-cascader
                     v-model="sku[0]['category-id']"
@@ -279,7 +279,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.supplier[i18n.language] }}
+                {{ getString('supplier') }}
                 <template #action>
                     <t-auto-complete
                     v-model="sku[0].supplier"
@@ -299,7 +299,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.supplier[i18n.language] }}{{ i18n.stylenumber[i18n.language] }}
+                {{ getString('supplier') }}{{ getString('stylenumber') }}
                 <template #action>
                     <t-input
                     v-model="sku[0]['supplier-id']"
@@ -333,7 +333,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.cost[i18n.language] }}
+                {{ getString('cost') }}
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
@@ -348,7 +348,7 @@
                             })
                         }
                     }"
-                    >{{ i18n.unify[i18n.language] }}</t-checkbox>
+                    >{{ getString('unify') }}</t-checkbox>
                     <t-input-number
                     v-if="Math.min(...sku.map(obj => obj.cost)) === Math.max(...sku.map(obj => obj.cost)) || isNaN(Math.min(...sku.map(obj => obj.cost))) || isNaN(Math.max(...sku.map(obj => obj.cost)))"
                     v-model="sku[0].cost"
@@ -376,7 +376,7 @@
                         variant="outline"
                         size="small"
                         >
-                            {{ i18n.barcode[i18n.language] }}{{ i18n.cost[i18n.language] }}
+                            {{ getString('barcode') }}{{ getString('cost') }}
                         </t-button>
                         <template #content>
                             <t-list
@@ -386,9 +386,9 @@
                             >
                                 <t-list-item
                                 >
-                                    {{ i18n.barcode[i18n.language] }}
+                                    {{ getString('barcode') }}
                                     <template #action>
-                                        {{ i18n.cost[i18n.language] }}
+                                        {{ getString('cost') }}
                                     </template>
                                 </t-list-item>
                                 <t-list-item
@@ -410,7 +410,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.price[i18n.language] }}
+                {{ getString('price') }}
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
@@ -425,7 +425,7 @@
                             })
                         }
                     }"
-                    >{{ i18n.unify[i18n.language] }}</t-checkbox>
+                    >{{ getString('unify') }}</t-checkbox>
                     <t-input-number
                     v-if="Math.min(...sku.map(obj => obj.price)) === Math.max(...sku.map(obj => obj.price)) || isNaN(Math.min(...sku.map(obj => obj.price))) || isNaN(Math.max(...sku.map(obj => obj.price)))"
                     v-model="sku[0].price"
@@ -453,7 +453,7 @@
                         variant="outline"
                         size="small"
                         >
-                            {{ i18n.barcode[i18n.language] }}{{ i18n.price[i18n.language] }}
+                            {{ getString('barcode') }}{{ getString('price') }}
                         </t-button>
                         <template #content>
                             <t-list
@@ -463,9 +463,9 @@
                             >
                                 <t-list-item
                                 >
-                                    {{ i18n.barcode[i18n.language] }}
+                                    {{ getString('barcode') }}
                                     <template #action>
-                                        {{ i18n.price[i18n.language] }}
+                                        {{ getString('price') }}
                                     </template>
                                 </t-list-item>
                                 <t-list-item
@@ -487,7 +487,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.tagPrice[i18n.language] }}
+                {{ getString('tagPrice') }}
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
@@ -502,7 +502,7 @@
                             })
                         }
                     }"
-                    >{{ i18n.unify[i18n.language] }}</t-checkbox>
+                    >{{ getString('unify') }}</t-checkbox>
                     <t-input-number
                     v-if="Math.min(...sku.map(obj => obj.tagprice)) === Math.max(...sku.map(obj => obj.tagprice)) || isNaN(Math.min(...sku.map(obj => obj.tagprice))) || isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
                     v-model="sku[0].tagprice"
@@ -530,7 +530,7 @@
                         variant="outline"
                         size="small"
                         >
-                            {{ i18n.barcode[i18n.language] }}{{ i18n.tagPrice[i18n.language] }}
+                            {{ getString('barcode') }}{{ getString('tagPrice') }}
                         </t-button>
                         <template #content>
                             <t-list
@@ -540,9 +540,9 @@
                             >
                                 <t-list-item
                                 >
-                                    {{ i18n.barcode[i18n.language] }}
+                                    {{ getString('barcode') }}
                                     <template #action>
-                                        {{ i18n.tagPrice[i18n.language] }}
+                                        {{ getString('tagPrice') }}
                                     </template>
                                 </t-list-item>
                                 <t-list-item
@@ -564,7 +564,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.firstListingTime[i18n.language] }}
+                {{ getString('firstListingTime') }}
                 <template #action>
                     <t-date-picker
                     v-model="sku[0]['first-listing-time']"
@@ -583,7 +583,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.inputTime[i18n.language] }}
+                {{ getString('inputTime') }}
                 <template #action>
                     <t-date-picker
                     v-model="sku[0]['entry-time']"
@@ -603,7 +603,7 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ i18n.editTime[i18n.language] }}
+                {{ getString('editTime') }}
                 <template #action>
                     <t-date-picker
                     v-model="sku[0]['update-time']"
@@ -640,8 +640,10 @@ import confirmBar from '../../components/confirmBar.vue'
 import {MessagePlugin} from "tdesign-vue-next";
 import service from "../../api/service.js";
 import {tips} from "../../hooks/tips.js";
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         confirmBar
     },
@@ -714,7 +716,7 @@ export default {
 
             let res = await service.api.imports.start('sku', task.id)
             if(res.result){
-                await MessagePlugin.success(i18n.editSuccess[i18n.language])
+                await MessagePlugin.success(getString('editSuccess'))
             }
             submit.value = false
             visible.value = false

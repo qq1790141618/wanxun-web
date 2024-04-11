@@ -6,9 +6,9 @@
         <template #actions>
             {{ dayjs().subtract(1, 'day').format('YYYY-MM-DD') }}
         </template>
-        <t-alert v-if="data['salesCount'] === 0 && data['refundsCount'] === 0" :message="i18n['salesDataOfYetNotUpload'][i18n.language]" >
+        <t-alert v-if="data['salesCount'] === 0 && data['refundsCount'] === 0" :message="getString('salesDataOfYetNotUpload')" >
             <template #operation>
-                <span @click="$router.push('/import')">{{ i18n['upload'][i18n.language] }}</span>
+                <span @click="$router.push('/import')">{{ getString('upload') }}</span>
             </template>
         </t-alert>
         <div class="day-sales" v-if="data['salesCount'] !== 0 || data['refundsCount'] !== 0">
@@ -27,6 +27,7 @@
 
 <script setup>
 import dayjs from 'dayjs'
+import {getString} from "../../i18n/index.js";
 
 const i18n = inject('i18n')
 const shop = inject('shop')
@@ -46,34 +47,34 @@ const initData = () => {
 
     matchData.value = []
     matchData.value.push({
-        title: i18n.salesCount[i18n.language],
+        title: getString('salesCount'),
         value: props.data['salesCount'],
-        unit: i18n.piece[i18n.language]
+        unit: getString('piece')
     })
     matchData.value.push({
-        title: i18n.salesAmount[i18n.language],
+        title: getString('salesAmount'),
         value: props.data['salesAmount'],
-        unit: i18n.yuan[i18n.language]
+        unit: getString('yuan')
     })
     matchData.value.push({
-        title: i18n.refundsCount[i18n.language],
+        title: getString('refundsCount'),
         value: props.data['refundsCount'],
-        unit: i18n.piece[i18n.language]
+        unit: getString('piece')
     })
     matchData.value.push({
-        title: i18n.refundsAmount[i18n.language],
+        title: getString('refundsAmount'),
         value: props.data['refundsAmount'],
-        unit: i18n.yuan[i18n.language]
+        unit: getString('yuan')
     })
     matchData.value.push({
-        title: i18n.actualSalesAmount[i18n.language],
+        title: getString('actualSalesAmount'),
         value: Math.round((props.data['salesAmount'] - props.data['refundsAmount']) * 100) / 100,
-        unit: i18n.yuan[i18n.language]
+        unit: getString('yuan')
     })
     matchData.value.push({
-        title: i18n.income[i18n.language],
+        title: getString('income'),
         value: props.data['income'],
-        unit: i18n.yuan[i18n.language]
+        unit: getString('yuan')
     })
 }
 

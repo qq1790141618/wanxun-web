@@ -3,7 +3,7 @@
         <template #title>
             <t-icon name="work-history"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ getContent('recent') }}
+                {{ getString('recent') }}
             </span>
         </template>
         <template #actions>
@@ -14,14 +14,14 @@
             </t-button>
         </template>
         <div style="text-align: center;" v-if="history.menus.length === 0 && history.goods.length === 0">
-            {{ getContent('none') }}{{ getContent('recent') }}~
+            {{ getString('none') }}{{ getString('recent') }}~
         </div>
         <t-tabs default-value="menus" v-if="history.menus.length !== 0 || history.goods.length !== 0">
             <t-tab-panel
             v-for="(group, index) in ['menus', 'goods']"
             :key="index"
             :value="group"
-            :label="getContent(group)"
+            :label="getString(group)"
             :disabled="!history[group] || history[group].length === 0"
             >
                 <t-space :break-line="true" size="10px" style="margin-top: 10px;" :key="history[group]" v-if="history[group] && history[group].length > 0">
@@ -41,7 +41,7 @@
                     >
                         <img v-if="group === 'menus'" :src="item.meta.avatar" height="20" style="margin-right: 5px;"  alt="">
                         <span v-if="group === 'menus'">
-                            {{ getContent(item.meta.title) }} ( {{ item.path }} )
+                            {{ getString(item.meta.title) }} ( {{ item.path }} )
                         </span>
                         <img v-if="group === 'goods'" :src="item['main-image'] == null ? '' : JSON.parse(item['main-image'])[0]" height="20" style="margin-right: 5px;"  alt="">
                         <span v-if="group === 'goods'">
@@ -56,11 +56,11 @@
         <template #title>
             <t-icon name="star"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
-                {{ getContent('collection') }}
+                {{ getString('collection') }}
             </span>
         </template>
         <div style="text-align: center;" v-if="collectionPath.length === 0">
-            {{ getContent('none') }}{{ getContent('collection') }}~
+            {{ getString('none') }}{{ getString('collection') }}~
         </div>
         <t-space :break-line="true" size="10px" :key="collectionPath">
             <t-check-tag
@@ -72,7 +72,7 @@
             variant="outline"
             >
                 <img :src="item.meta.avatar" height="20" style="margin-right: 5px;"  alt="">
-                {{ getContent(item.meta.title) }} ( {{ item.path }} )
+                {{ getString(item.meta.title) }} ( {{ item.path }} )
             </t-check-tag>
         </t-space>
     </t-card>
@@ -80,7 +80,7 @@
 
 <script setup>
 import { miaostreetGoodsLink } from '../../hooks'
-import { getContent } from "../../i18n/index.js";
+import { getString } from "../../i18n/index.js";
 
 const shop = inject('shop')
 

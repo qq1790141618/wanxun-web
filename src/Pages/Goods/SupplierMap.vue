@@ -11,7 +11,7 @@
     >
         <template #header>
             <t-icon name="arrow-up-down-2" style="margin-right: 5px;" />
-            {{ i18n.supplier[i18n.language] }}{{ i18n.mapping[i18n.language] }}
+            {{ getString('supplier') }}{{ getString('mapping') }}
         </template>
         <t-row :gutter="[12, 12]" style="width: 100%;">
             <t-col :span="6">
@@ -19,7 +19,7 @@
                 v-model="data.from"
                 :options="supplierOptions.map(obj => obj.value)"
                 :input-props="{
-                    label: i18n.original[i18n.language] + i18n.supplier[i18n.language] + ': '
+                    label: getString('original') + getString('supplier') + ': '
                 }"
                 clearable
                 >
@@ -30,7 +30,7 @@
                 v-model="data.to"
                 :options="supplierOptions.map(obj => obj.value)"
                 :input-props="{
-                    label: i18n.target[i18n.language] + i18n.supplier[i18n.language] + ': '
+                    label: getString('target') + getString('supplier') + ': '
                 }"
                 clearable
                 >
@@ -38,7 +38,7 @@
             </t-col>
             <t-col :span="12">
                 <t-checkbox v-model="data.onlyStore">
-                    {{ i18n.onlyStore[i18n.language] }}
+                    {{ getString('onlyStore') }}
                 </t-checkbox>
             </t-col>
             <t-col :span="12">
@@ -62,8 +62,10 @@ import confirmBar from '../../components/confirmBar.vue'
 import service from "../../api/service.js";
 import {tips} from "../../hooks/tips.js";
 import {MessagePlugin} from "tdesign-vue-next";
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         confirmBar
     },
@@ -87,15 +89,15 @@ export default {
         })
         const done = async () => {
             if(data.value.to === null || data.value.to === ''){
-                MessagePlugin.error(i18n.supplierMapToEmpty[i18n.language])
+                MessagePlugin.error(getString('supplierMapToEmpty'))
                 return
             }
             if(data.value.from === null || data.value.from === ''){
                 let confirm = DialogPlugin.confirm({
-                    header: i18n.tip[i18n.language],
-                    body: i18n.tip2[i18n.language],
-                    okText: i18n.confirm[i18n.language],
-                    cancelText: i18n.cancel[i18n.language],
+                    header: getString('tip'),
+                    body: getString('tip2'),
+                    okText: getString('confirm'),
+                    cancelText: getString('cancel'),
                     onConfirm: async () => {
                         confirm.hide()
 

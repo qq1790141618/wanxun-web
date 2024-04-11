@@ -7,13 +7,13 @@
     @change="initData"
     >
         <t-radio-button value="refundsCount">
-            {{ i18n.refundsCount[i18n.language] }}
+            {{ getString('refundsCount') }}
         </t-radio-button>
         <t-radio-button value="refundsRate">
-            {{ i18n.refundsRate[i18n.language] }}
+            {{ getString('refundsRate') }}
         </t-radio-button>
         <t-radio-button value="afterSaleRate">
-            {{ i18n.afterSaleRate[i18n.language] }}
+            {{ getString('afterSaleRate') }}
         </t-radio-button>
     </t-radio-group>
     <t-table
@@ -30,6 +30,7 @@
 
 <script>
 import { sort, miaostreetGoodsLink } from '../../../hooks'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -46,13 +47,13 @@ export default {
         const columns = ref([
             {
                 colKey: 'stylenumber',
-                title: i18n.stylenumber[i18n.language],
+                title: getString('stylenumber'),
                 width: 100,
                 align: 'center'
             },
             {
                 colKey: 'category',
-                title: i18n.category[i18n.language],
+                title: getString('category'),
                 ellipsis: true,
                 tooltip: true,
                 width: 120,
@@ -60,19 +61,19 @@ export default {
             },
             {
                 colKey: 'salesCount',
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 width: 80,
                 align: 'center'
             },
             {
                 colKey: 'refundsCount',
-                title: i18n.refundsCount[i18n.language],
+                title: getString('refundsCount'),
                 width: 80,
                 align: 'center'
             },
             {
                 colKey: 'refundsRate',
-                title: i18n.refundsRate[i18n.language],
+                title: getString('refundsRate'),
                 cell: (h, { row }) => {
                     if(row.refundsRate){
                         return Math.round(row.refundsRate * 10000) / 100 + '%'
@@ -83,7 +84,7 @@ export default {
             },
             {
                 colKey: 'afterSaleRate',
-                title: i18n.afterSaleRate[i18n.language],
+                title: getString('afterSaleRate'),
                 cell: (h, { row }) => {
                     if(row.afterSaleRate){
                         return Math.round(row.afterSaleRate * 10000) / 100 + '%'

@@ -4,7 +4,7 @@
             <template #icon>
                 <t-icon name="chevron-left" />
             </template>
-            {{ i18n[$route.meta.title][i18n.language] }}
+            {{ getString($route.meta.title) }}
         </t-button>
         <span v-if="parameter">
             <t-icon name="leaderboard" style="margin-right: 6px;" />
@@ -24,7 +24,7 @@
     >
         <t-tab-panel
         :value="1"
-        :label="i18n.summary[i18n.language]"
+        :label="getString('summary')"
         destroy-on-hide
         v-if="data.summary"
         >
@@ -34,7 +34,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="2"
-        :label="i18n.trend[i18n.language]"
+        :label="getString('trend')"
         destroy-on-hide
         v-if="data.trend"
         >
@@ -44,7 +44,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="3"
-        :label="i18n.time[i18n.language]"
+        :label="getString('time')"
         destroy-on-hide
         v-if="data.timepoint"
         >
@@ -54,7 +54,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="4"
-        :label="i18n.contrast[i18n.language]"
+        :label="getString('contrast')"
         destroy-on-hide
         v-if="data.summary && data.contrast"
         >
@@ -64,7 +64,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="5"
-        :label="i18n.category[i18n.language]"
+        :label="getString('category')"
         destroy-on-hide
         v-if="data.category"
         >
@@ -74,7 +74,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="6"
-        :label="i18n.channel[i18n.language]"
+        :label="getString('channel')"
         destroy-on-hide
         v-if="data.channel"
         >
@@ -84,7 +84,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="7"
-        :label="i18n.sex[i18n.language]"
+        :label="getString('sex')"
         destroy-on-hide
         v-if="data.sex"
         >
@@ -94,7 +94,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="8"
-        :label="i18n.season[i18n.language]"
+        :label="getString('season')"
         destroy-on-hide
         v-if="data.season"
         >
@@ -104,7 +104,7 @@
         </t-tab-panel>
         <t-tab-panel
         :value="9"
-        :label="i18n.supplier[i18n.language]"
+        :label="getString('supplier')"
         destroy-on-hide
         v-if="data.supplier"
         >
@@ -126,8 +126,10 @@ import Sex from './Sex.vue'
 import Season from './Season.vue'
 import Supplier from './Supplier.vue'
 import {useRouter} from "vue-router";
+import {getString} from "../../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         Summary,
         Trend,

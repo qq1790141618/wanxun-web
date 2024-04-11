@@ -15,7 +15,7 @@
             <span>
                 <span style="margin-right: 6px;">
                     <t-icon name="calendar" style="margin-right: 3px;" />
-                    {{ i18n.choose[i18n.language] }}{{ i18n.time[i18n.language] }}:
+                    {{ getString('choose') }}{{ getString('time') }}:
                 </span>
                 <t-date-range-picker
                 size="small"
@@ -29,7 +29,7 @@
         v-if="loading"
         style="width: 100%; height: 100%; min-height: 50vh;"
         size="small"
-        :text="i18n.loading[i18n.language]"
+        :text="getString('loading')"
         ></t-loading>
         <div v-if="!loading">
             <t-radio-group
@@ -40,11 +40,11 @@
             >
                 <t-radio-button value="charts">
                     <t-icon name="chart-radial"></t-icon>
-                    {{ i18n.chart[i18n.language] }}
+                    {{ getString('chart') }}
                 </t-radio-button>
                 <t-radio-button value="table">
                     <t-icon name="table"></t-icon>
-                    {{ i18n.table[i18n.language] }}
+                    {{ getString('table') }}
                 </t-radio-button>
             </t-radio-group>
             <t-row v-if="view == 'charts'">
@@ -74,8 +74,10 @@ import ElseChart from './ElseChart.vue'
 import CategoryDataTable from './CategoryDataTable.vue'
 import service from "../../../api/service.js";
 import {tips} from "../../../hooks/tips.js";
+import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         MainChart,
         ElseChart,

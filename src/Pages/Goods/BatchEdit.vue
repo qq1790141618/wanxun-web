@@ -11,7 +11,7 @@
     >
         <template #header>
             <t-icon name="edit" style="margin-right: 5px;" />
-            {{ i18n.batch[i18n.language] }}{{ i18n.edit[i18n.language] }}
+            {{ getString('batch') }}{{ getString('edit') }}
         </template>
         <t-row :gutter="[12, 12]" style="width: 100%;">
             <t-col :span="6">
@@ -19,7 +19,7 @@
                 v-model="data.supplier"
                 :options="supplierOptions.map(obj => obj.value)"
                 :input-props="{
-                    label: i18n.supplier[i18n.language] + ': '
+                    label: getString('supplier') + ': '
                 }"
                 >
                 </t-auto-complete>
@@ -30,8 +30,8 @@
                 :options="categoryOptions"
                 clearable
                 filterable
-                :label="i18n.category[i18n.language] + ': '"
-                :placeholder="i18n.choose[i18n.language] + i18n.category[i18n.language]"
+                :label="getString('category') + ': '"
+                :placeholder="getString('choose') + getString('category')"
                 >
                 </t-cascader>
             </t-col>
@@ -40,17 +40,17 @@
                 v-model="data['miaostreet-listing-status']"
                 :options="[
                     {
-                        label: i18n.listing[i18n.language],
+                        label: getString('listing'),
                         value: 1
                     },
                     {
-                        label: i18n.unlist[i18n.language],
+                        label: getString('unlist'),
                         value: 0
                     }
                 ]"
                 clearable
                 filterable
-                :label="i18n.miaostreetListingStatus[i18n.language] + ': '"
+                :label="getString('miaostreetListingStatus') + ': '"
                 >
                 </t-select>
             </t-col>
@@ -59,24 +59,24 @@
                 v-model="data['tmall-listing-status']"
                 :options="[
                     {
-                        label: i18n.listing[i18n.language],
+                        label: getString('listing'),
                         value: 1
                     },
                     {
-                        label: i18n.unlist[i18n.language],
+                        label: getString('unlist'),
                         value: 0
                     }
                 ]"
                 clearable
                 filterable
-                :label="i18n.tmallListingStatus[i18n.language] + ': '"
+                :label="getString('tmallListingStatus') + ': '"
                 >
                 </t-select>
             </t-col>
             <t-col :span="8">
                 <t-space size="13px">
                     <span style="line-height: 32px;">
-                        {{ i18n.firstListingTime[i18n.language] + ': ' }}
+                        {{ getString('firstListingTime') + ': ' }}
                     </span>
                     <t-date-picker
                     v-model="data['first-listing-time']"
@@ -106,8 +106,10 @@ import dayjs from 'dayjs'
 import confirmBar from '../../components/confirmBar.vue'
 import service from "../../api/service.js";
 import {MessagePlugin} from "tdesign-vue-next";
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         confirmBar
     },

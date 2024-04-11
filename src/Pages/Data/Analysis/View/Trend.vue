@@ -29,11 +29,11 @@
 <script>
 import { sort } from '../../../../hooks'
 import * as echarts from 'echarts'
+import {getString} from "../../../../i18n/index.js";
 
 export default {
     props: ['data'],
     setup(props){
-        const i18n = inject('i18n')
         
         const primaryData = ref([])
         const view = ref('chart')
@@ -41,19 +41,19 @@ export default {
         const sortDefault = { sortBy: 'time', descending: false }
         const columns = [
             {
-                title: i18n.time[i18n.language],
+                title: getString('time'),
                 colKey: 'time',
                 ellipsis: true,
                 tooltip: true,
                 align: 'center'
             },
             {
-                title: i18n.accumulate[i18n.language] + i18n.actualSalesAmount[i18n.language],
+                title: getString('accumulate') + getString('actualSalesAmount'),
                 colKey: 'accumulateRealSalesAmount',
                 align: 'center'
             },
             {
-                title: i18n.accumulate[i18n.language] + i18n.income[i18n.language],
+                title: getString('accumulate') + getString('income'),
                 colKey: 'accumulateIncome',
                 align: 'center'
             }
@@ -65,7 +65,7 @@ export default {
                 trigger: 'axis'
             },
             legend: {
-                data: [i18n.accumulate[i18n.language] + i18n.income[i18n.language]]
+                data: [getString('accumulate') + getString('income')]
             },
             xAxis: {
                 type: 'category',
@@ -79,7 +79,7 @@ export default {
             series: [
                 {
                     type: 'line',
-                    name: i18n.accumulate[i18n.language] + i18n.income[i18n.language],
+                    name: getString('accumulate') + getString('income'),
                     data: [],
                     showSymbol: false,
                     smooth: true,

@@ -1,25 +1,25 @@
 <template>
     <div style="padding: 7px 24px;">
         <t-space align="center">
-            {{ getContent('chooseVerifyMode') }}:
+            {{ getString('chooseVerifyMode') }}:
             <t-select
             v-model="mode"
             style="width: 220px;"
             >
                 <t-option
                 v-if="action === 'ChangePassword'"
-                :label="getContent('oldPasswordVerification')"
+                :label="getString('oldPasswordVerification')"
                 :value="0"
                 >
                 </t-option>
                 <t-option
-                :label="getContent('mobilePhoneVerification')"
+                :label="getString('mobilePhoneVerification')"
                 :value="1"
                 >
                 </t-option>
                 <t-option
                 v-if="user.inform.mail"
-                :label="getContent('emailVerification')"
+                :label="getString('emailVerification')"
                 :value="2"
                 >
                 </t-option>
@@ -30,25 +30,25 @@
         </div>
 
         <t-space align="center" v-if="mode === 0" style="margin: 10px 0;">
-            {{ getContent('oldPassword') }}:
+            {{ getString('oldPassword') }}:
             <t-input style="width: 270px;" type="password" v-model="oldPassword" ></t-input>
         </t-space>
 
         <t-space align="center" v-if="mode === 1" style="margin-top: 10px;">
-            {{ getContent('phone') }}:
+            {{ getString('phone') }}:
             {{ user.inform.phone }}
         </t-space>
         <t-space align="center" v-if="mode === 2" style="margin-top: 10px;">
-            {{ getContent('mail') }}:
+            {{ getString('mail') }}:
             {{ user.inform.mail }}
         </t-space>
         <div>
         </div>
         <t-space v-if="mode !== 0" align="center" style="margin-bottom: 10px;">
-            {{ getContent('code') }}:
+            {{ getString('code') }}:
             <t-input style="width: 160px;" v-model="code" :maxlength="6" ></t-input>
             <t-button @click="sendVCode" :loading="codeSending" :disabled="codeCrash > 0" >
-                {{ codeCrash > 0 ? codeCrash + 's' + getContent('secondReSend') : getContent('sendCode') }}
+                {{ codeCrash > 0 ? codeCrash + 's' + getString('secondReSend') : getString('sendCode') }}
             </t-button>
         </t-space>
         
@@ -56,13 +56,13 @@
         </div>
 
         <t-button @click="check">
-            {{ getContent('nextStep') }}
+            {{ getString('nextStep') }}
         </t-button>
     </div>
 </template>
 
 <script setup>
-import {getContent} from "../../i18n/index.js"
+import {getString} from "../../i18n/index.js"
 import {tips} from "../../hooks/tips.js"
 import service from "../../api/service.js"
 

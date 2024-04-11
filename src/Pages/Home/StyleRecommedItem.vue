@@ -31,12 +31,12 @@
                 <span class="number-show">
                     {{ item.salesCount }}
                 </span>
-                {{ i18n.piece[i18n.language] }}
+                {{ getString('piece') }}
                 /
                 <span class="number-show">
                     {{ item.salesAmount }}
                 </span>
-                {{ i18n.yuan[i18n.language] }}
+                {{ getString('yuan') }}
             </div>
             <t-button
             v-if="item['miaostreet-id'] != null"
@@ -47,7 +47,7 @@
                 <template #icon>
                     <t-icon name="browse"></t-icon>
                 </template>
-                {{ i18n.viewGoods[i18n.language] }}
+                {{ getString('viewGoods') }}
             </t-button>
         </div>
     </t-card>
@@ -55,8 +55,10 @@
 
 <script>
 import { miaostreetGoodsLink } from '../../hooks'
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     props: {
         item: {
             type: Object,

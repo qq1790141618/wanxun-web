@@ -7,6 +7,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -32,8 +33,8 @@ export default {
             calculable: true,
             legend: {
                 data: [
-                    i18n.styleCount[i18n.language],
-                    i18n.actualSalesCount[i18n.language]
+                    getString('styleCount'),
+                    getString('actualSalesCount')
                 ],
                 itemGap: 5
             },
@@ -78,7 +79,7 @@ export default {
             ],
             series: [
                 {
-                    name: i18n.styleCount[i18n.language],
+                    name: getString('styleCount'),
                     type: 'bar',
                     itemStyle: {
                         borderRadius: 5,
@@ -87,7 +88,7 @@ export default {
                     data: []
                 },
                 {
-                    name: i18n.actualSalesCount[i18n.language],
+                    name: getString('actualSalesCount'),
                     type: 'bar',
                     itemStyle: {
                         borderRadius: 5,

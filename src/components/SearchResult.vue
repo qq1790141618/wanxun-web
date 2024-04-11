@@ -9,7 +9,7 @@
             <span>
                 <t-icon name="search" style="margin-right: 5px;" />
                 <span style="vertical-align: middle; margin-right: 6px;">
-                    {{ getContent('search') }}
+                    {{ getString('search') }}
                 </span>
                 <t-tag size="small">
                     #
@@ -21,7 +21,7 @@
         v-if="loading"
         style="width: 100%; min-height: 50vh;"
         size="small"
-        :text="getContent('loading')"
+        :text="getString('loading')"
         ></t-loading>
         <div
         style="max-height: 50vh; margin: 10px 0;"
@@ -31,7 +31,7 @@
             size="small"
             v-for="c in ['menus', 'store', 'brand', 'goods']"
             :key="c"
-            :title="getContent(c)"
+            :title="getString(c)"
             :header-bordered="true"
             :style="{
                 margin: '5px'
@@ -91,7 +91,7 @@
 import service from "../api/service.js"
 import {useRouter} from "vue-router"
 import {tips} from "../hooks/tips.js"
-import {getContent} from "../i18n/index.js";
+import {getString} from "../i18n/index.js";
 
 const visible = ref(false)
 const shop = inject('shop')
@@ -130,7 +130,7 @@ const search = async (value) => {
             continue
         }
 
-        const name = getContent(routes[i].meta['title']) ?? ''
+        const name = getString(routes[i].meta['title']) ?? ''
         if(!value || name.indexOf(value) >= 0 || routes[i].name.indexOf(value) >= 0){
             if(!options.menus){
                 options.menus = []
@@ -138,7 +138,7 @@ const search = async (value) => {
             options.menus.push({
                 label: name,
                 value: name,
-                description: getContent('menus'),
+                description: getString('menus'),
                 route: routes[i],
                 type: 'menus',
                 avatar: routes[i].meta['avatar']
@@ -156,7 +156,7 @@ const search = async (value) => {
             options.brand.push({
                 label: shop.brandOptions[i].label,
                 value: shop.brandOptions[i].value,
-                description: getContent('brand'),
+                description: getString('brand'),
                 type: 'brand',
                 avatar: shop.brandOptions[i].logo
             })
@@ -173,7 +173,7 @@ const search = async (value) => {
             options.store.push({
                 label: shop.storeOptions[i].label,
                 value: shop.storeOptions[i].value,
-                description: getContent('store'),
+                description: getString('store'),
                 type: 'store',
                 avatar: 'https://cdn.fixeam.com/tw/colorful/factory.png'
             })
@@ -197,7 +197,7 @@ const search = async (value) => {
             options.brand.push({
                 label: brandOfGoods.label,
                 value: brandOfGoods.value,
-                description: getContent('brand'),
+                description: getString('brand'),
                 type: 'brand',
                 avatar: brandOfGoods.logo
             })

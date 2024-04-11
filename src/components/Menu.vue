@@ -12,7 +12,7 @@
                 <template #icon>
                     <t-icon :name="item.meta['icon']" />
                 </template>
-                {{ getContent(item.meta['title']) }}
+                {{ getString(item.meta['title']) }}
                 <t-button
                 size="small"
                 variant="text"
@@ -46,7 +46,7 @@
                     <t-icon :name="item.meta['icon']" />
                 </template>
                 <template #title>
-                    <span>{{ getContent(item.meta['title']) }}</span>
+                    <span>{{ getString(item.meta['title']) }}</span>
                 </template>
                 <template
                 v-for="subitem in item.children"
@@ -60,7 +60,7 @@
                         <template #icon>
                             <t-icon :name="subitem.meta['icon']" />
                         </template>
-                        {{ getContent(subitem.meta['title']) }}
+                        {{ getString(subitem.meta['title']) }}
                         <t-button
                         size="small"
                         variant="text"
@@ -94,7 +94,7 @@
 
 <script setup>
 import {useRoute, useRouter} from "vue-router"
-import {getContent} from "../i18n/index.js"
+import {getString} from "../i18n/index.js"
 
 const route = useRoute()
 const router = useRouter()

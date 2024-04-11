@@ -11,7 +11,7 @@
                     <template #icon>
                         <t-icon :name="homeRoute['meta'].icon" />
                     </template>
-                    {{ getContent(homeRoute['meta'].title) }}
+                    {{ getString(homeRoute['meta'].title) }}
                 </t-breadcrumbItem>
                 <t-breadcrumbItem
                 v-for="item in $route.matched"
@@ -21,10 +21,10 @@
                     <template #icon>
                         <t-icon :name="item.meta.icon" />
                     </template>
-                    {{ getContent(item.meta.title) }}
+                    {{ getString(item.meta.title) }}
                 </t-breadcrumbItem>
             </t-breadcrumb>
-            <router-view v-slot="{ Component }" >
+            <router-view v-slot="{ Component }" v-if="showPage">
                 <keep-alive>
                     <component :is="Component" :key="$route.meta.key" v-if="$route.meta.keepAlive"/>
                 </keep-alive>
@@ -46,20 +46,51 @@ import korConfig from 'tdesign-vue-next/es/locale/ko_KR'
 import jpConfig from 'tdesign-vue-next/es/locale/ja_JP'
 import {DialogPlugin, MessagePlugin} from "tdesign-vue-next"
 import service from "./api/service.js"
-import {getContent} from "./i18n/index.js"
+import {getString} from "./i18n/index.js"
 import {useRoute, useRouter} from "vue-router"
+import {getAllBrand, getAllStore} from "./api/shop.js";
+import {tips} from "./hooks/tips.js";
+import {getToken} from "./hooks/user.js";
 
 const i18n = inject('i18n')
 const user = inject('user')
 const shop = inject('shop')
 const router = useRouter()
 const homeRoute = ref(false)
+const showPage = ref(false)
 const routes = router.getRoutes()
 for (let i = 0; i < routes.length; i++) {
     if(routes[i].path === '/'){
         homeRoute.value = routes[i]
     }
 }
+
+const getShopOption = async () => {
+    let storeResponse = await getAllStore()
+    if(!storeResponse.result){
+        tips('门店信息获取失败：' + storeResponse.error.message, 'error')
+    } else {
+        for (let i = 0; i < storeResponse.content.length;i++){
+            storeResponse.content[i].value = storeResponse.content[i].id
+            storeResponse.content[i].label = storeResponse.content[i].name
+        }
+        shop.storeOptions = storeResponse.content
+        shop.store = shop.storeOptions[0].value
+    }
+
+    let brandResponse = await getAllBrand()
+    if(!brandResponse.result){
+        tips('品牌信息获取失败：' + brandResponse.error.message, 'error')
+    } else {
+        for (let i = 0; i < brandResponse.content.length;i++){
+            brandResponse.content[i].value = brandResponse.content[i].keyword
+            brandResponse.content[i].label = brandResponse.content[i].name + ' ' + brandResponse.content[i].id
+        }
+        shop.brandOptions = brandResponse.content
+        shop.brand = shop.brandOptions[0].value
+    }
+}
+
 
 const initSet = () => {
     if(localStorage.getItem('lang')){
@@ -74,33 +105,44 @@ const initSet = () => {
     if(localStorage.getItem('user')){
         user.inform = JSON.stringify(localStorage.getItem('user'))
     }
-    if(localStorage.getItem('store')){
-        shop.store = localStorage.getItem('store')
-    }
-    if(localStorage.getItem('brand')){
-        shop.brand = localStorage.getItem('brand')
-    }
 }
-const loginVerify = () => {
+const loginVerify = async () => {
     user.status = 'verify'
 
     let token = localStorage.getItem('access_token')
     if(!token){
         router.replace('/login')
+        return
     }
 
-    service.api.user.inform(token)
-        .then(res => {
-            user.inform = res.content.user
-            user.status = 'loged'
-            localStorage.setItem('user', JSON.stringify(user.inform))
-            MessagePlugin.success(getContent('welcomeBack') + '！' + user.inform['realname'])
-        })
-        .catch(() => {
-            MessagePlugin.info(getContent('loginFailure'))
-            user.status = 'unlog'
-            router.replace('/login')
-        })
+    let res = await service.api.user.inform(token)
+    if(res.result){
+        user.inform = res.content.user
+        user.status = 'loged'
+        localStorage.setItem('user', JSON.stringify(user.inform))
+        MessagePlugin.success(getString('welcomeBack') + '！' + user.inform['realname'])
+
+        user.inform.setting = JSON.parse(user.inform.setting) ?? {}
+        let set = user.inform.setting
+        if(set.store){
+            shop.store = set.store
+            localStorage.setItem('store', set.store)
+        }
+        if(set.brand){
+            shop.brand = set.brand
+            localStorage.setItem('brand', set.brand)
+        }
+        if(set.language){
+            i18n.language = set.language
+            localStorage.setItem('language', set.language)
+        }
+
+        showPage.value = true
+    } else {
+        MessagePlugin.info(getString('loginFailure'))
+        user.status = 'unlog'
+        router.replace('/login')
+    }
 }
 
 const route = useRoute()
@@ -211,9 +253,11 @@ const checkForUpdate = async () => {
     }
 }
 
-onMounted(() => {
+onMounted(async () => {
+    await getShopOption()
+    await loginVerify()
+
     i18n.checkEmpty()
-    loginVerify()
     setTimeout(() => {
         historyRecord()
 

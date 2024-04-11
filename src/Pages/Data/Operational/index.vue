@@ -16,7 +16,7 @@
                 <t-space size="6px" align="center">
                     <t-select
                     size="small"
-                    :label="i18n.store[i18n.language] + ': '"
+                    :label="getString('store') + ': '"
                     v-model="store"
                     :options="shop.storeOptions"
                     @change="initData"
@@ -26,7 +26,7 @@
                     />
                     <t-select
                     size="small"
-                    :label="i18n.brand[i18n.language] + ': '"
+                    :label="getString('brand') + ': '"
                     v-model="brand"
                     :options="shop.brandOptions"
                     @change="initData"
@@ -36,7 +36,7 @@
                     
                     <span style="margin-right: 6px;">
                         <t-icon name="calendar" style="margin-right: 3px;" />
-                        {{ i18n.choose[i18n.language] }}{{ i18n.time[i18n.language] }}:
+                        {{ getString('choose') }}{{ getString('time') }}:
                     </span>
                     <t-select
                     size="small"
@@ -59,8 +59,8 @@
                     size="small"
                     v-model="tagFee"
                     :step="1"
-                    :label="i18n.eahtc[i18n.language]"
-                    :suffix="i18n.yuan[i18n.language]"
+                    :label="getString('eahtc')"
+                    :suffix="getString('yuan')"
                     style="width: 240px;"
                     @change="computerProfit"
                     :disabled="loading"
@@ -69,7 +69,7 @@
                     size="small"
                     v-model="platformServiceFee"
                     :step="0.01"
-                    :label="i18n.psfr[i18n.language]"
+                    :label="getString('psfr')"
                     style="width: 220px;"
                     @change="computerProfit"
                     :disabled="loading"
@@ -78,7 +78,7 @@
                     size="small"
                     v-model="tax"
                     :step="0.01"
-                    :label="i18n.tax[i18n.language] + i18n.ratio[i18n.language]"
+                    :label="getString('tax') + getString('ratio')"
                     style="width: 180px;"
                     @change="computerProfit"
                     :disabled="loading"
@@ -93,7 +93,7 @@
                         <template #icon>
                             <t-icon name="refresh" />
                         </template>
-                        {{ i18n.refresh[i18n.language] }}
+                        {{ getString('refresh') }}
                     </t-button>
                 </t-space>
             </template>
@@ -101,7 +101,7 @@
             v-if="loading"
             style="width: 100%; min-height: 50vh;"
             size="small"
-            :text="i18n.loading[i18n.language]"
+            :text="getString('loading')"
             ></t-loading>
             <div
             class="error-card-list"
@@ -149,8 +149,10 @@ import OperationalContrust from './OperationalContrust.vue'
 import ProfitRatio from './ProfitRatio.vue'
 import service from "../../../api/service.js";
 import {tips} from "../../../hooks/tips.js";
+import {getString} from "../../../i18n/index.js";
 
 export default {
+    methods: {getString},
     components: {
         OperationalContrust,
         GoodsProfitRanks,
@@ -167,19 +169,19 @@ export default {
         const mode = ref('month')
         const modeOptions = [
             {
-                label: i18n.date[i18n.language],
+                label: getString('date'),
                 value: 'date',
                 format: 'YYYY-MM-DD',
                 tag: 'day'
             },
             {
-                label: i18n.month[i18n.language],
+                label: getString('month'),
                 value: 'month',
                 format: 'YYYY-MM',
                 tag: 'month'
             },
             {
-                label: i18n.year[i18n.language],
+                label: getString('year'),
                 value: 'year',
                 format: 'YYYY',
                 tag: 'year'

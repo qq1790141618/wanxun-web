@@ -11,8 +11,8 @@
     >
         <template #header>
             <t-icon name="user-avatar" />
-            {{ getContent('edit') }}
-            {{ getContent('avatar') }}
+            {{ getString('edit') }}
+            {{ getString('avatar') }}
         </template>
         <t-upload
         style="margin: 10px 3px; "
@@ -80,7 +80,7 @@ import confirmBar from '../../components/confirmBar.vue'
 import { imageFileToBase } from '../../hooks'
 import service from "../../api/service.js"
 import {MessagePlugin} from "tdesign-vue-next"
-import {getContent} from "../../i18n/index.js"
+import {getString} from "../../i18n/index.js"
 import {tips} from "../../hooks/tips.js"
 
 const emit = defineEmits(['done'])
@@ -128,7 +128,7 @@ const confirm = async () => {
         user.inform.headsrc = fileUploaded.content.href
         visible.value = false
         emit('done')
-        await MessagePlugin.success(getContent('editSuccess'))
+        await MessagePlugin.success(getString('editSuccess'))
     } else {
         tips(res.error.message, 'error')
     }

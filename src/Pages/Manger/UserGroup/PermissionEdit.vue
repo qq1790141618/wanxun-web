@@ -1,5 +1,5 @@
 <template>
-    <t-loading style="width: 100%; height: 160px; " size="small" :text="i18n['loading'][i18n.language]" :loading="loading" />
+    <t-loading style="width: 100%; height: 160px; " size="small" :text="getString('loading')" :loading="loading" />
     <t-collapse v-if="!loading" :default-expand-all="true">
         <t-collapse-panel
         v-for="(group, key) in apiData"
@@ -11,7 +11,7 @@
                     <t-checkbox @change="(value) => {
                         addAllPermission(value, key)
                     }" :checked="apiSelected[key].length === apiData[key].map(item => item['route']).length">
-                        {{ i18n['openAll'][i18n.language] }}
+                        {{ getString('openAll') }}
                     </t-checkbox>
                 </t-space>
             </template>
@@ -31,7 +31,7 @@
 import service from "../../../api/service.js"
 import {tips} from "../../../hooks/tips.js"
 import {translate} from "../../../hooks/index.js"
-import {getLanguage} from "../../../i18n/index.js"
+import {getLanguage, getString} from "../../../i18n/index.js"
 
 const i18n = inject('i18n')
 const user = inject('user')

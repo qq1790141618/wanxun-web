@@ -15,7 +15,7 @@
                 <template #icon>
                     <t-icon name="add" />
                 </template>
-                {{ i18n['createIdentity'][i18n.language] }}
+                {{ getString('createIdentity') }}
             </t-button>
             <t-button
             @click="getIdentity()"
@@ -24,7 +24,7 @@
                 <template #icon>
                     <t-icon name="refresh" />
                 </template>
-                {{ i18n['refresh'][i18n.language] }}
+                {{ getString('refresh') }}
             </t-button>
         </t-space>
         <t-table
@@ -34,7 +34,7 @@
         :loading="loading"
         :loading-props="{
             indicator: false,
-            text: i18n['loading'][i18n.language]
+            text: getString('loading')
         }"
         max-height="calc(100vh - 200px)"
         >
@@ -49,10 +49,10 @@
                         editPermission = JSON.parse(row['api_p'])
                     }"
                     >
-                        {{ i18n['permissionConfig'][i18n.language] }}
+                        {{ getString('permissionConfig') }}
                     </t-button>
                     <t-popconfirm
-                    :content="i18n['removeConfirm'][i18n.language]"
+                    :content="getString('removeConfirm')"
                     theme="danger"
                     @confirm="removeIdentity(row.identity)"
                     >
@@ -61,7 +61,7 @@
                         size="small"
                         :loading="removeLoading === row.identity"
                         >
-                            {{ i18n['removeIdentity'][i18n.language] }}
+                            {{ getString('removeIdentity') }}
                         </t-button>
                     </t-popconfirm>
                 </t-space>
@@ -76,19 +76,19 @@
     >
         <template #header>
             <span v-if="visible === 'edit'">
-                {{ i18n['permissionConfig'][i18n.language] }}
+                {{ getString('permissionConfig') }}
             </span>
             <span v-if="visible === 'create'">
-                {{ i18n['createIdentity'][i18n.language] }}
+                {{ getString('createIdentity') }}
             </span>
         </template>
         <div class="scrollbar">
             <h3 v-if="visible === 'create'">
-                {{ i18n['baseInfo'][i18n.language] }}
+                {{ getString('baseInfo') }}
             </h3>
             <CreateForm v-if="visible === 'create'" v-model:form="createForm" ref="createRef" />
             <h3 v-if="visible === 'create'">
-                {{ i18n['permissionConfig'][i18n.language] }}
+                {{ getString('permissionConfig') }}
             </h3>
             <PermissionEdit v-model:permission="editPermission" />
         </div>
@@ -98,7 +98,7 @@
 
 <script setup>
 import service from "../../../api/service.js"
-import {getContent} from "../../../i18n/index.js"
+import {getString} from "../../../i18n/index.js"
 import {tips} from "../../../hooks/tips.js"
 import PermissionEdit from "./PermissionEdit.vue"
 import CreateForm from "./CreateForm.vue"
@@ -116,12 +116,12 @@ const columns = [
     },
     {
         colKey: 'name',
-        title: getContent('identityName'),
+        title: getString('identityName'),
         align: 'center'
     },
     {
         colKey: 'api_p',
-        title: getContent('permissionCount'),
+        title: getString('permissionCount'),
         cell: (h, {row}) => {
             if(row['need_auth']){
                 return JSON.parse(row['api_p']).length
@@ -133,7 +133,7 @@ const columns = [
     },
     {
         colKey: 'create_by',
-        title: getContent('createBy'),
+        title: getString('createBy'),
         cell: (h, {row}) => {
             return JSON.parse(row['create_by']).join(' -> ')
         },
@@ -141,7 +141,7 @@ const columns = [
     },
     {
         colKey: 'operate',
-        title: getContent('operate'),
+        title: getString('operate'),
         align: 'center'
     }
 ]

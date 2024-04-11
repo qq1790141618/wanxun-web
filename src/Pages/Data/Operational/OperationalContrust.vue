@@ -8,6 +8,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import {getString} from "../../../i18n/index.js";
 
 export default {
     props: {
@@ -22,7 +23,7 @@ export default {
         const chartOption = ref({
             title: {
                 left: 'center',
-                text: i18n.recentBusinessComparison[i18n.language] + ' / ' + i18n.yuan[i18n.language]
+                text: getString('recentBusinessComparison') + ' / ' + getString('yuan')
             },
             tooltip: {
                 trigger: 'axis'
@@ -30,8 +31,8 @@ export default {
             legend: {
                 bottom: 0,
                 data: [
-                    i18n.income[i18n.language],
-                    i18n.profit[i18n.language]
+                    getString('income'),
+                    getString('profit')
                 ]
             },
             xAxis: {
@@ -46,14 +47,14 @@ export default {
             series: [
                 {
                     type: 'line',
-                    name: i18n.income[i18n.language],
+                    name: getString('income'),
                     data: [],
                     showSymbol: true,
                     smooth: false
                 },
                 {
                     type: 'line',
-                    name: i18n.profit[i18n.language],
+                    name: getString('profit'),
                     data: [],
                     showSymbol: true,
                     smooth: false

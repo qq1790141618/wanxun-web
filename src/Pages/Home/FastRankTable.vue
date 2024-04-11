@@ -4,10 +4,10 @@
             <span>
                 <t-icon name="chart-bubble"></t-icon>
                 <span style="vertical-align: middle; margin-left: 8px;">
-                    {{ title }} {{ i18n.rank[i18n.language] }}
+                    {{ title }} {{ getString('rank') }}
                 </span>
             </span>
-            <t-tooltip :content="i18n.tip0[i18n.language]">
+            <t-tooltip :content="getString('tip0')">
                 <t-icon name="help-circle" :style="{
                     color: '#aaa',
                     cursor: 'pointer',
@@ -35,8 +35,10 @@
 
 <script>
 import { sort } from '../../hooks'
+import {getString} from "../../i18n/index.js";
 
 export default {
+    methods: {getString},
     props: {
         data: {
             type: Object,
@@ -65,7 +67,7 @@ export default {
                 align: 'center'
             },
             {
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 colKey: 'salesCount',
                 sortType: 'all',
                 sorter: true,
@@ -73,7 +75,7 @@ export default {
                 align: 'center'
             },
             {
-                title: i18n.salesAmount[i18n.language],
+                title: getString('salesAmount'),
                 colKey: 'salesAmount',
                 sortType: 'all',
                 sorter: true,
@@ -81,7 +83,7 @@ export default {
                 align: 'center'
             },
             {
-                title: i18n.refundsCount[i18n.language],
+                title: getString('refundsCount'),
                 colKey: 'refundsCount',
                 sortType: 'all',
                 sorter: true,
@@ -89,7 +91,7 @@ export default {
                 align: 'center'
             },
             {
-                title: i18n.refundsAmount[i18n.language],
+                title: getString('refundsAmount'),
                 colKey: 'refundsAmount',
                 sortType: 'all',
                 sorter: true,

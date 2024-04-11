@@ -104,9 +104,8 @@ const i18n = reactive({
             for (const key in languagePackage) {
                 if(languagePackage[key] === ''){
                     hasEmpty = true
-                    let f = await translate(i18n[key]["zh"], languageCode)
-                    languagePackage[key] = f.trans_result[0].dst
-                    i18n[key][languageCode] = f.trans_result[0].dst
+                    let f = await translate(zh[key], languageCode)
+                    languagePackage[key] = f['trans_result'][0]['dst']
                 }
             }
 
@@ -117,25 +116,6 @@ const i18n = reactive({
         }
     }
 })
-
-const initLanguage = () => {
-    for (let i = 0; i < i18n.options.length; i++) {
-        let languageCode = i18n.options[i].value
-        let languagePackage = i18n.options[i].package
-    
-        for (const key in languagePackage) {
-            if(!i18n[key]){
-                i18n[key] = {}
-    
-                for (let l = 0; l < i18n.options.length; l++) {
-                    i18n[key][i18n.options[l].value] = ''
-                }
-            }
-            i18n[key][languageCode] = languagePackage[key]
-        }
-    }
-}
-initLanguage()
 
 export const getLanguageOptionItem = (value) => {
     return i18n.options.find(item => item.value === value) ? i18n.options.find(item => item.value === value).content : ''
@@ -150,7 +130,7 @@ export const getLanguage = () => {
     return language
 }
 
-export const getContent = (key) => {
+export const getString = (key) => {
     let language = getLanguage()
     let languagePackage = {}
 
@@ -184,6 +164,14 @@ export const getContent = (key) => {
     }
 
     return key
+}
+
+export const getStringAsync = async (key) => {
+    let str = await getString(key)
+    if(str === key || str === ''){
+        let f = await translate(key, getLanguage())
+        return f['trans_result'][0]['dst']
+    }
 }
 
 export default i18n

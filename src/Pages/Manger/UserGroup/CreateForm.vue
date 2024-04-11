@@ -9,13 +9,15 @@
         <t-form-item label="ID" name="identity">
             <t-input v-model="formData.identity" @change="$emit('update:form', formData)"></t-input>
         </t-form-item>
-        <t-form-item :label="i18n['identityName'][i18n.language]" name="identity">
+        <t-form-item :label="getString('identityName')" name="identity">
             <t-input v-model="formData.name" @change="$emit('update:form', formData)"></t-input>
         </t-form-item>
     </t-form>
 </template>
 
 <script setup>
+import {getString} from "../../../i18n/index.js";
+
 const props = defineProps({
     form: {
         type: Object,
@@ -24,7 +26,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:form'])
 
-const i18n = inject('i18n')
 const formRef = ref(null)
 const formData = ref({
     identity: null,

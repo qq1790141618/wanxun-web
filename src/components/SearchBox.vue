@@ -4,7 +4,7 @@
     ref="searchBox"
     class="search-box"
     v-model="searchValue"
-    :placeholder="getContent('search')"
+    :placeholder="getString('search')"
     :style="{ width: searchWidth + 'px', marginRight: '20px', transition: 'all .3s' }"
     @focus="searchWidth = 270"
     @blur="searchWidth = 200"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import {getContent} from "../i18n/index.js"
+import {getString} from "../i18n/index.js"
 
 const emit = defineEmits(['search'])
 

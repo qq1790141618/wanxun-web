@@ -208,6 +208,18 @@ const routes = [
                     keepAlive: true
                 }
             },
+            {
+                path: '/manger/shop',
+                name: 'shop-manager',
+                component: () => import('./Pages/Manger/Shop/index.vue'),
+                meta: {
+                    title: "shopManage",
+                    icon: 'store',
+                    avatar: 'https://cdn.fixeam.com/tw/colorful/factory.png',
+                    key: '7-4',
+                    keepAlive: true
+                }
+            },
         ]
     }
 ]

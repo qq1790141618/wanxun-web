@@ -35,6 +35,7 @@
 import { sort } from '../../../../hooks'
 import SupplierTreeMap from './SupplierTreeMap.vue'
 import SupplierRing from './SupplierRing.vue'
+import {getString} from "../../../../i18n/index.js";
 
 export default {
     components: {
@@ -43,7 +44,6 @@ export default {
     },
     props: ['data', 'tabId'],
     setup(props){
-        const i18n = inject('i18n')
         
         const primaryData = ref([])
         const view = ref('chart-tree')
@@ -52,20 +52,20 @@ export default {
         const footData = ref([])
         const columns = [
             {
-                title: i18n.supplier[i18n.language],
+                title: getString('supplier'),
                 colKey: 'name',
                 ellipsis: true,
                 tooltip: true,
                 width: 200
             },
             {
-                title: i18n.salesCount[i18n.language],
+                title: getString('salesCount'),
                 colKey: 'salesCount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.ratio[i18n.language],
+                title: getString('ratio'),
                 colKey: 'proportion',
                 cell: (h, {row}) => {
                     if(row.proportion){
@@ -76,25 +76,25 @@ export default {
                 sorter: true
             },
             {
-                title: i18n.salesAmount[i18n.language],
+                title: getString('salesAmount'),
                 colKey: 'salesAmount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.refundsCount[i18n.language],
+                title: getString('refundsCount'),
                 colKey: 'refundsCount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.refundsAmount[i18n.language],
+                title: getString('refundsAmount'),
                 colKey: 'refundsAmount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: i18n.afterSalesRatio[i18n.language],
+                title: getString('afterSalesRatio'),
                 colKey: 'afterSalesRate',
                 cell: (h, {row}) => {
                     if(row.afterSalesRate){
@@ -105,7 +105,7 @@ export default {
                 sorter: true
             },
             {
-                title: i18n.CUP[i18n.language],
+                title: getString('CUP'),
                 colKey: 'CUP',
                 sortType: 'all',
                 sorter: true
@@ -118,7 +118,7 @@ export default {
 
             primaryData.value = props.data
             let foo = {
-                name: i18n.summary[i18n.language]
+                name: getString('summary')
             }
 
             for (let i = 0; i < props.data.length; i++) {
