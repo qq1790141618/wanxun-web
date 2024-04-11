@@ -141,182 +141,151 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import dayjs from 'dayjs'
 import { translate, uniqueArray } from '../../../hooks'
 import GoodsProfitRanks from './GoodsProfitRanks.vue'
 import OperationalContrust from './OperationalContrust.vue'
 import ProfitRatio from './ProfitRatio.vue'
-import service from "../../../api/service.js";
-import {tips} from "../../../hooks/tips.js";
-import {getString} from "../../../i18n/index.js";
+import service from "../../../api/service.js"
+import {tips} from "../../../hooks/tips.js"
+import {getString} from "../../../i18n/index.js"
 
-export default {
-    methods: {getString},
-    components: {
-        OperationalContrust,
-        GoodsProfitRanks,
-        ProfitRatio
+const shop = inject('shop')
+const store = ref('')
+const brand = ref('')
+store.value = shop.store
+brand.value = shop.brand
+const i18n = inject('i18n')
+
+const mode = ref('month')
+const modeOptions = [
+    {
+        label: getString('date'),
+        value: 'date',
+        format: 'YYYY-MM-DD',
+        tag: 'day'
     },
-    setup(){
-        const shop = inject('shop')
-        const store = ref('')
-        const brand = ref('')
-        store.value = shop.store
-        brand.value = shop.brand
-        const i18n = inject('i18n')
+    {
+        label: getString('month'),
+        value: 'month',
+        format: 'YYYY-MM',
+        tag: 'month'
+    },
+    {
+        label: getString('year'),
+        value: 'year',
+        format: 'YYYY',
+        tag: 'year'
+    }
+]
+const date = ref(null)
+date.value = {
+    date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+    month: dayjs().format('YYYY-MM'),
+    year: dayjs().format('YYYY')
+}
 
-        const mode = ref('month')
-        const modeOptions = [
-            {
-                label: getString('date'),
-                value: 'date',
-                format: 'YYYY-MM-DD',
-                tag: 'day'
-            },
-            {
-                label: getString('month'),
-                value: 'month',
-                format: 'YYYY-MM',
-                tag: 'month'
-            },
-            {
-                label: getString('year'),
-                value: 'year',
-                format: 'YYYY',
-                tag: 'year'
-            }
-        ]
-        const date = ref(null)
-        date.value = {
-            date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
-            month: dayjs().format('YYYY-MM'),
-            year: dayjs().format('YYYY')
-        }
-
-        const tax = ref(0.08)
-        const platformServiceFee = ref(0.2)
-        const tagFee = ref(0)
-        const special = (brand) => {
-            if(brand == 'DR'){
-                platformServiceFee.value = 0.3
-            } else {
-                platformServiceFee.value = 0.2
-            }
-            if(brand == '兔皇'){
-                tagFee.value = 8
-            } else {
-                tagFee.value = 8
-            }
-        }
-        special(brand.value)
-        watch(() => brand.value, (newVal) => {
-            special(newVal)
-        })
-
-        const data = ref({})
-        const errorInfo = ref({})
-        
-        const loading = ref(false)
-        const initData = async () => {
-            data.value = {}
-            errorInfo.value = {}
-            loading.value = true
-
-            let n = 5
-            if(mode.value === 'year'){
-                n = 2
-            }
-            if(mode.value === 'date'){
-                n = 7
-            }
-            let option = modeOptions.find(obj => obj.value === mode.value)
-            let format = option.format
-            let tag = option.tag
-            let results = {}
-
-            for (let i = 0; i < n; i++) {
-                let matchTime = dayjs(date.value[mode.value]).subtract(i, tag).format(format)
-                let res = await service.api.analysis.operational(brand.value, mode.value, matchTime, store.value ?? "")
-
-                if(res.result){
-                    continue
-                } else {
-                    tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
-                }
-                results[matchTime] = res
-
-                let ekey
-                if(results[matchTime].message === '部分SKU在品牌的商品列表中未包含'){
-                    ekey = 'nosku'
-                }
-                if(results[matchTime].message === '部分SKU未上传运营价'){
-                    ekey = 'nocost'
-                }
-
-                errorInfo.value[ekey] = errorInfo.value[ekey] ? errorInfo.value[ekey] : { message: '', data: [] }
-                errorInfo.value[ekey].message = errorInfo.value[ekey].message || (await translate(results[matchTime].message, i18n.language)).trans_result[0].dst
-                errorInfo.value[ekey].data = errorInfo.value[ekey].data.concat(results[matchTime].data)
-                errorInfo.value[ekey].data = uniqueArray(errorInfo.value[ekey].data, arr => arr)
-            }
-
-            data.value = results
-            if(JSON.stringify(errorInfo.value) === '{}'){
-                computerProfit()
-            } else {
-                loading.value = false
-            }
-        }
-        const computerProfit = () => {
-            loading.value = true
-
-            for (const key in data.value) {
-                let list = data.value[key].data
-
-                for (let i = 0; i < list.length; i++) {
-                    list[i].income = list[i].salesIncome - list[i].refundsIncome
-                    list[i].income = Math.round(list[i].income * 100) / 100
-                    list[i].actualSalesCount = list[i].salesCount - list[i].refundsCount
-                    list[i].actualSalesAmount = list[i].salesAmount - list[i].refundsAmount
-                    list[i].useCost = list[i].salesCost - list[i].refundsCost
-                    list[i].profit = list[i].income * (1 - tax.value) - platformServiceFee.value * list[i].actualSalesAmount - list[i].useCost - tagFee.value * list[i].actualSalesCount
-                    list[i].profit = Math.round(list[i].profit * 100) / 100
-                    list[i].profitRatio = list[i].profit == 0 ? 0 : list[i].profit / list[i].actualSalesAmount
-                    list[i].profitRatio = Math.round(list[i].profitRatio * 10000) / 10000
-                }
-            }
-
-            setTimeout(() => {
-                loading.value = false
-            }, 100)
-        }
-
-        onMounted(() => {
-            initData()
-        })
-
-        return {
-            i18n,
-            shop,
-            store,
-            brand,
-
-            mode,
-            modeOptions,
-            date,
-
-            tax,
-            platformServiceFee,
-            tagFee,
-
-            data,
-            loading,
-            errorInfo,
-            initData,
-            computerProfit
-        }
+const tax = ref(0.08)
+const platformServiceFee = ref(0.2)
+const tagFee = ref(0)
+const special = (brand) => {
+    if(brand === 'DR'){
+        platformServiceFee.value = 0.3
+    } else {
+        platformServiceFee.value = 0.2
+    }
+    if(brand === '兔皇'){
+        tagFee.value = 8
+    } else {
+        tagFee.value = 8
     }
 }
+special(brand.value)
+watch(() => brand.value, (newVal) => {
+    special(newVal)
+})
+
+const data = ref({})
+const errorInfo = ref({})
+
+const loading = ref(false)
+const initData = async () => {
+    data.value = {}
+    errorInfo.value = {}
+    loading.value = true
+
+    let n = 5
+    if(mode.value === 'year'){
+        n = 2
+    }
+    if(mode.value === 'date'){
+        n = 7
+    }
+    let option = modeOptions.find(obj => obj.value === mode.value)
+    let format = option.format
+    let tag = option.tag
+    let results = {}
+
+    for (let i = 0; i < n; i++) {
+        let matchTime = dayjs(date.value[mode.value]).subtract(i, tag).format(format)
+        let res = await service.api.analysis.operational(brand.value, mode.value, matchTime, store.value ?? "")
+
+        if(res.result){
+            continue
+        } else {
+            tips(res.error.message, 'error')
+        }
+        results[matchTime] = res
+
+        let ekey
+        if(results[matchTime].error.message === '部分SKU在品牌的商品列表中未包含'){
+            ekey = 'nosku'
+        }
+        if(results[matchTime].error.message === '部分SKU未上传运营价'){
+            ekey = 'nocost'
+        }
+
+        errorInfo.value[ekey] = errorInfo.value[ekey] ? errorInfo.value[ekey] : { message: '', data: [] }
+        errorInfo.value[ekey].message = (await translate(results[matchTime].error.message, i18n.language))['trans_result'][0]['dst']
+        errorInfo.value[ekey].data = errorInfo.value[ekey].data.concat(results[matchTime].content)
+        errorInfo.value[ekey].data = uniqueArray(errorInfo.value[ekey].data, arr => arr)
+    }
+
+    data.value = results
+    if(JSON.stringify(errorInfo.value) === '{}'){
+        computerProfit()
+    } else {
+        loading.value = false
+    }
+}
+const computerProfit = () => {
+    loading.value = true
+
+    for (const key in data.value) {
+        let list = data.value[key].data
+
+        for (let i = 0; i < list.length; i++) {
+            list[i].income = list[i].salesIncome - list[i].refundsIncome
+            list[i].income = Math.round(list[i].income * 100) / 100
+            list[i].actualSalesCount = list[i].salesCount - list[i].refundsCount
+            list[i].actualSalesAmount = list[i].salesAmount - list[i].refundsAmount
+            list[i].useCost = list[i].salesCost - list[i].refundsCost
+            list[i].profit = list[i].income * (1 - tax.value) - platformServiceFee.value * list[i].actualSalesAmount - list[i].useCost - tagFee.value * list[i].actualSalesCount
+            list[i].profit = Math.round(list[i].profit * 100) / 100
+            list[i].profitRatio = list[i].profit == 0 ? 0 : list[i].profit / list[i].actualSalesAmount
+            list[i].profitRatio = Math.round(list[i].profitRatio * 10000) / 10000
+        }
+    }
+
+    setTimeout(() => {
+        loading.value = false
+    }, 100)
+}
+
+onMounted(() => {
+    initData()
+})
 </script>
  
 <style>

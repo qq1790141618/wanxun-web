@@ -24,7 +24,7 @@
             :label="getString(group)"
             :disabled="!history[group] || history[group].length === 0"
             >
-                <t-space :break-line="true" size="10px" style="margin-top: 10px;" :key="history[group]" v-if="history[group] && history[group].length > 0">
+                <t-space :break-line="true" size="10px" style="margin-top: 10px; max-height: 120px; overflow-y: auto;" :key="history[group]" v-if="history[group] && history[group].length > 0">
                     <t-check-tag
                     v-for="item in history[group]"
                     :key="item.name"
@@ -62,7 +62,7 @@
         <div style="text-align: center;" v-if="collectionPath.length === 0">
             {{ getString('none') }}{{ getString('collection') }}~
         </div>
-        <t-space :break-line="true" size="10px" :key="collectionPath">
+        <t-space :break-line="true" size="10px" :key="collectionPath" style="margin-top: 10px; max-height: 120px; overflow-y: auto;">
             <t-check-tag
             v-for="item in collectionPath"
             :key="item.name"

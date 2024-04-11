@@ -11,8 +11,12 @@
             v-for="(item, index) in shop.brandOptions"
             :key="index"
             :value="item.value"
-            :label="item.label"
             >
+                <template #label>
+                    <span :title="item.label">
+                        {{ item.name.length > 8 ? item.name.substring(0, 8) + '...' : item.name}}
+                    </span>
+                </template>
                 <div class="home-goods-list">
                     <StyleRecommedItem
                     v-for="item in data[item.value]"

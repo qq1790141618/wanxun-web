@@ -61,19 +61,19 @@
             </template>
         </t-table>
         <t-dialog
-            v-model:visible="visible"
-            :footer="false"
-            width="600"
-            placement="center"
-            :close-on-overlay-click="false"
+        v-model:visible="visible"
+        :footer="false"
+        width="600"
+        placement="center"
+        :close-on-overlay-click="false"
         >
             <template #header>
                 {{ visible === 'create' ? getString('createBrand') : getString('brandInfoEdit') }}
             </template>
             <div class="scrollbar">
-                <BrandForm v-model:form="form" ref="createRef" :identity-options="identityOptions" :type="visible" />
+                <BrandForm v-model:form="form" ref="createRef" :type="visible" />
             </div>
-            <ConfirmBar :noreset="true" :confirm-loading="confirmLoading" @close="visible = false" @confirm="confirmForm()"/>
+            <ConfirmBar :noreset="true" :confirm-loading="confirmLoading" @close="visible = null" @confirm="confirmForm()"/>
         </t-dialog>
     </div>
 </template>

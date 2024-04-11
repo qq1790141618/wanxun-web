@@ -13,7 +13,7 @@
         <t-form
         :data="formData"
         :rules="rules"
-        label-width="100px"
+        :label-width="150"
         :colon="true"
         resetType="initial"
         @submit="onSubmit"

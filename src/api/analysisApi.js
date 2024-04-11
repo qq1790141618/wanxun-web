@@ -8,7 +8,7 @@ import {translate} from "../hooks/index.js";
 export const createTask = async (date) => {
     let path = '/analysis/sales/create'
     let sign = await apiSign(path)
-    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&date=${JSON.stringify(date)}&store-id=${getStore()}&brand=${getBrand()}`)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&date=${JSON.stringify(date)}&store-id=${getStore()}&brand=${getBrand()}`, 'GET', 'application/json', {}, 120)
 }
 export const startTask = async () => {
     let path = '/analysis/sales/task'

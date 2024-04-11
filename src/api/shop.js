@@ -3,9 +3,9 @@ import host from "./host.js";
 import {getToken} from "../hooks/user.js";
 
 const shop = reactive({
-    store: 'HZ13',
+    store: '',
     storeOptions: [],
-    brand: '兔皇',
+    brand: '',
     brandOptions: []
 })
 

@@ -66,7 +66,7 @@ body {
     padding: 0;
     margin: 0;
     overflow-x: hidden;
-    height: 100vh;
+    min-height: 100vh;
 }
 img, div, span{
     vertical-align: middle;

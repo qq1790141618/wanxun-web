@@ -1,11 +1,12 @@
 <template>
-    <t-progress
+    <div style="height: 90vh; overflow-y: auto;">
+        <t-progress
     v-if="loading"
     class="home-progress"
     :percentage="percent"
     :label="getString('loading') + ' ' + Math.ceil(percent) + '%'"
     />
-    <t-row :gutter="[12, 12]" v-if="!loading" style="width: 100%; padding: 15px;">
+        <t-row :gutter="[12, 12]" v-if="!loading" style="width: 100%; padding: 15px;">
         <t-col :span="12">
             <div style="padding: 0 10px; font-size: 15px;">
                 {{ getString('welcomeBack') }}！{{ data.famousWord }}
@@ -33,6 +34,7 @@
             <StyleRecommed :data="data.ranks" />
         </t-col>
     </t-row>
+    </div>
 </template>
 
 <script>
@@ -77,12 +79,7 @@ export default {
             week: [],
             goods: [],
             supplier: [],
-            ranks: {
-                kcor: [],
-                nt: [],
-                '兔皇': [],
-                dr: []
-            },
+            ranks: {},
             year: {}
         })
 
@@ -153,16 +150,12 @@ export default {
                 return
             }
 
-            let ranks = {
-                KCOR: [],
-                NT: [],
-                '兔皇': [],
-                DR: []
-            }
+            let ranks = {}
             for (let i = 0; i < res.content.length; i++) {
-                for (const ranksKey in ranks) {
-                    if(res.content[i].brand.indexOf(ranksKey) >= 0){
-                        ranks[ranksKey].push(res.content[i])
+                for (const key in shop.brandOptions) {
+                    if(res.content[i].brand.indexOf(shop.brandOptions[key].keyword) >= 0){
+                        ranks[shop.brandOptions[key].keyword] = ranks[shop.brandOptions[key].keyword] ?? []
+                        ranks[shop.brandOptions[key].keyword].push(res.content[i])
                     }
                 }
             }

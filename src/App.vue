@@ -75,7 +75,6 @@ const getShopOption = async () => {
             storeResponse.content[i].label = storeResponse.content[i].name
         }
         shop.storeOptions = storeResponse.content
-        shop.store = shop.storeOptions[0].value
     }
 
     let brandResponse = await getAllBrand()
@@ -87,10 +86,8 @@ const getShopOption = async () => {
             brandResponse.content[i].label = brandResponse.content[i].name + ' ' + brandResponse.content[i].id
         }
         shop.brandOptions = brandResponse.content
-        shop.brand = shop.brandOptions[0].value
     }
 }
-
 
 const initSet = () => {
     if(localStorage.getItem('lang')){

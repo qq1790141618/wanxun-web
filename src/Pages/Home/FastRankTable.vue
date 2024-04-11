@@ -26,7 +26,7 @@
             data = sort(val, primaryData, { sortBy: 'salesCount', descending: true })
         }"
         :sort="sortValue"
-        show-sort-column-bg-color
+        :show-sort-column-bg-color="true"
         height="450px"
         :row-key="colKey"
         ></t-table>
@@ -117,7 +117,8 @@ export default {
             shop,
             sort,
             columns,
-            primaryData
+            primaryData,
+            sortValue
         }
     }
 }

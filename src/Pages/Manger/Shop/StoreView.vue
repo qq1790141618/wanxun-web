@@ -73,7 +73,7 @@
             <div class="scrollbar">
                 <StoreForm v-model:form="form" ref="createRef" :type="visible" />
             </div>
-            <ConfirmBar :noreset="true" :confirm-loading="confirmLoading" @close="visible = false" @confirm="confirmForm()"/>
+            <ConfirmBar :noreset="true" :confirm-loading="confirmLoading" @close="visible = null" @confirm="confirmForm()"/>
         </t-dialog>
     </div>
 </template>

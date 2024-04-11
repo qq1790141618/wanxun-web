@@ -100,6 +100,7 @@ const getUploadSign = async () => {
 getUploadSign()
 const imageSuccess = (value) => {
     formData.logo = value.file.response.content.href
+    emit('update:form', formData)
 }
 
 watch(() => props.form, (newValue) => {
