@@ -51,9 +51,9 @@
             style="width: 270px;"
             ></t-input>
         </t-form-item>
-        <t-form-item :label="getString('password')" name="nickname">
+        <t-form-item :label="getString('password')" name="password">
             <t-input
-            v-model="formData.nickname"
+            v-model="formData.password"
             @change="$emit('update:form', formData)"
             type="password"
             style="width: 270px;"

@@ -56,7 +56,6 @@
                 <t-space :break-line="true" size="5px" v-if="row['create_by'].indexOf(user.inform['identity']) >= 0">
                     <t-button
                     size="small"
-                    :loading="removeLoading === row.uid"
                     @click="shopPermissionSet.open(row)"
                     >
                         {{ getString('changeUserShopPermissions') }}
