@@ -126,7 +126,7 @@
 import EnvironmentalSecurity from './EnvironmentalSecurity.vue'
 import OpenAuthentication from './OpenAuthentication.vue'
 import {getString} from "../../i18n/index.js"
-import {MessagePlugin} from "tdesign-vue-next"
+import {DialogPlugin, MessagePlugin} from "tdesign-vue-next"
 import {tips} from "../../hooks/tips.js"
 import service from "../../api/service.js"
 import {getToken} from "../../hooks/user.js"
@@ -150,6 +150,8 @@ const closeDialog = () => {
         const confirmDialog = DialogPlugin.confirm({
             header: getString('closeDialog'),
             body: getString('confirmCloseDialog'),
+            confirmBtn: getString('confirm'),
+            cancelBtn: getString('close'),
             onConfirm: () => {
                 confirmDialog.destroy()
                 return resolve(true)

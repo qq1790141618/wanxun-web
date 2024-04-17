@@ -24,7 +24,7 @@
                     <FastRankTable
                     :data="data[item]"
                     :title="getString(item)"
-                    :colKey="item == 'goods' ? 'stylenumber' : item"
+                    :colKey="item === 'goods' ? 'stylenumber' : item"
                     />
                 </t-col>
             </t-row>
@@ -45,12 +45,10 @@ import RecentData from './RecentData.vue'
 import FastRankTable from './FastRankTable.vue'
 import FastLink from './FastLink.vue'
 import StyleRecommed from './StyleRecommed.vue'
-import service from "../../api/service.js";
-import {getMirrors} from "../../api/goodsApi.js";
-import {tips} from "../../hooks/tips.js";
-import host from "../../api/host.js";
-import {MessagePlugin} from "tdesign-vue-next";
-import {getString} from "../../i18n/index.js";
+import service from "../../api/service.js"
+import {getMirrors} from "../../api/goodsApi.js"
+import {tips} from "../../hooks/tips.js"
+import {getString, getStringAsync} from "../../i18n/index.js"
 
 export default {
     methods: {getString},
@@ -90,7 +88,7 @@ export default {
                 tips(typeof f.error === 'string' ? f.error : f.error.message, 'error')
             }
 
-            data.value.famousWord = f.content.hitokoto + ' 来自《' + f.content.works + '》'
+            data.value.famousWord = f.content['works'] + ' 来自《' + f.content['works'] + '》'
             if(f.content.author){
                 data.value.famousWord += f.content.author
             }
@@ -125,7 +123,7 @@ export default {
                 data.value.year.ordersCount = ao.ordersCount
                 data.value.year.salesCount = ao.salesCount
                 data.value.year.productsCount = ao.productsCount
-                data.value.week = ao.nearlyWeek
+                data.value.week = ao['nearlyWeek']
                 data.value.supplier = ao.ms.supplier
                 data.value.goods = ao.ms.product
 
@@ -133,6 +131,19 @@ export default {
                 for (let i = 0; i < data.value.week.length; i++){
                     if (y === data.value.week[i].time){
                         data.value.day = data.value.week[i]
+                    }
+                }
+
+                let neverUploadKey = '未上传商品资料'
+                let neverUpload = await getStringAsync(neverUploadKey)
+                for (let i = 0; i < data.value.goods.length; i++){
+                    if(data.value.goods[i]['stylenumber'] === neverUploadKey){
+                        data.value.goods[i]['stylenumber'] = neverUpload
+                    }
+                }
+                for (let i = 0; i < data.value.supplier.length; i++){
+                    if(data.value.supplier[i]['supplier'] === neverUploadKey){
+                        data.value.supplier[i]['supplier'] = neverUpload
                     }
                 }
             }

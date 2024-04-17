@@ -9,7 +9,7 @@ export const appView = async () => {
 }
 
 export const appLatestVersion = async (platform) => {
-    let path = '/app/version/latest'
+    let path = '/app/latest'
     let sign = await apiSign(path)
     return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&platform=${platform}`)
 }

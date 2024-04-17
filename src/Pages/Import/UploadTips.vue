@@ -1,13 +1,13 @@
 <template>
     <div style="padding: 13px; padding-top: 0;">
         <h3>
-            所有上传的表格将自动会识别表格类型：
+            {{ getString('autoRecognitionInformToWhenAllOfTableUploaded') }}：
         </h3>
         <h4>
-            商品相关信息：
+            {{ getString('informAboutGoods') }}：
         </h4>
         <div>
-            SKU信息：
+            {{ getString('skuInformTable') }}：
             喵街MOS商家后台
             <t-icon name="chevron-right"></t-icon>
             商品
@@ -21,7 +21,7 @@
             导出sku
         </div>
         <div>
-            SKU/款信息：
+            {{ getString('spuInformTable') }}：
             喵街MOS商家后台
             <t-icon name="chevron-right"></t-icon>
             商品
@@ -35,7 +35,7 @@
             导出款信息
         </div>
         <div>
-            商品库存信息：
+            {{ getString('inventoryInformTable') }}：
             喵街MOS商家后台
             <t-icon name="chevron-right"></t-icon>
             商品
@@ -49,14 +49,14 @@
             批量导出(不要勾选“占库类型统计”和“分供应商（货主）”)
         </div>
         <div>
-            SKU其他信息导入【运营价，日常销售价，上架时间，供应商，原厂编码，适用性别，适用季节】：
+            {{ getString('skuImportTemplate') }}【{{ getString('cost') }}，{{ getString('price') }}，{{ getString('firstListingTime') }}，{{ getString('supplier') }}，{{ getString('supplier') }} {{ getString('stylenumber') }}，{{ getString('sex') }}，{{ getString('season') }}】：
             在本页下载相应的导入模板
         </div>
         <h4>
-            订单相关信息：
+            {{ getString('informAboutOrders') }}：
         </h4>
         <div>
-            订单列表/订单明细：
+            {{ getString('ordersInformTable') }}：
             喵街MOS商家后台
             <t-icon name="chevron-right"></t-icon>
             商品
@@ -68,7 +68,7 @@
             批量导出
         </div>
         <div>
-            订单退款信息：
+            {{ getString('refundsInformTable') }}：
             喵街MOS商家后台
             <t-icon name="chevron-right"></t-icon>
             商品
@@ -80,7 +80,7 @@
             导出excel
         </div>
         <div>
-            销售对账信息：
+            {{ getString('orderBillsInformTable') }}：
             喵街MOS商家后台
             <t-icon name="chevron-right"></t-icon>
             交易
@@ -92,9 +92,9 @@
             导出Excel
         </div>
         <h3>
-            注意：
+            {{ getString('attention') }}：
         </h3>
-        <div>
+        <div v-if="i18n.language === 'zh'">
             <t-icon name="numbers-1-1"></t-icon>
             <span>导入顺序每一个种类</span>
             <span style="color: red; font-weight: bold; vertical-align: middle;">从上到下严格的顺序</span>
@@ -105,23 +105,41 @@
             <t-icon name="chevron-right"></t-icon>
             <span>销售对账信息</span>。
         </div>
-        <div>
+        <div v-if="i18n.language !== 'zh'">
+            <t-icon name="numbers-1-1"></t-icon>
+            <span>Import order for each category</span>
+            <span>Strict order from top to bottom</span>
+            <span>Pour in one by one, ensuring that the previous item has been successfully imported when importing the next item, for example:</span>
+            <span>Order List/Order Details</span>
+            <t-icon name="chevron-right"></t-icon>
+            <span>Order refund information</span>
+            <t-icon name="chevron-right"></t-icon>
+            <span>Sales reconciliation information.</span>。
+        </div>
+        <div v-if="i18n.language === 'zh'">
             <t-icon name="numbers-2-1"></t-icon>
             <span>导入（订单列表/订单明细，订单退款信息，销售对账信息）时，三项的在后台导出的</span>
             <span style="color: red; font-weight: bold; vertical-align: middle;">日期时间选择，需要完全一致</span>。
         </div>
-        <div>
+        <div v-if="i18n.language !== 'zh'">
+            <t-icon name="numbers-2-1"></t-icon>
+            <span>When importing (order list/order details, order refund information, sales reconciliation information), the three items are exported in the background</span> <span style="color: red; font-weight: bold; vertical-align: middle;">Date and time selection must be completely consistent.</span>
+        </div>
+        <div v-if="i18n.language === 'zh'">
             <t-icon name="numbers-3-1"></t-icon>
             <span>新版本导入的所有内容以表格内容为准，</span>
             <span style="color: red; font-weight: bold; vertical-align: middle;">与设置内选择的 门店/品牌 无关</span>。
         </div>
+        <div v-if="i18n.language !== 'zh'">
+            <t-icon name="numbers-3-1"></t-icon>
+            <span>All content imported in the new version shall be based on the table content</span> <span style="color: red; font-weight: bold; vertical-align: middle;">Not related to the selected store/brand within the settings.</span>
+        </div>
     </div>
 </template>
 
-<script>
-export default {
-
-}
+<script setup>
+import {getString} from "../../i18n/index.js"
+const i18n = inject('i18n')
 </script>
 
 <style>

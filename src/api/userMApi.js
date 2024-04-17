@@ -23,12 +23,13 @@ export const setIdentityApiPermissions = async (identity, permissions) => {
     })
 }
 
-export const createIdentity = async (id, name) => {
+export const createIdentity = async (id, name, create_by_identity) => {
     let path = '/manage/create_identity'
     let sign = await apiSign(path)
     return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`, 'POST', 'application/json', {
         id,
-        name
+        name,
+        create_by_identity
     })
 }
 

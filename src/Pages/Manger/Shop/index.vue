@@ -38,6 +38,7 @@ const getShopOption = async () => {
         for (let i = 0; i < storeResponse.content.length;i++){
             storeResponse.content[i].value = storeResponse.content[i].id
             storeResponse.content[i].label = storeResponse.content[i].name
+            storeResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_store'].indexOf(storeResponse.content[i].id) < 0)
         }
         shop.storeOptions = storeResponse.content
     }
@@ -49,6 +50,7 @@ const getShopOption = async () => {
         for (let i = 0; i < brandResponse.content.length;i++){
             brandResponse.content[i].value = brandResponse.content[i].keyword
             brandResponse.content[i].label = brandResponse.content[i].name + ' ' + brandResponse.content[i].id
+            brandResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_brand'].indexOf(brandResponse.content[i].keyword) < 0)
         }
         shop.brandOptions = brandResponse.content
     }

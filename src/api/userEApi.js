@@ -25,3 +25,27 @@ export const removeUser = async (uid) => {
     let sign = await apiSign(path)
     return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&uid=${uid}`)
 }
+
+export const setAllShopAllowedStatus = async (uid, status) => {
+    let path = '/user/set/all_shop'
+    let sign = await apiSign(path)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&uid=${uid}&status=${status}`)
+}
+
+export const setAllowedStore = async (uid, allow_store) => {
+    let path = '/user/set/allow_store'
+    let sign = await apiSign(path)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`, 'POST', 'application/json', {
+        uid,
+        allow_store
+    })
+}
+
+export const setAllowedBrand= async (uid, allow_brand) => {
+    let path = '/user/set/allow_brand'
+    let sign = await apiSign(path)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`, 'POST', 'application/json', {
+        uid,
+        allow_brand
+    })
+}

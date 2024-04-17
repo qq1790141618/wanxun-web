@@ -1,31 +1,33 @@
+import {getString} from "../../../i18n/index.js";
+
 export default {
     platformOptions: [
         {
-            label: '安卓',
+            label: getString('platform-android'),
             icon: 'logo-android',
             value: 'android',
             suffix: '.apk'
         },
         {
-            label: 'Windows',
+            label: getString('platform-windows'),
             icon: '',
             value: 'windows',
             suffix: '.exe, .msi'
         },
         {
-            label: 'iOS',
+            label: getString('platform-ios'),
             icon: 'logo-apple',
             value: 'ios',
             suffix: '.ipa'
         },
         {
-            label: 'MacOS',
+            label: getString('platform-mac'),
             icon: 'logo-apple',
             value: 'macos',
             suffix: '.dmg, .pkg'
         },
         {
-            label: '其他',
+            label: getString('other'),
             icon: '',
             value: 'other',
             suffix: '*'
@@ -33,15 +35,15 @@ export default {
     ],
     versionTypeOptions: [
         {
-            label: '正式版',
+            label: getString('release'),
             value: 'release'
         },
         {
-            label: 'Beta测试版',
+            label: getString('beta'),
             value: 'beta'
         },
         {
-            label: '开发者测试版',
+            label: getString('dev'),
             value: 'dev'
         }
     ]

@@ -86,7 +86,7 @@
             <h3 v-if="visible === 'create'">
                 {{ getString('baseInfo') }}
             </h3>
-            <CreateForm v-if="visible === 'create'" v-model:form="createForm" ref="createRef" />
+            <CreateForm v-if="visible === 'create'" v-model:form="createForm" :identity-options="identityData" ref="createRef" />
             <h3 v-if="visible === 'create'">
                 {{ getString('permissionConfig') }}
             </h3>
@@ -176,7 +176,7 @@ const confirmForm = async () => {
             }
         }
 
-        let response0 = await service.api.userM.createIdentity(createForm.value.identity, createForm.value.name)
+        let response0 = await service.api.userM.createIdentity(createForm.value.identity, createForm.value.name, createForm.value['create_by_identity'])
         if(!response0.result){
             tips(response0.error.message, 'error')
             confirmLoading.value = false
@@ -186,6 +186,7 @@ const confirmForm = async () => {
         if(editPermission.value.length === 0){
             tips('操作成功', 'success')
             visible.value = null
+            confirmLoading.value = false
             await getIdentity()
             return
         }

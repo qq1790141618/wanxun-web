@@ -110,6 +110,17 @@ watch(() => props.form, (newValue) => {
     formData.logo = newValue.logo
     formData.keyword = newValue.keyword
 })
+
+let timer
+onActivated(() => {
+    timer = setInterval(() => {
+        getUploadSign()
+    }, 1000)
+})
+onDeactivated(() => {
+    clearInterval(timer)
+    timer = null
+})
 </script>
 
 <style scoped>

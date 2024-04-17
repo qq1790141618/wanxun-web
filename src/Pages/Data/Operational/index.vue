@@ -7,12 +7,6 @@
         style="height: calc(100vh - 115px);"
         >
             <template #header>
-                <span>
-                    <t-icon name="castle-3" style="margin-right: 3px;" />
-                    {{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}
-                    /
-                    {{ shop.brand }}
-                </span>
                 <t-space size="6px" align="center">
                     <t-select
                     size="small"
@@ -20,7 +14,7 @@
                     v-model="store"
                     :options="shop.storeOptions"
                     @change="initData"
-                    style="width: 160px;"
+                    style="width: fit-content;"
                     :disabled="loading"
                     clearable
                     />
@@ -30,14 +24,10 @@
                     v-model="brand"
                     :options="shop.brandOptions"
                     @change="initData"
-                    style="width: 160px;"
+                    style="width: fit-content;"
                     :disabled="loading"
                     />
-                    
-                    <span style="margin-right: 6px;">
-                        <t-icon name="calendar" style="margin-right: 3px;" />
-                        {{ getString('choose') }}{{ getString('time') }}:
-                    </span>
+
                     <t-select
                     size="small"
                     :options="modeOptions"
@@ -61,7 +51,7 @@
                     :step="1"
                     :label="getString('eahtc')"
                     :suffix="getString('yuan')"
-                    style="width: 240px;"
+                    style="width: fit-content;"
                     @change="computerProfit"
                     :disabled="loading"
                     />
@@ -70,7 +60,7 @@
                     v-model="platformServiceFee"
                     :step="0.01"
                     :label="getString('psfr')"
-                    style="width: 220px;"
+                    style="width: fit-content;"
                     @change="computerProfit"
                     :disabled="loading"
                     />
@@ -79,7 +69,7 @@
                     v-model="tax"
                     :step="0.01"
                     :label="getString('tax') + getString('ratio')"
-                    style="width: 180px;"
+                    style="width: fit-content;"
                     @change="computerProfit"
                     :disabled="loading"
                     />
@@ -232,11 +222,11 @@ const initData = async () => {
         let res = await service.api.analysis.operational(brand.value, mode.value, matchTime, store.value ?? "")
 
         if(res.result){
+            results[matchTime] = res
             continue
         } else {
             tips(res.error.message, 'error')
         }
-        results[matchTime] = res
 
         let ekey
         if(results[matchTime].error.message === '部分SKU在品牌的商品列表中未包含'){

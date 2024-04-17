@@ -272,7 +272,8 @@ const saveOptions = () => {
     }
 }
 
-const changeLanguage = () => {
+const changeLanguage = ({ value }) => {
+    i18n.language = value
     saveOptions()
     tips('已为您切换界面语言, 刷新页面以获得最佳浏览体验！', 'success')
 }
@@ -304,7 +305,6 @@ const storeChange = (value) => {
 
     saveOptions()
 }
-storeChange(shop.store)
 watch(() => shop.brand, () => {
     storeChange(shop.store)
 })
@@ -312,6 +312,7 @@ watch(() => shop.brand, () => {
 const clickSet = () => {
     localStorage.setItem('setting-button-attention', 'clicked')
     COUNT.value = ''
+    storeChange(shop.store)
     settings.value = true
 }
 
@@ -339,7 +340,9 @@ onMounted(() => {
         showBackground.value = false
     }
     showBackgroundChange(showBackground.value)
-    getLatestVersions()
+    if(user.inform){
+        getLatestVersions()
+    }
 })
 </script>
 

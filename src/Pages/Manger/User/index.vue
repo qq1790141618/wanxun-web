@@ -54,6 +54,13 @@
             </template>
             <template #operate="{ row }">
                 <t-space :break-line="true" size="5px" v-if="row['create_by'].indexOf(user.inform['identity']) >= 0">
+                    <t-button
+                    size="small"
+                    :loading="removeLoading === row.uid"
+                    @click="shopPermissionSet.open(row)"
+                    >
+                        {{ getString('changeUserShopPermissions') }}
+                    </t-button>
                     <t-popconfirm
                     :content="getString('removeConfirm')"
                     theme="danger"
@@ -86,6 +93,7 @@
         </div>
         <ConfirmBar :noreset="true" :confirm-loading="confirmLoading" @close="visible = false" @confirm="confirmForm()"/>
     </t-dialog>
+    <ShopPermissionSet ref="shopPermissionSet" @reload="getUsers" />
 </template>
 
 <script setup>
@@ -94,10 +102,12 @@ import {getString} from "../../../i18n/index.js"
 import {tips} from "../../../hooks/tips.js"
 import CreateForm from "./CreateForm.vue"
 import ConfirmBar from '../../../components/confirmBar.vue'
+import ShopPermissionSet from "./ShopPermissionSet.vue"
 
 const user = inject('user')
 const loading = ref(true)
 const identityData = ref([])
+const shopPermissionSet = ref(null)
 const columns = [
     {
         colKey: 'uid',
@@ -214,20 +224,6 @@ const columns = [
     {
         colKey: 'identitys',
         title: getString('userIdentity'),
-        align: 'center',
-        attrs: ({ row }) => {
-            if (row.uid === user.inform.uid) {
-                return {
-                    style: {
-                        backgroundColor: 'var(--td-error-color-light)'
-                    }
-                }
-            }
-        }
-    },
-    {
-        colKey: 'name',
-        title: getString('name'),
         align: 'center',
         attrs: ({ row }) => {
             if (row.uid === user.inform.uid) {

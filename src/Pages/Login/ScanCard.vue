@@ -1,6 +1,6 @@
 <template>
     <t-card style="text-align: center; margin-bottom: 5px;" :key="qrcodeV">
-        <t-loading style="width: 160px; height: 160px; " size="small" text="加载中..." v-if="!qrcodeV && !scanEd" />
+        <t-loading style="width: 160px; height: 160px; " size="small" :text="getString('loading')" v-if="!qrcodeV && !scanEd" />
         <QRCodeVue3
             v-if="qrcodeV && !scanEd"
             :width="160"
@@ -27,12 +27,13 @@
             :downloadOptions="{ name: 'vqr', extension: 'png' }"
             />
         <span v-if="qrcodeV && !scanEd">
-            使用安卓App扫描二维码
+            {{ getString('scanInAndroidApp') }}
         </span>
         <t-icon v-if="scanEd" name="check" style="margin: 40px 0;" size="50px" color="green" />
         <br />
         <span v-if="scanEd">
-            扫描成功, 请在手机端确认登录
+            {{ getString('scanSuccess') }},
+            {{ getString('pleaseConfirmInAndroidApp') }}
         </span>
     </t-card>
 </template>
@@ -41,6 +42,7 @@
 import QRCodeVue3 from "qrcode-vue3"
 import service from "../../api/service.js"
 import {useRouter} from "vue-router"
+import {getString} from "../../i18n/index.js";
 
 const qrcodeV = ref(null)
 const scanEd = ref(false)
@@ -49,12 +51,13 @@ const router = useRouter()
 
 let socket
 const connectToSocket = () => {
-    socket = new WebSocket('wss://work-scan.fixeam.com/wss')
+    socket = new WebSocket('wss://scan.fixeam.com/wss')
     socket.onopen = function() {
-        console.log("WebSocket连接已打开")
-        socket.send(JSON.stringify({
+        console.log("WebSocket Open")
+        const message = JSON.stringify({
             type: 'create'
-        }))
+        })
+        socket.send(message)
         setTimeout(() => {
             socket.close()
             socket = null
@@ -63,10 +66,11 @@ const connectToSocket = () => {
         }, 60 * 5 * 1000)
     }
     socket.onclose = function(event) {
-        console.log(event)
-        console.log("WebSocket连接已关闭")
+        console.log(event.data)
+        console.log("WebSocket Close")
     }
     socket.onmessage = function(event) {
+        console.log(JSON.parse(event.data) || event.data)
         const message = event.data
         const data = JSON.parse(message)
 
@@ -78,19 +82,12 @@ const connectToSocket = () => {
         }
         if(data['type'] === 'upload token'){
             localStorage.setItem('access_token', data['content'])
-            service.api.user.inform(data['content'])
-                .then(res => {
-                    user.inform = res.content.user
-                    user.status = 'loged'
-                    localStorage.setItem('user', JSON.stringify(user.inform))
-
-                    socket.send(JSON.stringify({
-                        type: 'loged'
-                    }))
-                    socket.close()
-
-                    router.push('/')
-                })
+            socket.send(JSON.stringify({
+                type: 'loged',
+                sign: qrcodeV.value
+            }))
+            socket.close()
+            location.href = location.origin
         }
         if(data['type'] === 'expired'){
             socket.close()

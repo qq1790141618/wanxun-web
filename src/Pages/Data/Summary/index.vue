@@ -89,44 +89,44 @@ export default {
         const data = ref({})
         const columns = [
             {
-                title: '日期',
+                title: getString('date'),
                 colKey: 'date',
                 sortType: 'all',
                 sorter: true,
                 width: 180
             },
             {
-                title: '销售商品总数',
+                title: getString('salesCount'),
                 colKey: 'salesCount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: '销售商品总金额',
+                title: getString('salesAmount'),
                 colKey: 'salesAmount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: '退款商品总数',
+                title: getString('refundsCount'),
                 colKey: 'refundsCount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: '退款商品总金额',
+                title: getString('refundsAmount'),
                 colKey: 'refundsAmount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: '实销金额',
+                title: getString('actualSalesAmount'),
                 colKey: 'realSalesAmount',
                 sortType: 'all',
                 sorter: true
             },
             {
-                title: '净收金额',
+                title: getString('income'),
                 colKey: 'income',
                 sortType: 'all',
                 sorter: true

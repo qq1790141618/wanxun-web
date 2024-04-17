@@ -1,22 +1,20 @@
 <template>
-    <div class="logo" title="LOGO" @click="$router.push('/')">
+    <div class="logo" title="LOGO" @click="() => {
+        if(user.inform){
+            $router.push('/')
+        }
+    }">
         <img src="../assets/logo.png" class="logo-image"  alt="logo">
         <span class="logo-text">
-            {{ getContent('websiteName') }}
+            {{ getString('websiteName') }}
         </span>
     </div>
 </template>
 
-<script>
+<script setup>
 import {getString} from "../i18n/index.js"
-
-export default {
-    methods: {getContent: getString},
-    setup(){
-        const i18n = inject('i18n')
-        return { i18n }
-    }
-}
+const i18n = inject('i18n')
+const user = inject('user')
 </script>
 
 <style>

@@ -15,6 +15,17 @@
                 <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Manage</t-tag>
                 <div>
                     <div>
+                        新增针对于用户单位的“店铺/品牌”数据访问权限，并且新增了“店铺/品牌”数据访问权限的设置功能
+                    </div>
+                    <div>
+                        Added "Store/Brand" data access permissions for user units, and added the function of setting "Store/Brand" data access permissions.
+                    </div>
+                </div>
+            </div>
+            <div class="part" style="width: 100%">
+                <t-tag theme="primary" variant="light" style="margin-bottom: 5px;">Manage</t-tag>
+                <div>
+                    <div>
                         新增菜单“管理”，以及子菜单“用户管理”，“用户组管理”，“App管理”，“店铺管理”
                     </div>
                     <div>

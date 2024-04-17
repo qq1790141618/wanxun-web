@@ -73,6 +73,7 @@ const getShopOption = async () => {
         for (let i = 0; i < storeResponse.content.length;i++){
             storeResponse.content[i].value = storeResponse.content[i].id
             storeResponse.content[i].label = storeResponse.content[i].name
+            storeResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_store'].indexOf(storeResponse.content[i].id) < 0)
         }
         shop.storeOptions = storeResponse.content
     }
@@ -84,6 +85,7 @@ const getShopOption = async () => {
         for (let i = 0; i < brandResponse.content.length;i++){
             brandResponse.content[i].value = brandResponse.content[i].keyword
             brandResponse.content[i].label = brandResponse.content[i].name + ' ' + brandResponse.content[i].id
+            brandResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_brand'].indexOf(brandResponse.content[i].keyword) < 0)
         }
         shop.brandOptions = brandResponse.content
     }
@@ -99,9 +101,6 @@ const initSet = () => {
         document.documentElement.lang = i18n.language
     }
     initLangConfig(i18n.language)
-    if(localStorage.getItem('user')){
-        user.inform = JSON.stringify(localStorage.getItem('user'))
-    }
 }
 const loginVerify = async () => {
     user.status = 'verify'
@@ -116,8 +115,7 @@ const loginVerify = async () => {
     if(res.result){
         user.inform = res.content.user
         user.status = 'loged'
-        localStorage.setItem('user', JSON.stringify(user.inform))
-        MessagePlugin.success(getString('welcomeBack') + '！' + user.inform['realname'])
+        await MessagePlugin.success(getString('welcomeBack') + '！' + user.inform['realname'])
 
         user.inform.setting = JSON.parse(user.inform.setting) ?? {}
         let set = user.inform.setting
@@ -135,6 +133,9 @@ const loginVerify = async () => {
         }
 
         showPage.value = true
+        const channel = new BroadcastChannel('fixeam_work')
+        channel.postMessage('UserIsLogin')
+        getShopOption()
     } else {
         MessagePlugin.info(getString('loginFailure'))
         user.status = 'unlog'
@@ -143,11 +144,11 @@ const loginVerify = async () => {
 }
 
 const route = useRoute()
-const historyRecord = () => {
-    if(route.name === 'NotFound' || route.path === '/login' || route.path === '/' || route.path === '/data/analysis-view'){
+const historyRecord = async () => {
+    if(!user.inform || route.name === 'NotFound' || ['/login', '/', '/data/analysis-view'].indexOf(route.path) >= 0){
         return
     }
-    let history = JSON.parse(localStorage.getItem('history')) || {
+    let history = user.inform['web_history'] || {
         menus: [],
         goods: []
     }
@@ -155,8 +156,19 @@ const historyRecord = () => {
     for (let i = history.menus.length - 1; i >= 0; i--) {
         if(history.menus[i].path === route.path){
             history.menus.splice(i, 1)
-            history.menus.unshift(route)
-            localStorage.setItem('history', JSON.stringify(history))
+            history.menus.unshift({
+                name: route.name,
+                path: route.path,
+                meta: route.meta
+            })
+
+            user.inform['web_history'] = history
+            await service.api.user.saveUserInform({
+                web_history: history
+            })
+            const channel = new BroadcastChannel('fixeam_work')
+            channel.postMessage('HistoryChange')
+
             return
         }
         if(history.menus[i].name === 'NotFound'){
@@ -164,8 +176,18 @@ const historyRecord = () => {
         }
     }
 
-    history.menus.unshift(route)
-    localStorage.setItem('history', JSON.stringify(history))
+    history.menus.unshift({
+        name: route.name,
+        path: route.path,
+        meta: route.meta
+    })
+    user.inform['web_history'] = history
+    await service.api.user.saveUserInform({
+        web_history: history
+    })
+
+    const channel = new BroadcastChannel('fixeam_work')
+    channel.postMessage('HistoryChange')
 }
 watch(() => route.name, () => {
     historyRecord()
@@ -215,7 +237,7 @@ initSet()
 const frameLessPage = ['login', 'datas-analysis-view']
 const queryVersion = () => {
     return new Promise((resolve, reject) => {
-        fetch(`version?ver=${ (new Date()).getTime() }`)
+        fetch(`index.html?ver=${ (new Date()).getTime() }`)
             .then(response => {
                 resolve(response.text())
             })
@@ -229,24 +251,27 @@ const queryVersion = () => {
 let timer
 const checkForUpdate = async () => {
     const application = document.querySelector('#app')
-    const runningVersion = parseInt(application.dataset.version)
-    let newVersion = await queryVersion()
+    const runningVersion = parseFloat(application.dataset.version)
 
-    if(typeof newVersion == 'string' && /^\d+$/.test(newVersion)){
-        newVersion = parseInt(newVersion)
+    let html = await queryVersion()
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(html, 'text/html')
+    let webApplication = doc.querySelector('#app')
+    let newVersion = parseFloat(webApplication.dataset.version)
 
-        if(newVersion > runningVersion){
-            clearInterval(timer)
-            timer = null
+    if(newVersion > runningVersion){
+        clearInterval(timer)
+        timer = null
 
-            DialogPlugin.confirm({
-                header: '页面更新',
-                body: '当前页面存在更新版本, 是否立即刷新以获取最新内容?',
-                onConfirm: () => {
-                    location.reload()
-                }
-            })
-        }
+        DialogPlugin.confirm({
+            header: getString('pageUpgrade'),
+            body: getString('pageUpgradeConfirm'),
+            confirmBtn: getString('confirm'),
+            cancelBtn: getString('close'),
+            onConfirm: () => {
+                location.reload()
+            }
+        })
     }
 }
 

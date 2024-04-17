@@ -161,70 +161,52 @@
     </t-dialog>
 </template>
 
-<script>
+<script setup>
 import {getString} from "../../i18n/index.js";
+import service from "../../api/service.js";
 
-export default {
-    methods: {getString},
-    setup(){
-        const i18n = inject('i18n')
-        const serve = inject('serve')
-        const shop = inject('shop')
+const i18n = inject('i18n')
+const shop = inject('shop')
 
-        const visible = ref(false)
-        const loading = ref(false)
-        const data = ref({})
-        const sku = ref([])
-        const getData = async (stylenumber) => {
-            return fetch(serve + '/goods/item/get?store-id=' + shop.store + '&brand=' + shop.brand + '&stylenumber=' + stylenumber, {
-                method: 'POST'
-            })
-            .then(res => {
-                return Promise.resolve(res.json())
-            })
-        }
-        const open = async (row) => {
-            visible.value = true
-            loading.value = true
-            let res = await getData(row.stylenumber)
-            sku.value = res
+const visible = ref(false)
+const loading = ref(false)
+const data = ref({})
+const sku = ref([])
 
-            let soData = JSON.parse(JSON.stringify(res[0]))
-            data.value = soData
-            if(soData['main-image'] !== null){
-                data.value['main-image'] = JSON.parse(soData['main-image'])
-            } else {
-                data.value['main-image'] = []
-            }
-            if(soData['detail-image'] !== null){
-                data.value['detail-image'] = JSON.parse(soData['detail-image'])
-            } else {
-                data.value['detail-image'] = []
-            }
-            data.value.color = row.color
-            data.value.size = row.size
-            data.value.inventory = row.inventory
+const open = async (row) => {
+    visible.value = true
+    loading.value = true
+    let res = await service.api.goods.getItem(row.stylenumber)
+    sku.value = res.data
 
-            loading.value = false
-        }
-        const close = () => {
-            visible.value = false
-            data.value = {}
-            sku.value = []
-        }
-
-        return {
-            i18n,
-            shop,
-            data,
-            sku,
-            visible,
-            loading,
-            open,
-            close
-        }
+    let soData = JSON.parse(JSON.stringify(res.data[0]))
+    data.value = soData
+    if(soData['main-image'] !== null){
+        data.value['main-image'] = JSON.parse(soData['main-image'])
+    } else {
+        data.value['main-image'] = []
     }
+    if(soData['detail-image'] !== null){
+        data.value['detail-image'] = JSON.parse(soData['detail-image'])
+    } else {
+        data.value['detail-image'] = []
+    }
+    data.value.color = row.color
+    data.value.size = row.size
+    data.value.inventory = row.inventory
+
+    loading.value = false
 }
+const close = () => {
+    visible.value = false
+    data.value = {}
+    sku.value = []
+}
+
+defineExpose({
+    open,
+    close
+})
 </script>
 
 <style>

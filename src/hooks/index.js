@@ -3,6 +3,7 @@ import fetchJSONP from 'fetch-jsonp'
 import useClipboard from 'vue-clipboard3'
 import {getString} from '../i18n'
 import dayjs from 'dayjs'
+import service from "../api/service.js";
 
 export function translate(text, lang){
     return new Promise((resolve, reject) => {
@@ -52,16 +53,14 @@ export function sort(val, sortArray, defaultSort = { sortBy: 'salesCount', desce
     return sortArray
 }
 
-export function miaostreetGoodsLink(item) {
+export async function miaostreetGoodsLink(item) {
     if(!item['miaostreet-id'] || item['miaostreet-id'] == null){
         return
     }
     window.open('https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=goods-detail&wx_navbar_transparent=true&wh_weex=true&itemId=' + item['miaostreet-id'], "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
 
-    let history = JSON.parse(localStorage.getItem('history')) || {
-        menus: [],
-        goods: []
-    }
+    let res = await service.api.user.inform()
+    let history = res.content.user.web_history
     if(!history.goods){
         history.goods = []
     }
@@ -77,6 +76,11 @@ export function miaostreetGoodsLink(item) {
 
     history.goods.unshift(item)
     localStorage.setItem('history', JSON.stringify(history))
+    await service.api.user.saveUserInform({
+        web_history: history
+    })
+    const channel = new BroadcastChannel('fixeam_work')
+    channel.postMessage('HistoryChange')
 }
 
 export function getQuickDateRangePicker(language = 'zh'){

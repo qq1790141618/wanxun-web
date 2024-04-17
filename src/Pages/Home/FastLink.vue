@@ -73,6 +73,17 @@
             >
                 <img :src="item.meta.avatar" height="20" style="margin-right: 5px;"  alt="">
                 {{ getString(item.meta.title) }} ( {{ item.path }} )
+                <t-button
+                shape="square"
+                size="small"
+                variant="text"
+                style="left: 7px;"
+                @click.stop="removeCollection(item)"
+                >
+                    <template #icon>
+                        <t-icon name="close" style="margin-right: 0;" />
+                    </template>
+                </t-button>
             </t-check-tag>
         </t-space>
     </t-card>
@@ -81,8 +92,10 @@
 <script setup>
 import { miaostreetGoodsLink } from '../../hooks'
 import { getString } from "../../i18n/index.js";
+import service from "../../api/service.js";
 
 const shop = inject('shop')
+const user = inject('user')
 
 const historyStructure = {
     menus: [],
@@ -95,14 +108,44 @@ const clearHistory = () => {
     for (const key in history.value) {
         history.value[key] = []
     }
-    localStorage.removeItem('history')
+    user.inform['web_history'] = []
+    service.api.user.saveUserInform({
+        web_history: {
+            menus: [],
+            goods: []
+        }
+    })
+}
+const getHistory = async () => {
+    let res = await service.api.user.inform()
+    history.value = res.content.user.web_history
+}
+const getCollection = () => {
+    collectionPath.value = user.inform['web_collection']
+}
+const removeCollection = (item) => {
+    const channel = new BroadcastChannel('fixeam_work')
+    channel.postMessage('CollectionChange')
+    collectionPath.value = collectionPath.value.filter(obj => obj['path'] !== item.path)
+    user.inform['web_collection'] = collectionPath.value
+    service.api.user.saveUserInform({
+        web_collection: collectionPath.value
+    })
 }
 
 onMounted(() => {
-    setInterval(() => {
-        history.value = JSON.parse(localStorage.getItem('history')) || historyStructure
-        collectionPath.value = JSON.parse(localStorage.getItem('collection')) || []
-    }, 500)
+    getHistory()
+    getCollection()
+
+    const channel = new BroadcastChannel('fixeam_work')
+    channel.addEventListener('message', function(event) {
+        if(event.data === 'HistoryChange'){
+            getHistory()
+        }
+        if(event.data === 'CollectionChange'){
+            getCollection()
+        }
+    })
 })
 </script>
 

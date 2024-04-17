@@ -37,7 +37,7 @@ export const freights = async (from, to) => {
 export const operational = async (brand, mode, time, store = "") => {
     let path = '/analysis/atomic'
     let sign = await apiSign(path)
-    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&mode=${mode}&time=${time}&store-id=${store}&brand=${brand}`)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&mode=${mode}&time=${time}&store-id=${store}&brand=${brand}`, 'GET', 'application/json', {}, 120)
 }
 export const summaryDayOfMonth = async (month) => {
     let path = '/analysis/summary/month'

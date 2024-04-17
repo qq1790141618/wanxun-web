@@ -15,14 +15,14 @@
         <t-space size="8px" style="margin: 8px 0;">
             <t-popconfirm
             theme="danger"
-            :content="`确定要移除( ${ shop.store } / ${ shop.brand } )在该日期之后的订单吗？删除后不可恢复！`"
+            :content="`${ getString('removeConfirmOf') }( ${ shop.store } / ${ shop.brand } )${ getString('removeOrdersAfterDate') }`"
             @confirm="removeOrder()"
             >
                 <t-button
                 theme="danger"
                 :loading="loading"
                 >
-                    移除相关订单
+                    {{ getString('removeAboutOrders') }}
                 </t-button>
             </t-popconfirm>
             <t-button
@@ -30,58 +30,44 @@
             variant="outline"
             :disabled="loading"
             >
-                取消
+                {{ getString('cancel') }}
             </t-button>
         </t-space>
     </t-dialog>
 </template>
 
-<script>
+<script setup>
 import dayjs from 'dayjs'
 import {NotifyPlugin} from "tdesign-vue-next";
 import service from "../../api/service.js";
+import {tips} from "../../hooks/tips.js";
+import {getString} from "../../i18n/index.js";
 
-export default {
-    setup(){
-        const show = ref(false)
-        const dateFrom = ref(null)
-        const serve = inject('serve')
-        const i18n = inject('i18n')
-        const shop = inject('shop')
-        const loading = ref(false)
+const show = ref(false)
+const dateFrom = ref(null)
+const serve = inject('serve')
+const i18n = inject('i18n')
+const shop = inject('shop')
+const loading = ref(false)
 
-        const open = () => {
-            dateFrom.value = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
-            show.value = true
-        }
-
-        const removeOrder = async () => {
-            loading.value = true
-            let res = await service.api.imports.removeOrder(dateFrom.value)
-            if(res.result){
-                MessagePlugin.success(`删除成功, 总计删除${ res.affected }个订单记录`)
-            } else {
-                NotifyPlugin.error({
-                    title: '移除失败',
-                    content: res.message,
-                    duration: 10000,
-                    closeBtn: true
-                })
-            }
-            loading.value = false
-            show.value = false
-        }
-
-        return {
-            show,
-            open,
-            dateFrom,
-            shop,
-            removeOrder,
-            loading
-        }
-    }
+const open = () => {
+    dateFrom.value = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
+    show.value = true
 }
+
+const removeOrder = async () => {
+    loading.value = true
+    let res = await service.api.imports.removeOrder(dateFrom.value)
+    if(res.result){
+        tips(`删除成功, 总计删除${ res.affected }个订单记录`, 'success')
+    } else {
+        tips(res.message, 'error')
+    }
+    loading.value = false
+    show.value = false
+}
+
+defineExpose({ open })
 </script>
 
 <style>

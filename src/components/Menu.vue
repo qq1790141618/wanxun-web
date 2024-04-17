@@ -95,20 +95,32 @@
 <script setup>
 import {useRoute, useRouter} from "vue-router"
 import {getString} from "../i18n/index.js"
+import service from "../api/service.js";
 
 const route = useRoute()
 const router = useRouter()
 const collectionPath = ref([])
 const activeMenu = ref('1')
+const user = inject('user')
 
 const collection = (route, status = true) => {
     if(status){
-        collectionPath.value.push(route)
-        localStorage.setItem('collection', JSON.stringify(collectionPath.value))
+        collectionPath.value.push({
+            name: route.name,
+            path: route.path,
+            meta: route.meta
+        })
     } else {
         collectionPath.value = collectionPath.value.filter(item => item['path'] !== route.path)
-        localStorage.setItem('collection', JSON.stringify(collectionPath.value))
     }
+
+    user.inform['web_collection'] = collectionPath.value
+    service.api.user.saveUserInform({
+        web_collection: collectionPath.value
+    })
+
+    const channel = new BroadcastChannel('fixeam_work')
+    channel.postMessage('CollectionChange')
 }
 
 watch(() => route.path, () => {
@@ -116,10 +128,19 @@ watch(() => route.path, () => {
 })
 
 onMounted(() => {
-    collectionPath.value = JSON.parse(localStorage.getItem('collection')) || []
+    const channel = new BroadcastChannel('fixeam_work')
+    channel.addEventListener('message', function(event) {
+        if(event.data === 'UserIsLogin'){
+            collectionPath.value = user.inform['web_collection']
+        }
+        if(event.data === 'CollectionChange'){
+            collectionPath.value = user.inform['web_collection']
+        }
+    })
+
     setTimeout(() => {
         activeMenu.value = route.meta['key']
-    }, 600)
+    }, 500)
 })
 </script>
 
