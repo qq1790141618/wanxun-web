@@ -27,6 +27,24 @@ export const get = async (condition = {}, start = 0, number = 20) => {
     })
 }
 
+export const getTotal = async (condition = {}) => {
+    let path = '/goods/mul/total'
+    let sign = await apiSign(path)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`, 'POST', 'application/json', {
+        condition,
+        'store-id': getStore(),
+        'brand': getBrand()
+    })
+}
+
+export const getSales = async (styleNumbers = []) => {
+    let path = '/goods/get/sales'
+    let sign = await apiSign(path)
+    return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}`, 'POST', 'application/json', {
+        stylenumber: styleNumbers
+    })
+}
+
 export const getItem = async (stylenumber) => {
     let path = '/goods/item/get'
     let sign = await apiSign(path)

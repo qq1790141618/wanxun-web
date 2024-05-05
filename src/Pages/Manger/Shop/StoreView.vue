@@ -63,9 +63,10 @@
         <t-dialog
         v-model:visible="visible"
         :footer="false"
-        width="600"
+        width="800"
         placement="center"
         :close-on-overlay-click="false"
+        :destroy-on-close="true"
         >
             <template #header>
                 {{ visible === 'create' ? getString('createStore') : getString('storeInfoEdit') }}

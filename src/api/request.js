@@ -46,7 +46,7 @@ export const request = (url, method = 'GET', contentType = 'application/json', b
                     message: '请求超时'
                 }
             })
-        }, 10 * 1000)
+        }, timeout * 1000)
     })
 }
 

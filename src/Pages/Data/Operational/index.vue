@@ -220,19 +220,19 @@ const initData = async () => {
     for (let i = 0; i < n; i++) {
         let matchTime = dayjs(date.value[mode.value]).subtract(i, tag).format(format)
         let res = await service.api.analysis.operational(brand.value, mode.value, matchTime, store.value ?? "")
+        results[matchTime] = res
 
         if(res.result){
-            results[matchTime] = res
             continue
         } else {
             tips(res.error.message, 'error')
         }
 
         let ekey
-        if(results[matchTime].error.message === '部分SKU在品牌的商品列表中未包含'){
+        if(results[matchTime].error && results[matchTime].error.message === '部分SKU在品牌的商品列表中未包含'){
             ekey = 'nosku'
         }
-        if(results[matchTime].error.message === '部分SKU未上传运营价'){
+        if(results[matchTime].error && results[matchTime].error.message === '部分SKU未上传运营价'){
             ekey = 'nocost'
         }
 

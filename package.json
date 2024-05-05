@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@highlightjs/vue-plugin": "^2.1.0",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
