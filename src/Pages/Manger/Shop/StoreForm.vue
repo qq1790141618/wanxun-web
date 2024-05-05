@@ -197,8 +197,7 @@ const initAMap = (location) => {
 onMounted(async () => {
     formData.id = props.form.id
     formData.name = props.form.name
-    formData.brand = props.form.brand
-    formData.brand =  props.form.brand
+    formData.brand = props.form.brand ? props.form.brand : []
 
     if(props.form.location){
         formData.location = props.form.location

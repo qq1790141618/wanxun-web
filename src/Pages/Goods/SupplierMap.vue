@@ -92,8 +92,8 @@ const done = async () => {
         let confirm = DialogPlugin.confirm({
             header: getString('tip'),
             body: getString('tip2'),
-            okText: getString('confirm'),
-            cancelText: getString('cancel'),
+            confirmBtn: getString('confirm'),
+            cancelBtn: getString('close'),
             onConfirm: async () => {
                 confirm.hide()
 
