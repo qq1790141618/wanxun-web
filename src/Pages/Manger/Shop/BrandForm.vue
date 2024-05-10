@@ -47,6 +47,9 @@
                 <br>
                 <t-upload
                     :action="`${host}/import/upload/image?api_sign=${uploadSign}&access_token=${getToken()}`"
+                    :headers="{
+                        'X-Secret-A': 'SubFixeam'
+                    }"
                     @success="imageSuccess"
                 >
                     <template #file-list-display>

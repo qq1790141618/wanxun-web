@@ -340,7 +340,7 @@ onMounted(() => {
         showBackground.value = false
     }
     showBackgroundChange(showBackground.value)
-    if(user.inform){
+    if(getToken()){
         getLatestVersions()
     }
 })
