@@ -1,24 +1,38 @@
 <template>
-    <t-loading style="width: 100%; height: 160px; " size="small" :text="getString('loading')" :loading="loading" />
-    <t-collapse v-if="!loading" :default-expand-all="true">
+    <t-loading
+        style="width: 100%; height: 160px; "
+        size="small"
+        :text="getString('loading')"
+        :loading="loading"
+    />
+    <t-collapse
+        v-if="!loading"
+        :default-expand-all="true"
+    >
         <t-collapse-panel
-        v-for="(group, key) in apiData"
-        :value="key"
-        :header="keyTitle[key]"
+            v-for="(group, key) in apiData"
+            :value="key"
+            :header="key"
         >
             <template #headerRightContent>
                 <t-space size="small">
-                    <t-checkbox @change="(value) => {
-                        addAllPermission(value, key)
-                    }" :checked="apiSelected[key].length === apiData[key].map(item => item['route']).length">
+                    <t-checkbox
+                        @change="(value) => {
+                            addAllPermission(value, key)
+                        }"
+                        :checked="apiSelected[key].length === apiData[key].map(item => item.id).length"
+                    >
                         {{ getString('openAll') }}
                     </t-checkbox>
                 </t-space>
             </template>
-            <t-checkbox-group v-model="apiSelected[key]" @change="$emit('update:permission', sumPermissions())">
+            <t-checkbox-group
+                v-model="apiSelected[key]"
+                @change="$emit('update:permission', sumPermissions())"
+            >
                 <t-checkbox
                 v-for="item in group"
-                :value="item['route']"
+                :value="item.id"
                 >
                     {{ item['name'] }}
                 </t-checkbox>
@@ -28,17 +42,15 @@
 </template>
 
 <script setup>
-import service from "../../../api/service.js"
 import {tips} from "../../../hooks/tips.js"
-import {translate} from "../../../hooks/index.js"
-import {getLanguage, getString} from "../../../i18n/index.js"
+import {getString} from "../../../i18n/index.js"
+import {request} from "../../../api/request.js"
 
 const i18n = inject('i18n')
 const user = inject('user')
 const apiData = ref({})
+const apiSelected = ref({})
 const apiAllData = ref([])
-const apiSelected = ref([])
-const keyTitle = ref({})
 const props = defineProps({
     permission: {
         type: Array,
@@ -52,26 +64,22 @@ const getApiData = async () => {
     apiData.value = {}
     apiAllData.value = []
 
-    let res = await service.api.userM.apiView()
-    if(res.result){
+    let res = await request('/user/apis')
+    if(res.status === 'success'){
         apiAllData.value = res.content
         for (let i = 0; i < res.content.length; i++){
-            if(res.content[i]['need_auth'] && (!user.inform['need_auth'] || user.inform['api_p'].indexOf(res.content[i].route) >= 0)){
-                let key = res.content[i].group
-
+            let item = res.content[i]
+            if(item.needAuth && (!user.inform.needAuth || user.inform.permissions.indexOf(res.content[i].id) >= 0)){
+                let key = item.groupName
                 apiData.value[key] = apiData.value[key] ?? []
                 apiSelected.value[key] = apiSelected.value[key] ?? []
                 apiData.value[key].push(res.content[i])
-
-                if(!keyTitle.value[key]){
-                    let res = await translate(key, getLanguage())
-                    keyTitle.value[key] = res['trans_result'][0]['dst']
-                }
             }
         }
     } else {
-        tips(res.error.message, 'error')
+        tips(res.error.msg, 'error')
     }
+
     initPermissionProps()
     loading.value = false
 }
@@ -79,26 +87,25 @@ const initPermissionProps = () => {
     if(apiAllData.value.length === 0){
         return
     }
-
     for (const key in apiSelected.value) {
         apiSelected.value[key] = []
     }
     for (let i = 0; i < props.permission.length; i++){
         let p = props.permission[i]
-        let api = apiAllData.value.find(item => item['route'] === p)
-        apiSelected.value[api['group']] = apiSelected.value[api['group']] ?? []
-        if(apiSelected.value[api['group']].indexOf(api['route']) < 0){
-            apiSelected.value[api['group']].push(api['route'])
+        let api = apiAllData.value.find(item => item.id === p)
+        let key = api.groupName
+        apiSelected.value[key] = apiSelected.value[key] ?? []
+        if(apiSelected.value[key].indexOf(api.id) < 0){
+            apiSelected.value[key].push(api.id)
         }
     }
 }
 watch(() => props.permission, () => {
     initPermissionProps()
 })
-
 const addAllPermission = (status, key) => {
     if(status){
-        apiSelected.value[key] = apiData.value[key].map(item => item['route'])
+        apiSelected.value[key] = apiData.value[key].map(item => item.id)
     } else {
         apiSelected.value[key] = []
     }

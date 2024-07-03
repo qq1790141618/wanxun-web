@@ -88,124 +88,89 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import headerComponent from '../../components/header.vue'
 import ScanCard from './ScanCard.vue'
 import service from "../../api/service.js"
-import {MessagePlugin} from "tdesign-vue-next"
-import {useRouter} from "vue-router"
-import {tips} from "../../hooks/tips.js"
-import {getString} from "../../i18n/index.js"
+import { MessagePlugin } from "tdesign-vue-next"
+import { tips } from "../../hooks/tips.js"
+import { getString } from "../../i18n/index.js"
+import { request } from "../../api/request.js"
 
-export default {
-    methods: {getString},
-    components: {
-        headerComponent,
-        ScanCard
-    },
-    setup(){
-        const i18n = inject('i18n')
-        const user = inject('user')
 
-        const mode = ref(1)
-        const account = ref(null)
-        const password = ref(null)
-        const verifyId = ref(null)
-        const code = ref(null)
+const i18n = inject('i18n')
 
-        const codeSendCd = ref(0)
-        const codeSendLd = ref(false)
-        const sendVerifyCode = async () => {
-            codeSendLd.value = true
-            service.api.user.codeSend(account.value)
-                .then(response => {
-                    if(response.result){
-                        getString('sended')
-                        codeSendCd.value = 60
-                        let timer = setInterval(() => {
-                            codeSendCd.value--
-                            if(codeSendCd.value <= 0){
-                                clearInterval(timer)
-                                codeSendCd.value = 0
-                            }
-                            verifyId.value = response.content['verify_id']
-                        }, 1000)
-                    } else {
-                        tips(response.error.message, 'error')
-                    }
-                    codeSendLd.value = false
-                })
-                .catch(error => {
-                    console.error(error)
-                    codeSendLd.value = false
-                })
-        }
+const mode = ref(1)
+const account = ref(null)
+const password = ref(null)
+const verifyId = ref(null)
+const code = ref(null)
 
-        const accountInput = ref(null)
-        const passwordInput = ref(null)
-        const phoneInput = ref(null)
-        const codeInput = ref(null)
-
-        const router = useRouter()
-        const login = async () => {
-            if(account.value == null || account.value === ''){
-                await MessagePlugin.error(getString('accountEmpty'))
-                return
+const codeSendCd = ref(0)
+const codeSendLd = ref(false)
+const sendVerifyCode = async () => {
+    codeSendLd.value = true
+    let response = await request("/user/sendcode", { target: account.value })
+    if(response.status === 'success'){
+        getString('sended')
+        codeSendCd.value = 60
+        let timer = setInterval(() => {
+            codeSendCd.value--
+            if(codeSendCd.value <= 0){
+                clearInterval(timer)
+                codeSendCd.value = 0
             }
-            if(mode.value === 1){
-                if(password.value == null || password.value === ''){
-                    await MessagePlugin.error(getString('passwordEmpty'))
-                    return
-                }
-                service.api.user.passwordLogin(account.value, password.value)
-                    .then(response => loginThen(response))
-                    .catch(error => MessagePlugin.error(error))
-            } else {
-                if(verifyId.value == null){
-                    await MessagePlugin.error(getString('notSendToLog'))
-                    return
-                }
-                if(code.value == null || code.value.length !== 6){
-                    await MessagePlugin.error(getString('codeError'))
-                    return
-                }
-                service.api.user.verifyCodeLogin(account.value, verifyId.value, code.value)
-                    .then(response => loginThen(response))
-                    .catch(error => MessagePlugin.error(error))
-            }
+            verifyId.value = response.content['verify_id']
+        }, 1000)
+    } else {
+        tips(response.error.msg, 'error')
+    }
+    codeSendLd.value = false
+}
+
+const accountInput = ref(null)
+const passwordInput = ref(null)
+const phoneInput = ref(null)
+const codeInput = ref(null)
+
+const login = async () => {
+    if(account.value == null || account.value === ''){
+        await MessagePlugin.error(getString('accountEmpty'))
+        return
+    }
+    if(mode.value === 1){
+        if(password.value == null || password.value === ''){
+            await MessagePlugin.error(getString('passwordEmpty'))
+            return
         }
-        const loginThen = (response) => {
-            if(response.result){
-                MessagePlugin.success(getString('loged'))
-
-                const token = response.content['token']
-                localStorage.setItem('access_token', token)
-                location.href = location.origin
-            } else {
-                tips(response.error.message, 'error')
-            }
+        let response = await request("/user/login/password", {
+            account: account.value,
+            password: password.value
+        }, 'POST')
+        loginThen(response)
+    } else {
+        if(verifyId.value == null){
+            await MessagePlugin.error(getString('notSendToLog'))
+            return
         }
-
-        return {
-            i18n,
-
-            account,
-            password,
-            verifyId,
-            code,
-            mode,
-
-            sendVerifyCode,
-            codeSendCd,
-            codeSendLd,
-
-            accountInput,
-            passwordInput,
-            phoneInput,
-            codeInput,
-
-            login
+        if(code.value == null || code.value.length !== 6){
+            await MessagePlugin.error(getString('codeError'))
+            return
         }
+        let response = await request("/user/login/code", {
+            account: account.value,
+            verificationId: verifyId.value,
+            verificationCode: code.value
+        }, 'POST')
+        loginThen(response)
+    }
+}
+const loginThen = (response) => {
+    if(response.status === 'success'){
+        MessagePlugin.success(getString('loged'))
+        location.href = location.origin
+    } else {
+        tips(response.error.msg, 'error')
     }
 }
 </script>

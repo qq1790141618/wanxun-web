@@ -1,52 +1,12 @@
-/* 英文字体 */
-/*@font-face {*/
-/*    font-family: 'DIN Medium';*/
-/*    src: url('https://cdn.fixeam.com/font/DIN.ttf') format('truetype');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Quicksand';*/
-/*    src: url('https://cdn.fixeam.com/font/Quicksand/Quicksand-Regular.eot');*/
-/*    src: url('https://cdn.fixeam.com/font/Quicksand/Quicksand-Regular.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Quicksand/Quicksand-Regular.woff2') format('woff2'), url('https://cdn.fixeam.com/font/Quicksand/Quicksand-Regular.woff') format('woff'), url('https://cdn.fixeam.com/font/Quicksand/Quicksand-Regular.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Quicksand/Quicksand-Regular.svg') format('svg');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Josefin sans';*/
-/*    src: url('https://cdn.fixeam.com/font/Josefin sans/JosefinSans-Regular-7.eot');*/
-/*    src: url('https://cdn.fixeam.com/font/Josefin sans/JosefinSans-Regular-7.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Josefin sans/JosefinSans-Regular-7.woff2') format('woff2'), url('https://cdn.fixeam.com/font/Josefin sans/JosefinSans-Regular-7.woff') format('woff'), url('https://cdn.fixeam.com/font/Josefin sans/JosefinSans-Regular-7.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Josefin sans/JosefinSans-Regular-7.svg') format('svg');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Noto sans';*/
-/*    src: url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.eot');*/
-/*    src: url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.woff') format('woff'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Noto sans/NotoSans-Regular-2.svg') format('svg');*/
-/*}*/
-
-/*@font-face {*/
-/*    font-family: 'Raleway';*/
-/*    src: url('https://cdn.fixeam.com/font/Raleway/Raleway-Regular-2.eot');*/
-/*    src: url('https://cdn.fixeam.com/font/Raleway/Raleway-Regular-2.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Raleway/Raleway-Regular-2.woff') format('woff'), url('https://cdn.fixeam.com/font/Raleway/Raleway-Regular-2.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Raleway/Raleway-Regular-2.svg') format('svg');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Rubik';*/
-/*    src: url('https://cdn.fixeam.com/font/Rubik/Rubik-Regular.eot');*/
-/*    src: url('https://cdn.fixeam.com/font/Rubik/Rubik-Regular.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Rubik/Rubik-Regular.woff') format('woff'), url('https://cdn.fixeam.com/font/Rubik/Rubik-Regular.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Rubik/Rubik-Regular.svg') format('svg');*/
-/*}*/
-/* 中文字体 */
-/*@font-face {*/
-/*    font-family: 'Pingfang SC Medium';*/
-/*    src: url('https://cdn.fixeam.com/font/Pingfang%20SC%20Medium.ttf') format('truetype');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Pingfang SC Regular';*/
-/*    src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot');*/
-/*    src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.woff') format('woff'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.svg') format('svg');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'HYWenHei-45W';*/
-/*    src: url('https://cdn.fixeam.com/font/hanyiwenhei/HYWenHei-45W-5.ttf') format('truetype');*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'HYWenHei-55W';*/
-/*    src: url('https://cdn.fixeam.com/font/hanyiwenhei/HYWenHei-55W-4.ttf') format('truetype');*/
-/*}*/
+@font-face {
+    font-family: 'Pingfang SC Regular';
+    src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot');
+    src: url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.eot?#iefix') format('embedded-opentype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.woff') format('woff'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.ttf') format('truetype'), url('https://cdn.fixeam.com/font/Pingfang SC Regular/PingFang Regular.svg') format('svg');
+}
+@font-face {
+    font-family: 'DIN-Light';
+    src: url('https://cdn.fixeam.com/font/DIN-Light.ttf') format('truetype');
+}
 * {
     box-sizing: border-box;
 }
@@ -54,14 +14,15 @@ header {
     display: block;
 }
 :root {
-    /*--td-font-family: 'Noto sans', 'HYWenHei-45W', 'Pingfang SC Medium', Microsoft YaHei, Arial Regular;*/
-    --td-font-family: Noto sans, Microsoft YaHei, Arial Regular;
+    --td-font-family: "DIN-Light", "Pingfang SC Regular",Microsoft YaHei, Arial Regular;
+    /*--td-font-family: Noto sans, Microsoft YaHei, Arial Regular;*/
     --td-font-size-body-medium: 13px;
 }
 body {
     color: var(--td-text-color-secondary);
     font: var(--td-font-body-medium);
     font-family: -apple-system, BlinkMacSystemFont, var(--td-font-family);
+    background: transparent url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg") center center / cover no-repeat;
     -webkit-font-smoothing: antialiased;
     padding: 0;
     margin: 0;
@@ -213,4 +174,11 @@ img, div, span{
 }
 #app .t-layout__content{
     padding: 0 12px;
+}
+
+.position-in-center {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

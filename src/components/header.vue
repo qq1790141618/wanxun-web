@@ -27,30 +27,6 @@
                         </template>
                     </t-button>
                 </t-dropdown>
-                <t-dropdown
-                placement="bottom"
-                :min-column-width="180"
-                >
-                    <t-button variant="text" shape="square">
-                        <template #icon>
-                            <t-icon name="download" />
-                        </template>
-                    </t-button>
-                    <t-dropdown-menu>
-                        <t-dropdown-item :disabled="!clientLink" @click="downloadClient">
-                            <t-icon name="desktop" style="margin-right: 5px;" />
-                            {{ getString('windows') }}
-                        </t-dropdown-item>
-                        <t-dropdown-item :disabled="!appLink" @click="downloadAndroidApp = true">
-                            <t-icon name="logo-android" style="margin-right: 5px;" />
-                            {{ getString('android') }}
-                        </t-dropdown-item>
-                        <t-dropdown-item :disabled="true" @click="mobileWeb = true">
-                            <t-icon name="mobile" style="margin-right: 5px;" />
-                            {{ getString('mobile') }}
-                        </t-dropdown-item>
-                    </t-dropdown-menu>
-                </t-dropdown>
                 <t-tooltip :content="getString('setting')" v-if="$route.name !== 'login'">
                     <t-badge :count="COUNT">
                         <t-button variant="text" shape="square" @click="clickSet">
@@ -67,7 +43,7 @@
                 >
                     <t-button variant="text">
                         <template #icon>
-                            <t-image :src="user.inform.headsrc" shape="circle" style="width: 28px;">
+                            <t-image :src="user.inform.avatar" shape="circle" style="width: 28px;">
                                 <template #loading>
                                     ...
                                 </template>
@@ -104,69 +80,6 @@
         </div>
     </header>
     <t-dialog
-    v-model:visible="downloadAndroidApp"
-    :header="getString('android')"
-    :footer="false"
-    >
-        <div style="text-align: center;">
-            <t-icon name="scan" />
-            {{ getString('scanToDownload') }}
-            <QRCodeVue3
-                v-if="downloadAndroidApp"
-                :width="160"
-                :height="160"
-                :value="appLink"
-                :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
-                :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 0 }"
-                :dotsOptions="{
-                    type: 'dots',
-                    color: '#888',
-                    gradient: {
-                        type: 'linear',
-                        rotation: 0,
-                        colorStops: [
-                            { offset: 0, color: '#888' },
-                            { offset: 1, color: '#888' }
-                        ]
-                    }
-                }"
-                :cornersSquareOptions="{ type: 'dot', color: '#000000' }"
-                :cornersDotOptions="{ type: undefined, color: '#000000' }"
-                fileExt="png"
-                :download="false"
-                :downloadOptions="{ name: 'vqr', extension: 'png' }"
-                />
-            <div>
-                <t-button @click="downloadApk">
-                    <template #icon>
-                        <t-icon name="logo-android" />
-                    </template>
-                    {{ getString('downloadApk') }}
-                </t-button>
-            </div>
-        </div>
-    </t-dialog>
-    <t-dialog
-    v-model:visible="mobileWeb"
-    :header="getString('mobile')"
-    :footer="false"
-    >
-        <div style="text-align: center;">
-            <t-icon name="scan" />
-            {{ getString('scanToVisit') }}
-            <img src="../assets/Mobile Web.png" style="width: 200px;"  alt="">
-            <t-link href="https://mobile-work.fixeam.com/" target="_blank" style="margin-right: 5px;">
-                Url:
-                https://mobile-work.fixeam.com/
-            </t-link>
-            <t-button @click.stop="copy('https://mobile-work.fixeam.com/', i18n.language)" variant="text" shape="square">
-                <template #icon>
-                    <t-icon name="copy" />
-                </template>
-            </t-button>
-        </div>
-    </t-dialog>
-    <t-dialog
     v-model:visible="settings"
     :header="getString('setting')"
     :footer="false"
@@ -188,15 +101,27 @@
             <t-select
             :label="getString('store') + ': '"
             v-model="shop.store"
-            :options="shop.storeOptions"
             @change="storeChange"
-            ></t-select>
+            >
+                <t-option
+                    v-for="(item, index) in shop.storeOptions"
+                    :key="index"
+                    :value="item.id"
+                    :label="item.name"
+                ></t-option>
+            </t-select>
             <t-select
             :label="getString('brand') + ': '"
             v-model="shop.brand"
-            :options="brandOptions"
             @change="saveOptions"
-            ></t-select>
+            >
+                <t-option
+                    v-for="(item, index) in shop.brandOptions"
+                    :key="index"
+                    :value="item.id"
+                    :label="item.name"
+                ></t-option>
+            </t-select>
             <t-space size="small" align="center">
                 <t-switch size="small" v-model="showBackground" @change="showBackgroundChange"></t-switch><div>显示背景/Show Background</div>
             </t-space>
@@ -229,33 +154,6 @@ const settings = ref(false)
 const COUNT = ref('')
 const searchResult = ref(null)
 const showBackground = ref(true)
-
-const clientLink = ref(null)
-const appLink = ref(null)
-
-const downloadClient = () => {
-    window.open(clientLink.value)
-}
-
-const downloadApk = () => {
-    window.open(appLink.value)
-}
-
-const getLatestVersions = async () => {
-    let windows = await service.api.app.appLatestVersion('windows')
-    if(windows.result){
-        clientLink.value = windows.content.package_resource
-    } else {
-        tips(windows.error.message, 'error')
-    }
-
-    let android = await service.api.app.appLatestVersion('android')
-    if(android.result){
-        appLink.value = android.content.package_resource
-    } else {
-        tips(android.error.message, 'error')
-    }
-}
 
 const saveOptions = () => {
     localStorage.setItem('language', i18n.language)
@@ -340,9 +238,6 @@ onMounted(() => {
         showBackground.value = false
     }
     showBackgroundChange(showBackground.value)
-    if(getToken()){
-        getLatestVersions()
-    }
 })
 </script>
 

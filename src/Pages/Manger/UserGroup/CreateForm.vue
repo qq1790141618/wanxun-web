@@ -11,13 +11,18 @@
         <t-form-item :label="getString('identityName')" name="identity">
             <t-input v-model="formData.name" @change="$emit('update:form', formData)"></t-input>
         </t-form-item>
-        <t-form-item :label="getString('createBy')" name="create_by_identity">
-            <t-select v-model="formData.create_by_identity" @change="$emit('update:form', formData)">
+        <t-form-item :label="getString('createBy')" name="createByIdentity">
+            <t-select
+                v-model="formData.createByIdentity"
+                @change="$emit('update:form', formData)"
+                :placeholder="user.inform.identity"
+                :clearable="true"
+            >
                 <t-option
                 v-for="item in identityOptions"
                 :value="item.identity"
                 :label="item.name"
-                :disabled="JSON.parse(item['create_by']).indexOf(user.inform.identity) < 0"
+                :disabled="item.createBy.indexOf(user.inform.identity) < 0"
                 >
                 </t-option>
             </t-select>
@@ -26,7 +31,7 @@
 </template>
 
 <script setup>
-import {getString} from "../../../i18n/index.js";
+import {getString} from "../../../i18n/index.js"
 
 const props = defineProps({
     form: {
@@ -45,7 +50,7 @@ const formRef = ref(null)
 const formData = ref({
     identity: null,
     name: null,
-    create_by_identity: null
+    createByIdentity: null
 })
 const FORM_RULES = {
     identity: [{ required: true }],
@@ -61,12 +66,10 @@ defineExpose({
 watch(() => props.form, (newValue) => {
     formData.value.identity = newValue.identity
     formData.value.name = newValue.name
-    if(newValue.create_by_identity){
-        formData.value.create_by_identity = newValue.create_by_identity
-    } else if(newValue['create_by']){
-        formData.value.create_by_identity = JSON.parse(newValue['create_by'])
+    if(newValue.createByIdentity){
+        formData.value.createByIdentity = newValue.createByIdentity
     } else {
-        formData.value.create_by_identity = null
+        formData.value.createByIdentity = null
     }
 })
 </script>

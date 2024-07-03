@@ -13,9 +13,9 @@
                 style="width: 270px;">
             </t-input>
         </t-form-item>
-        <t-form-item :label="getString('realname')" name="realname">
+        <t-form-item :label="getString('realname')" name="realName">
             <t-input
-            v-model="formData.realname"
+            v-model="formData.realName"
             @change="$emit('update:form', formData)"
             style="width: 270px;">
             </t-input>
@@ -59,8 +59,8 @@
             style="width: 270px;"
             ></t-input>
         </t-form-item>
-        <t-form-item :label="getString('hiredate')" name="hiredate">
-            <t-date-picker v-model="formData.hiredate" @change="$emit('update:form', formData)" ></t-date-picker>
+        <t-form-item :label="getString('hiredate')" name="hireDate">
+            <t-date-picker v-model="formData.hireDate" @change="$emit('update:form', formData)" ></t-date-picker>
         </t-form-item>
         <t-form-item :label="getString('birthday')" name="birthday">
             <t-date-picker v-model="formData.birthday" @change="$emit('update:form', formData)" ></t-date-picker>
@@ -90,15 +90,15 @@ const formData = reactive({
     mail: null,
     identity: "user",
     nickname: null,
-    realname: null,
-    hiredate: null,
+    realName: null,
+    hireDate: null,
     birthday: null,
     password: null
 })
 const FORM_RULES = {
     username: [{ required: true }],
     identity: [{ required: true }],
-    realname: [{ required: true }],
+    realName: [{ required: true }],
     phone: [{ required: true }]
 }
 const confirm = async () => {

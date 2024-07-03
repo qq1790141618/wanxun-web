@@ -1,7 +1,8 @@
 <template>
     <t-config-provider :global-config="globalConfig">
-        <router-view v-if="frameLessPage.indexOf($route.name) >= 0"/>
-        <div v-if="frameLessPage.indexOf($route.name) < 0">
+        <splash v-if="loading" />
+        <router-view v-if="!loading && frameLessPage.indexOf($route.name) >= 0"/>
+        <div v-if="!loading && frameLessPage.indexOf($route.name) < 0">
             <header-component />
             <t-breadcrumb max-item-width="150" style="margin: 10px 0 0 20px;" v-if="$route.name !== 'NotFound'">
                 <t-breadcrumbItem
@@ -44,20 +45,21 @@ import chtConfig from 'tdesign-vue-next/es/locale/zh_TW'
 import enConfig from 'tdesign-vue-next/es/locale/en_US'
 import korConfig from 'tdesign-vue-next/es/locale/ko_KR'
 import jpConfig from 'tdesign-vue-next/es/locale/ja_JP'
-import {DialogPlugin, MessagePlugin} from "tdesign-vue-next"
-import service from "./api/service.js"
-import {getString} from "./i18n/index.js"
-import {useRoute, useRouter} from "vue-router"
-import {getAllBrand, getAllStore} from "./api/shop.js";
-import {tips} from "./hooks/tips.js";
-import {getToken} from "./hooks/user.js";
+import { DialogPlugin, MessagePlugin } from "tdesign-vue-next"
+import { getString } from "./i18n/index.js"
+import { useRoute, useRouter } from "vue-router"
+import { tips } from "./hooks/tips.js"
+import { request } from "./api/request.js"
+import Splash from "./Pages/splash.vue"
 
 const i18n = inject('i18n')
 const user = inject('user')
 const shop = inject('shop')
+const route = useRoute()
 const router = useRouter()
 const homeRoute = ref(false)
 const showPage = ref(false)
+const loading = ref(true)
 const routes = router.getRoutes()
 for (let i = 0; i < routes.length; i++) {
     if(routes[i].path === '/'){
@@ -66,27 +68,16 @@ for (let i = 0; i < routes.length; i++) {
 }
 
 const getShopOption = async () => {
-    let storeResponse = await getAllStore()
-    if(!storeResponse.result){
-        tips('门店信息获取失败：' + storeResponse.error.message, 'error')
+    let storeResponse = await request('/shop/store')
+    if(storeResponse.status !== 'success'){
+        tips(storeResponse.error.msg, 'error')
     } else {
-        for (let i = 0; i < storeResponse.content.length;i++){
-            storeResponse.content[i].value = storeResponse.content[i].id
-            storeResponse.content[i].label = storeResponse.content[i].name
-            storeResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_store'].indexOf(storeResponse.content[i].id) < 0)
-        }
         shop.storeOptions = storeResponse.content
     }
-
-    let brandResponse = await getAllBrand()
-    if(!brandResponse.result){
-        tips('品牌信息获取失败：' + brandResponse.error.message, 'error')
+    let brandResponse = await request('/shop/brand')
+    if(brandResponse.status !== 'success'){
+        tips(brandResponse.error.msg, 'error')
     } else {
-        for (let i = 0; i < brandResponse.content.length;i++){
-            brandResponse.content[i].value = brandResponse.content[i].keyword
-            brandResponse.content[i].label = brandResponse.content[i].name + ' ' + brandResponse.content[i].id
-            brandResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_brand'].indexOf(brandResponse.content[i].keyword) < 0)
-        }
         shop.brandOptions = brandResponse.content
     }
 }
@@ -105,19 +96,23 @@ const initSet = () => {
 const loginVerify = async () => {
     user.status = 'verify'
 
-    let token = localStorage.getItem('access_token')
-    if(!token){
-        router.replace('/login')
-        return
+    let routeToken = route.query.access_token
+    if(routeToken) {
+        let response = await request("/user/login/token", {
+            accessToken: routeToken
+        }, 'POST')
+        if(response.status === 'success'){
+            await MessagePlugin.success(getString('loged'))
+        } else {
+            tips(response.error.msg, 'error')
+        }
     }
 
-    let res = await service.api.user.inform(token)
-    if(res.result){
-        user.inform = res.content.user
+    let res = await request('/user/inform')
+    if(res.status === 'success'){
+        user.inform = res.content
         user.status = 'loged'
-        await MessagePlugin.success(getString('welcomeBack') + '！' + user.inform['realname'])
 
-        user.inform.setting = JSON.parse(user.inform.setting) ?? {}
         let set = user.inform.setting
         if(set.store){
             shop.store = set.store
@@ -133,65 +128,12 @@ const loginVerify = async () => {
         }
 
         showPage.value = true
-        const channel = new BroadcastChannel('fixeam_work')
-        channel.postMessage('UserIsLogin')
-        getShopOption()
     } else {
-        MessagePlugin.info(getString('loginFailure'))
         user.status = 'unlog'
-        router.replace('/login')
+        await router.replace('/login')
+        await MessagePlugin.info(getString('loginFailure'))
     }
 }
-
-const route = useRoute()
-const historyRecord = async () => {
-    if(!user.inform || route.name === 'NotFound' || ['/login', '/', '/data/analysis-view'].indexOf(route.path) >= 0){
-        return
-    }
-    let history = user.inform['web_history'] || {
-        menus: [],
-        goods: []
-    }
-
-    for (let i = history.menus.length - 1; i >= 0; i--) {
-        if(history.menus[i].path === route.path){
-            history.menus.splice(i, 1)
-            history.menus.unshift({
-                name: route.name,
-                path: route.path,
-                meta: route.meta
-            })
-
-            user.inform['web_history'] = history
-            await service.api.user.saveUserInform({
-                web_history: history
-            })
-            const channel = new BroadcastChannel('fixeam_work')
-            channel.postMessage('HistoryChange')
-
-            return
-        }
-        if(history.menus[i].name === 'NotFound'){
-            history.menus.splice(i, 1)
-        }
-    }
-
-    history.menus.unshift({
-        name: route.name,
-        path: route.path,
-        meta: route.meta
-    })
-    user.inform['web_history'] = history
-    await service.api.user.saveUserInform({
-        web_history: history
-    })
-
-    const channel = new BroadcastChannel('fixeam_work')
-    channel.postMessage('HistoryChange')
-}
-watch(() => route.name, () => {
-    historyRecord()
-})
 
 let globalConfig = merge(zhConfig)
 const initLangConfig = (lang) => {
@@ -276,13 +218,18 @@ const checkForUpdate = async () => {
 }
 
 onMounted(async () => {
+    let load = await MessagePlugin.loading('正在获取门店和品牌信息', 0)
     await getShopOption()
+    load.close()
+    load = await MessagePlugin.loading('正在验证用户信息', 0)
     await loginVerify()
+    load.close()
+    loading.value = false
+    if (user.status === 'loged') await MessagePlugin.success(getString('welcomeBack') + '！' + user.inform['realName'])
 
     i18n.checkEmpty()
+    if (import.meta.env.DEV) return
     setTimeout(() => {
-        historyRecord()
-
         timer = setInterval(() => {
             checkForUpdate()
         }, 3000)

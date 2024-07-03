@@ -11,12 +11,6 @@ const shop = reactive({
 
 export default shop
 
-export const getAllStore = async () => {
-    let path = '/shop/store'
-    let sign = await apiSign(path)
-    return await request(`${host}${path}?api_sign=${sign}`)
-}
-
 export const createStore= async (id = "", name = "", brand = [], location = "") => {
     let path = '/shop/create-store'
     let sign = await apiSign(path)
@@ -33,12 +27,6 @@ export const removeStore = async (id = "") => {
     let path = '/shop/remove-store'
     let sign = await apiSign(path)
     return await request(`${host}${path}?api_sign=${sign}&access_token=${getToken()}&id=${id}`)
-}
-
-export const getAllBrand = async () => {
-    let path = '/shop/brand'
-    let sign = await apiSign(path)
-    return await request(`${host}${path}?api_sign=${sign}`)
 }
 
 export const createBrand = async (id = "", name = "", keyword = "", suffix = "", logo = "") => {

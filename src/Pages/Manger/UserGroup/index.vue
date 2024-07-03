@@ -3,7 +3,7 @@
         <t-space style="margin-bottom: 12px;">
             <t-button
             @click="() => {
-                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/manage/create_identity') >= 0){
+                if(!user.inform.needAuth || user.inform.permissions.indexOf('api/v1/manage/create_identity') >= 0){
                     visible = 'create'
                     createForm = {}
                     editPermission = []
@@ -39,14 +39,14 @@
         max-height="calc(100vh - 200px)"
         >
             <template #operate="{ row }">
-                <t-space :break-line="true" size="5px" v-if="JSON.parse(row['create_by']).indexOf(user.inform['identity']) >= 0">
+                <t-space :break-line="true" size="5px" v-if="row.createBy.indexOf(user.inform.identity) >= 0">
                     <t-button
                     theme="primary"
                     size="small"
                     @click="() => {
                         visible = 'edit'
                         editId = row.identity
-                        editPermission = JSON.parse(row['api_p'])
+                        editPermission = row.permissions
                     }"
                     >
                         {{ getString('permissionConfig') }}
@@ -97,12 +97,12 @@
 </template>
 
 <script setup>
-import service from "../../../api/service.js"
 import {getString} from "../../../i18n/index.js"
 import {tips} from "../../../hooks/tips.js"
 import PermissionEdit from "./PermissionEdit.vue"
 import CreateForm from "./CreateForm.vue"
 import ConfirmBar from '../../../components/confirmBar.vue'
+import {request} from "../../../api/request.js";
 
 const i18n = inject('i18n')
 const user = inject('user')
@@ -123,8 +123,8 @@ const columns = [
         colKey: 'api_p',
         title: getString('permissionCount'),
         cell: (h, {row}) => {
-            if(row['need_auth']){
-                return JSON.parse(row['api_p']).length
+            if(row.needAuth){
+                return row.permissions.length
             } else {
                 return 'all'
             }
@@ -135,8 +135,13 @@ const columns = [
         colKey: 'create_by',
         title: getString('createBy'),
         cell: (h, {row}) => {
-            return JSON.parse(row['create_by']).join(' -> ')
+            return row.createBy.join(' -> ')
         },
+        align: 'center'
+    },
+    {
+        colKey: 'creator',
+        title: getString('createUser'),
         align: 'center'
     },
     {
@@ -147,8 +152,8 @@ const columns = [
 ]
 const getIdentity = async () => {
     loading.value = true
-    let res = await service.api.userM.identityView()
-    if(res.result){
+    let res = await request('/identity')
+    if(res.status === 'success'){
         identityData.value = res.content
     } else {
         tips(res.error.message, 'error')
@@ -176,9 +181,9 @@ const confirmForm = async () => {
             }
         }
 
-        let response0 = await service.api.userM.createIdentity(createForm.value.identity, createForm.value.name, createForm.value['create_by_identity'])
-        if(!response0.result){
-            tips(response0.error.message, 'error')
+        let response0 = await request('/identity', createForm.value, 'PUT')
+        if(response0.status !== 'success'){
+            tips(response0.error.msg, 'error')
             confirmLoading.value = false
             return
         }
@@ -192,13 +197,16 @@ const confirmForm = async () => {
         }
     }
 
-    let response = await service.api.userM.setIdentityApiPermissions(editId.value, editPermission.value)
-    if(response.result){
+    let response = await request('/identity/permission', {
+        identity: editId.value,
+        permission: editPermission.value
+    }, 'PUT')
+    if(response.status === 'success'){
         tips('操作成功', 'success')
         visible.value = null
         await getIdentity()
     } else {
-        tips(response.error.message, 'error')
+        tips(response.error.msg, 'error')
     }
 
     confirmLoading.value = false
@@ -206,12 +214,14 @@ const confirmForm = async () => {
 const removeLoading = ref(null)
 const removeIdentity = async (id) => {
     removeLoading.value = id
-    let response = await service.api.userM.removeIdentity(id)
-    if(response.result){
+    let response = await request('/identity', {
+        identity: id
+    }, 'DELETE')
+    if(response.status === 'success'){
         tips('操作成功', 'success')
         await getIdentity()
     } else {
-        tips(response.error.message, 'error')
+        tips(response.error.msg, 'error')
     }
     removeLoading.value = null
 }

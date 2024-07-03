@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory }from 'vue-router'
+import { createRouter, createWebHashHistory }from 'vue-router'
 
 const routes = [
     {
@@ -196,18 +196,18 @@ const routes = [
                     keepAlive: true
                 }
             },
-            {
-                path: '/manger/app',
-                name: 'app-manager',
-                component: () => import('./Pages/Manger/App/index.vue'),
-                meta: {
-                    title: "appManage",
-                    icon: 'app',
-                    avatar: 'https://cdn.fixeam.com/tw/colorful/menu.png',
-                    key: '7-3',
-                    keepAlive: true
-                }
-            },
+            // {
+            //     path: '/manger/app',
+            //     name: 'app-manager',
+            //     component: () => import('./Pages/Manger/App/index.vue'),
+            //     meta: {
+            //         title: "appManage",
+            //         icon: 'app',
+            //         avatar: 'https://cdn.fixeam.com/tw/colorful/menu.png',
+            //         key: '7-3',
+            //         keepAlive: true
+            //     }
+            // },
             {
                 path: '/manger/shop',
                 name: 'shop-manager',
@@ -225,7 +225,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 })
 router.beforeEach((to, from) => {

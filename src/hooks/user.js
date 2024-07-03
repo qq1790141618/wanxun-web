@@ -1,8 +1,10 @@
+import { request } from "../api/request.js"
+
 export default reactive({
     status: 'unlog', // unlog | loged | verify
     inform: false,
-    logout: () => {
-        localStorage.removeItem('access_token')
+    logout: async () => {
+        await request('/user/logout', {}, 'POST')
         location.href = location.origin + '/login'
     }
 })

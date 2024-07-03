@@ -20,9 +20,9 @@
             >
                 <t-checkbox
                 v-for="item in shop.storeOptions"
-                :value="item.value"
+                :value="item.id"
                 >
-                    {{ item.label }}
+                    {{ item.name }}
                 </t-checkbox>
             </t-checkbox-group>
             <h3>
@@ -33,9 +33,9 @@
             >
                 <t-checkbox
                 v-for="item in shop.brandOptions"
-                :value="item.value"
+                :value="item.id"
                 >
-                    {{ item.label }}
+                    {{ item.name }}
                 </t-checkbox>
             </t-checkbox-group>
         </div>
@@ -54,6 +54,7 @@ import {getString} from "../../../i18n/index.js"
 import ConfirmBar from "../../../components/confirmBar.vue"
 import service from "../../../api/service.js";
 import {tips} from "../../../hooks/tips.js";
+import {request} from "../../../api/request.js";
 
 const shop = inject('shop')
 
@@ -66,10 +67,10 @@ const allowBrand = ref([])
 const tempRow = ref(null)
 
 const open = (row) => {
-    uid.value = row['uid']
-    allowAllOfShop.value = row['allow_all_shop']
-    allowStore.value = row['allow_store']
-    allowBrand.value = row['allow_brand']
+    uid.value = row.uid
+    allowAllOfShop.value = row.allowAllShop
+    allowStore.value = row.allowStore
+    allowBrand.value = row.allowBrand
     tempRow.value = row
     visible.value = true
 }
@@ -78,32 +79,16 @@ const confirmLoading = ref(false)
 const confirm = async () => {
     confirmLoading.value = true
 
-    if(allowAllOfShop.value !== tempRow['allow_all_shop']){
-        let res = await service.api.userE.setAllShopAllowedStatus(uid.value, allowAllOfShop.value ? 1 : 0)
-        if(!res.result){
-            tips(res.error.message, 'error')
-            confirmLoading.value = false
-            return
-        }
-    }
-
-    if(!allowAllOfShop.value){
-        if(allowStore.value !== tempRow['allow_store']){
-            let res = await service.api.userE.setAllowedStore(uid.value, allowStore.value)
-            if(!res.result){
-                tips(res.error.message, 'error')
-                confirmLoading.value = false
-                return
-            }
-        }
-        if(allowBrand.value !== tempRow['allow_brand']){
-            let res = await service.api.userE.setAllowedBrand(uid.value, allowBrand.value)
-            if(!res.result){
-                tips(res.error.message, 'error')
-                confirmLoading.value = false
-                return
-            }
-        }
+    let res = await request('/user/shopper', {
+        uid: uid.value,
+        allowAllShop: allowAllOfShop.value,
+        allowStore: allowStore.value,
+        allowBrand: allowBrand.value
+    }, 'PUT')
+    if(res.status !== 'success'){
+        tips(res.error.msg, 'error')
+        confirmLoading.value = false
+        return
     }
 
 

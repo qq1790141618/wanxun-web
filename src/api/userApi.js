@@ -17,20 +17,6 @@ export const codeSend = async (target) => {
     let sign = await apiSign(path)
     return await request(`${host}${path}?api_sign=${sign}&target=${target}`)
 }
-export const inform = async (overToken) => {
-    let path = '/user/inform'
-    let sign = await apiSign(path)
-
-    let token = overToken
-    if(!overToken){
-        token = localStorage.getItem('access_token')
-    }
-    if(!token){
-        return
-    }
-
-    return await request(`${host}${path}?api_sign=${sign}&access_token=${token}`)
-}
 
 export const saveUserInform = async (inform) => {
     let path = '/user/edit'

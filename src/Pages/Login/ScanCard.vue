@@ -43,6 +43,9 @@ import QRCodeVue3 from "qrcode-vue3"
 import service from "../../api/service.js"
 import {useRouter} from "vue-router"
 import {getString} from "../../i18n/index.js";
+import {request} from "../../api/request.js";
+import {MessagePlugin} from "tdesign-vue-next";
+import {tips} from "../../hooks/tips.js";
 
 const qrcodeV = ref(null)
 const scanEd = ref(false)
@@ -69,7 +72,7 @@ const connectToSocket = () => {
         console.log(event.data)
         console.log("WebSocket Close")
     }
-    socket.onmessage = function(event) {
+    socket.onmessage = async function(event) {
         console.log(JSON.parse(event.data) || event.data)
         const message = event.data
         const data = JSON.parse(message)
@@ -81,7 +84,14 @@ const connectToSocket = () => {
             scanEd.value = true
         }
         if(data['type'] === 'upload token'){
-            localStorage.setItem('access_token', data['content'])
+            let response = await request("/user/login/token", {
+                accessToken: data['content']
+            }, 'POST')
+            if(response.status === 'success'){
+                await MessagePlugin.success(getString('loged'))
+            } else {
+                tips(response.error.msg, 'error')
+            }
             socket.send(JSON.stringify({
                 type: 'loged',
                 sign: qrcodeV.value

@@ -18,7 +18,6 @@ export default {
         }
     },
     setup(props){
-        const i18n = inject('i18n')
         const chartEl = ref(null)
         const chartOption = ref({
             title: {
@@ -75,8 +74,9 @@ export default {
                 if(!pd[minAva]){
                     pd[minAva] = 0
                 }
-                pd[minAva]++
+                pd[minAva] += chartData[i].salesCount
             }
+            chartOption.value.series[0].data = []
             for (const key in pd) {
                 chartOption.value.series[0].data.push({
                     name: key + '~' + (key * 1 + 100) + getString('yuan'),
