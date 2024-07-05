@@ -81,9 +81,10 @@
 <script setup>
 import {getString} from "../../../i18n/index.js";
 import {tips} from "../../../hooks/tips.js";
-import {createBrand, removeBrand, removeStore, setBrandInfo} from "../../../api/shop.js";
+import {createBrand, removeBrand, setBrandInfo} from "../../../api/shop.js";
 import ConfirmBar from "../../../components/confirmBar.vue";
 import BrandForm from "./BrandForm.vue";
+import {request} from "../../../api/request.js";
 
 const emit = defineEmits(['reload'])
 
@@ -92,18 +93,13 @@ const shop = inject('shop')
 const loading = ref(false)
 const columns = [
     {
-        colKey: 'keyword',
-        title:  getString('brandKeyword'),
+        colKey: 'id',
+        title:  getString('brandId'),
         align: 'center'
     },
     {
         colKey: 'name',
         title:  getString('brandName'),
-        align: 'center'
-    },
-    {
-        colKey: 'id',
-        title:  getString('storeId'),
         align: 'center'
     },
     {
@@ -135,16 +131,9 @@ const confirmForm = async () => {
         }
     }
 
-    let response
-    if(visible.value === 'create') {
-        response = await createBrand(form.value['id'], form.value['name'], form.value['keyword'], form.value['suffix'], form.value['logo'])
-    }
-    if(visible.value === 'edit') {
-        response = await setBrandInfo(form.value['id'], form.value['name'], form.value['keyword'], form.value['suffix'], form.value['logo'])
-    }
-
-    if(!response.result){
-        tips(response.error.message, 'error')
+    let response = await request('/shop/brand', form.value, 'PUT')
+    if(response.status !== 'success'){
+        tips(response.error.msg, 'error')
         confirmLoading.value = false
     } else {
         tips('操作成功', 'success')
@@ -159,9 +148,9 @@ const confirmForm = async () => {
 const removeLoading = ref(null)
 const remove = async (id) => {
     removeLoading.value = id
-    let res = await removeBrand(id)
-    if(!res.result){
-        tips(res.error.message, 'error')
+    let response = await request('/shop/brand', { id }, 'DELETE')
+    if(response.status !== 'success'){
+        tips(res.error.msg, 'error')
     } else {
         tips('操作成功', 'success')
         emit('reload')

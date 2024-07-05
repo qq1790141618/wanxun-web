@@ -4,11 +4,11 @@
         <Menu />
         <div class="operations-container">
             <t-space size="5px">
-                <SearchBox
-                @search="(value) => {
-                    searchResult.search(value)
-                }"
-                />
+<!--                <SearchBox-->
+<!--                @search="(value) => {-->
+<!--                    searchResult.search(value)-->
+<!--                }"-->
+<!--                />-->
                 <t-tooltip content="Github">
                     <t-button variant="text" shape="square" @click="viewOnGithub">
                         <template #icon>
@@ -127,9 +127,9 @@
             </t-space>
         </t-space>
     </t-dialog>
-    <SearchResult
-    ref="searchResult"
-    />
+<!--    <SearchResult-->
+<!--    ref="searchResult"-->
+<!--    />-->
 </template>
 
 <script setup>

@@ -342,5 +342,6 @@
     "changeUserShopPermissions": "ユーザー店舗ブランド権限の変更",
     "storePermissions": "店舗権限",
     "brandPermissions": "ブランド権限",
-    "allowAllPermissions": "すべての権限を許可"
+    "allowAllPermissions": "すべての権限を許可",
+    "deductions": "デパートのボタン"
 }

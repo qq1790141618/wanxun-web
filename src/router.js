@@ -133,11 +133,11 @@ const routes = [
         ]
     },
     {
-        path: '/import',
-        name: 'import',
+        path: '/task',
+        name: 'task',
         component: () => import('./Pages/Import/index.vue'),
         meta: {
-            title: 'import',
+            title: 'taskCenter',
             icon: 'upload',
             avatar: 'https://cdn.fixeam.com/tw/colorful/import.png',
             key: '4',

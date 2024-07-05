@@ -342,5 +342,6 @@
     "changeUserShopPermissions": "사용자 점포 브랜드 권한 수정",
     "storePermissions": "점포 권한",
     "brandPermissions": "브랜드 권한",
-    "allowAllPermissions": "모든 권한 허용"
+    "allowAllPermissions": "모든 권한 허용",
+    "deductions": "백화점 매점"
 }

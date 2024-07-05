@@ -25,11 +25,14 @@ export const request = (path, body = {}, method = 'GET', contentType = 'applicat
         let sign = await apiSign(path)
         path += `?api_secret=${secret}&api_sign=${sign}`
         if(method !== 'GET' && method !== 'HEAD' && method !== 'DELETE'){
-            options.body = JSON.stringify(body)
+            options.body = contentType === 'application/json' ? JSON.stringify(body) : body
         } else {
             for (const bodyKey in body) {
                 path += `&${ bodyKey }=${ body[bodyKey] }`
             }
+        }
+        if (!contentType) {
+            delete options.headers["Content-Type"]
         }
 
         fetch(host + path, options)

@@ -60,8 +60,7 @@
                 <OpenAuthentication
                 v-if="current === 1"
                 action="ChangeMailBind"
-                @verified="(token) => {
-                    authToken = token
+                @verified="() => {
                     current = 2
                 }"
                 />
@@ -130,8 +129,7 @@ import OpenAuthentication from './OpenAuthentication.vue'
 import {getString} from "../../i18n/index.js"
 import {DialogPlugin, MessagePlugin} from "tdesign-vue-next"
 import {tips} from "../../hooks/tips.js"
-import service from "../../api/service.js"
-import {getToken} from "../../hooks/user.js"
+import {request} from "../../api/request.js";
 
 const user = inject('user')
 const serve = inject('serve')
@@ -203,7 +201,6 @@ const onNewMailChange = (value) => {
 }
 
 const changeLoading = ref(false)
-const authToken = ref(null)
 const pattern = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 
 const changeToNew = async () => {
@@ -222,16 +219,13 @@ const changeToNew = async () => {
 
     changeLoading.value = true
 
-    let res = await service.api.userS.changeBind(authToken.value, 'mail', newMail.value, verifyId.value, code.value)
-    if(res.result){
+    let res = await request('/account/change/mail', {
+        mail: newMail.value, id: verifyId.value, code: code.value
+    })
+    if(res.status === 'success'){
         await MessagePlugin.success(getString('editSuccess'))
+        user.inform.mail = newMail.value
         current.value++
-
-        service.api.user.inform(getToken())
-            .then(res => {
-                user.inform = res.content.user
-                localStorage.setItem('user', JSON.stringify(user.inform))
-            })
     } else {
         tips(res.error.message, 'error')
     }
@@ -244,8 +238,8 @@ const codeSendLd = ref(false)
 const sendVerifyCode = async () => {
     codeSendLd.value = true
 
-    let response = await service.api.user.codeSend(newMail.value)
-    if(response.result){
+    let response = await request('/user/sendcode', { target: newMail.value })
+    if(response.status === 'success'){
         await MessagePlugin.success(getString('sended'))
         codeSendCd.value = 60
         let timer = setInterval(() => {

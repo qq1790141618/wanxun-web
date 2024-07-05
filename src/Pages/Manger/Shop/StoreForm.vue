@@ -27,11 +27,22 @@
             <t-checkbox-group v-model="formData.brand" @change="$emit('update:form', formData)">
                 <t-checkbox
                     v-for="item in shop.brandOptions"
-                    :value="item['id']"
+                    :value="item.id"
                 >
-                    {{ item['name'] }}
+                    {{ item.name }}
                 </t-checkbox>
             </t-checkbox-group>
+        </t-form-item>
+        <t-form-item :label="getString('deductions')" name="brand">
+            <t-input-number
+                v-model="formData.deductions"
+                @change="$emit('update:form', formData)"
+                :step="0.02"
+                :max="0.5"
+                :min="0.02"
+            >
+                {{ item.name }}
+            </t-input-number>
         </t-form-item>
         <t-form-item :label="getString('storeLocation')" name="location">
             <div style="width: 100%;">
@@ -75,11 +86,12 @@ let formData = reactive({
     id: null,
     name: null,
     brand: [],
-    location: null
+    location: null,
+    deductions: 0.2
 })
 const FORM_RULES = {
-    id: [{ required: true }],
-    name: [{ required: true }]
+    id: [{ required: true, trigger: 'blur' }],
+    name: [{ required: true, trigger: 'blur' }]
 }
 const locationOptions = ref([])
 let timer

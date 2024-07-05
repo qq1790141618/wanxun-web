@@ -8,15 +8,15 @@
                 <t-card :bordered="false">
                     <div class="user-card">
                         <t-image-viewer
-                        :images="[user.inform.headsrc]"
+                        :images="[user.inform.avatar]"
                         >
                             <template #trigger="{ open }">
                                 <t-image
-                                :src="user.inform.headsrc"
+                                :src="user.inform.avatar"
                                 class="user-avatar"
                                 shape="circle"
                                 @click="() => {
-                                    if(user.inform.headsrc){
+                                    if(user.inform.avatar){
                                         open
                                     }
                                 }"
@@ -27,7 +27,7 @@
                                         shape="circle"
                                         class="edit-avatar-button"
                                         @click.stop="() => {
-                                            editAvatarDialog.open(user.inform.headsrc)
+                                            editAvatarDialog.open(user.inform.avatar)
                                         }"
                                         >
                                             <template #icon>
@@ -85,25 +85,17 @@
                         <t-col :span="3">{{ user.inform.mail }}</t-col>
                         <t-col :span="3" class="description-title">{{ getString('hiredate') }}</t-col>
                         <t-col :span="3" class="description-title">{{ getString('birthday') }}</t-col>
-                        <t-col :span="6" class="description-title">{{ getString('location') }}</t-col>
-                        <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.hiredate }}</t-col>
+                        <t-col :span="6"></t-col>
+                        <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.hireDate }}</t-col>
                         <t-col :span="3" v-if="informEdit.isEdit">
-                            <t-date-picker v-model="informEdit.data.hiredate" size="small" :clearable="true" style="width: 100%;"></t-date-picker>
+                            <t-date-picker v-model="informEdit.data.hireDate" size="small" :clearable="true" style="width: 100%;"></t-date-picker>
                         </t-col>
                         <t-col :span="3" v-if="!informEdit.isEdit">{{ user.inform.birthday }}</t-col>
                         <t-col :span="3" v-if="informEdit.isEdit">
                             <t-date-picker v-model="informEdit.data.birthday" size="small" :clearable="true" style="width: 100%;"></t-date-picker>
                         </t-col>
                         <t-col :span="6" v-if="!informEdit.isEdit">{{ user.inform.locationDisplay }}</t-col>
-                        <t-col :span="3" v-if="informEdit.isEdit">
-                            <t-cascader
-                            v-model="informEdit.data.location"
-                            :options="options"
-                            :clearable="true"
-                            :load="initOptions"
-                            size="small"
-                            />
-                        </t-col>
+                        <t-col :span="6"></t-col>
                         <t-col :span="12" v-if="informEdit.isEdit">
                             <confirmBar
                             :confirmLoading="informEdit.loading"
@@ -115,13 +107,6 @@
                         </t-col>
                     </t-row>
                 </t-card>
-<!--                <div-->
-<!--                class="card-container"-->
-<!--                style="margin-top: 12px;"-->
-<!--                >-->
-<!--                    <h3>{{ getContent('colleagueInfo') }}</h3>-->
-<!--                    <ColleagueView />-->
-<!--                </div>-->
             </t-col>
             <t-col :span="3">
                 <t-card
@@ -183,11 +168,11 @@ import confirmBar from '../../components/confirmBar.vue'
 import EditPassword from './EditPassword.vue'
 import EditMail from './EditMail.vue'
 import EditPhone from './EditPhone.vue'
-import ColleagueView from './ColleagueView.vue'
 import { getString } from "../../i18n/index.js"
 import { MessagePlugin } from "tdesign-vue-next"
-import service from "../../api/service.js";
-import {tips} from "../../hooks/tips.js";
+import service from "../../api/service.js"
+import {tips} from "../../hooks/tips.js"
+import {request} from "../../api/request.js";
 
 const i18n = inject('i18n')
 const user = inject('user')
@@ -206,94 +191,33 @@ const informEdit = ref({
     done: async () => {
         informEdit.value.loading = true
 
-        let res = await service.api.user.saveUserInform({
+        let res = await request('/user/inform', {
             nickname: informEdit.value.data['nickname'],
-            hiredate: informEdit.value.data['hiredate'],
-            birthday: informEdit.value.data['birthday'],
-            location: informEdit.value.data['location']
-        })
+            hireDate: informEdit.value.data['hireDate'],
+            birthday: informEdit.value.data['birthday']
+        }, 'PUT')
 
-        if(!res.result){
-            tips(res.error.message, 'error')
+        if(res.status !== 'success'){
+            tips(res.error.msg, 'error')
             informEdit.value.loading = false
             return
         }
 
         user.inform.nickname = informEdit.value.data['nickname']
-        user.inform.hiredate = informEdit.value.data['hiredate']
+        user.inform.hireDate = informEdit.value.data['hireDate']
         user.inform.birthday = informEdit.value.data['birthday']
-        user.inform.location = informEdit.value.data['location']
 
         informEdit.value.loading = false
         informEdit.value.isEdit = false
 
         await MessagePlugin.success(getString('editSuccess'))
-        await initLocation()
     }
 })
 
-const initLocation = async () => {
-    let res = await service.api.userS.locationFormat(user.inform.location)
-    if(res.result){
-        user.inform.locationDisplay = res.content
-    } else {
-        tips(res.error.message, 'error')
-    }
-}
-
-const initOptions = async (node) => {
-    return new Promise(async (resolve) => {
-        let level = ['countries', 'states', 'cities']
-        let res = await service.api.userS.locationOptions(level[node.level + 1], node.value)
-        if(!res.result){
-            tips(res.error.message, 'error')
-            return resolve([])
-        }
-        return resolve(res.content)
-    })
-}
-
 const initEditData = () => {
     informEdit.value.data.nickname = user.inform.nickname
-    informEdit.value.data.hiredate = user.inform.hiredate
+    informEdit.value.data.hireDate = user.inform.hireDate
     informEdit.value.data.birthday = user.inform.birthday
-    informEdit.value.data.location = user.inform.location
-}
-
-const initUserLocationOptions = async () => {
-    let location = user.inform.location.split('-')
-    location = location.map(item => parseInt(item))
-
-    let level = ['countries', 'states', 'cities']
-    let res = await service.api.userS.locationOptions(level[0])
-    if(!res.result){
-        tips(res.error.message, 'error')
-        return
-    }
-    options.value = res.content
-
-    for (let i = 0; i < options.value.length; i++) {
-        if(options.value[i].value === location[0]){
-            let res1 = await service.api.userS.locationOptions(level[1], location[0])
-            if(!res1.result){
-                tips(res1.error.message, 'error')
-                return
-            }
-            options.value[i].children = res1.content
-
-            for (let r = 0; r < options.value[i].children.length; r++) {
-                let parentId = location[0] + '-' + location[1]
-                if(options.value[i].children[r].value === parentId){
-                    let res2 = await service.api.userS.locationOptions(level[2], parentId)
-                    if(!res2.result){
-                        tips(res2.error.message, 'error')
-                        return
-                    }
-                    options.value[i].children[r].children = res2.content
-                }
-            }
-        }
-    }
 }
 
 const bubbleShooterHdClick = () => {
@@ -303,18 +227,6 @@ const bubbleShooterHdClick = () => {
         bubbleShooterHd.value = 0
     }
 }
-
-watch(() => i18n.language, () => {
-    initLocation()
-    initUserLocationOptions()
-})
-
-onMounted(() => {
-    setTimeout(() => {
-        initLocation()
-        initUserLocationOptions()
-    }, 300)
-})
 </script>
 
 <style>

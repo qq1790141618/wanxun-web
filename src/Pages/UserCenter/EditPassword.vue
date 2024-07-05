@@ -59,8 +59,7 @@
                 <OpenAuthentication
                 v-if="current === 1"
                 action="ChangePassword"
-                @verified="(token) => {
-                    authToken = token
+                @verified="() => {
                     current = 2
                 }"
                 />
@@ -99,6 +98,7 @@ import {getString} from "../../i18n/index.js";
 import {DialogPlugin, MessagePlugin} from "tdesign-vue-next";
 import {tips} from "../../hooks/tips.js";
 import service from "../../api/service.js";
+import {request} from "../../api/request.js";
 
 const user = inject('user')
 
@@ -134,7 +134,6 @@ const close = () => {
 
 const newPassword  = ref('')
 const changeLoading = ref(false)
-const authToken = ref(null)
 
 const changeToNew = async () => {
     if(newPassword.value.length < 6){
@@ -143,12 +142,12 @@ const changeToNew = async () => {
     }
     changeLoading.value = true
 
-    let res = await service.api.userS.changePassword(authToken.value, newPassword.value)
-    if(res.result){
+    let res = await request('/account/change/password', { password: newPassword.value })
+    if(res.status === 'success'){
         await MessagePlugin.success(getString('editSuccess'))
         current.value++
     } else {
-        tips(res.error.message, 'error')
+        tips(res.error.msg, 'error')
     }
 
     changeLoading.value = false

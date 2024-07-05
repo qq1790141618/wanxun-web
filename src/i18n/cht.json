@@ -323,5 +323,6 @@
     "changeUserShopPermissions": "修改用戶店鋪品牌許可權",
     "storePermissions": "店鋪許可權",
     "brandPermissions": "品牌許可權",
-    "allowAllPermissions": "允許全部許可權"
+    "allowAllPermissions": "允許全部許可權",
+    "deductions": "商場扣點"
 }

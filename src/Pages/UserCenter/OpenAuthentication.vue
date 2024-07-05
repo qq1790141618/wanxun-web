@@ -65,6 +65,7 @@
 import {getString} from "../../i18n/index.js"
 import {tips} from "../../hooks/tips.js"
 import service from "../../api/service.js"
+import {request} from "../../api/request.js";
 
 const props = defineProps(['action'])
 const emit = defineEmits(['verified'])
@@ -80,10 +81,10 @@ const codeCrash = ref(0)
 const sendVCode = async () => {
     let type = mode.value === 1 ? 'phone' : 'mail'
     codeSending.value = true
-    let res = await service.api.userS.sendCodeFromSelf(type)
+    let res = await request('/account/sendcode/self', { mode: type })
 
-    if(!res.result){
-        tips(res.error.message, 'error')
+    if(res.status !== 'success'){
+        tips(res.error.msg, 'error')
     } else {
         vId.value = res.content['verify_id']
         codeCrash.value = 60
@@ -107,14 +108,14 @@ const check = async () => {
         }
 
         checking.value = true
-        let res = await service.api.userS.verifyPassword(oldPassword.value)
-        if(!res.result){
-            tips(res.error.message, 'error')
+        let res = await request('/account/verify/password', { password: oldPassword.value })
+        if(res.status !== 'success'){
+            tips(res.error.msg, 'error')
             checking.value = false
             return
         }
 
-        emit('verified', res.content['auth_token'])
+        emit('verified')
         checking.value = false
         return
     }
@@ -130,15 +131,20 @@ const check = async () => {
 
     checking.value = true
     let type = mode.value === 1 ? 'phone' : 'mail'
-    let res = await service.api.userS.verifyCodeToSet(type, vId.value, code.value, props['action'])
-    if(!res.result){
-        tips(res.error.message, 'error')
+    let res = await request('/account/verify/code', {
+        mode: type,
+        id: vId.value,
+        code: code.value,
+        operate: props['action']
+    })
+    if(res.status !== 'success'){
+        tips(res.error.msg, 'error')
         checking.value = false
         return
     }
 
     checking.value = false
-    emit('verified', res.content['auth_token'])
+    emit('verified')
 }
 
 onMounted(() => {

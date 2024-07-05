@@ -11,9 +11,21 @@
                 {{ getString('refresh') }}
             </t-button>
         </t-space>
-        <t-loading class="multiple-table" :text="getString('loading')" :loading="loading" size="small" :indicator="false">
-            <StoreView @reload="getShopOption" />
-            <BrandView @reload="getShopOption" />
+        <t-loading
+            class="multiple-table"
+            :text="getString('loading')"
+            :loading="loading"
+            size="small"
+            :indicator="false"
+        >
+            <t-row :gutter="20">
+                <t-col :span="7">
+                    <StoreView @reload="getShopOption" />
+                </t-col>
+                <t-col :span="5">
+                    <BrandView @reload="getShopOption" />
+                </t-col>
+            </t-row>
         </t-loading>
     </t-card>
 </template>
@@ -23,7 +35,7 @@ import {tips} from "../../../hooks/tips.js"
 import {getString} from "../../../i18n/index.js"
 import StoreView from "./StoreView.vue"
 import BrandView from "./BrandView.vue"
-import {getAllBrand, getAllStore} from "../../../api/shop.js";
+import {request} from "../../../api/request.js"
 
 const shop = inject('shop')
 const user = inject('user')
@@ -31,27 +43,16 @@ const loading = ref(false)
 const getShopOption = async () => {
     loading.value = true
 
-    let storeResponse = await getAllStore()
-    if(!storeResponse.result){
-        tips('门店信息获取失败：' + storeResponse.error.message, 'error')
+    let storeResponse = await request('/shop/store')
+    if(storeResponse.status !== 'success'){
+        tips(storeResponse.error.msg, 'error')
     } else {
-        for (let i = 0; i < storeResponse.content.length;i++){
-            storeResponse.content[i].value = storeResponse.content[i].id
-            storeResponse.content[i].label = storeResponse.content[i].name
-            storeResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_store'].indexOf(storeResponse.content[i].id) < 0)
-        }
         shop.storeOptions = storeResponse.content
     }
-
-    let brandResponse = await getAllBrand()
-    if(!brandResponse.result){
-        tips('品牌信息获取失败：' + brandResponse.error.message, 'error')
+    let brandResponse = await request('/shop/brand')
+    if(brandResponse.status !== 'success'){
+        tips(brandResponse.error.msg, 'error')
     } else {
-        for (let i = 0; i < brandResponse.content.length;i++){
-            brandResponse.content[i].value = brandResponse.content[i].keyword
-            brandResponse.content[i].label = brandResponse.content[i].name + ' ' + brandResponse.content[i].id
-            brandResponse.content[i].disabled = !user.inform || (!user.inform['allow_all_shop'] && user.inform['allow_brand'].indexOf(brandResponse.content[i].keyword) < 0)
-        }
         shop.brandOptions = brandResponse.content
     }
 
@@ -63,13 +64,5 @@ const getShopOption = async () => {
 .user-group-card {
     max-width: calc(100vw - 30px);
     margin: 15px auto;
-}
-.multiple-table {
-    padding: 12px;
-    display: flex;
-    gap: 28px;
-}
-.multiple-table > div {
-    flex: 1;
 }
 </style>

@@ -85,6 +85,7 @@ import {tips} from "../../../hooks/tips.js";
 import ConfirmBar from "../../../components/confirmBar.vue";
 import StoreForm from "./StoreForm.vue";
 import {createStore, removeStore, setStoreInfo} from "../../../api/shop.js";
+import {request} from "../../../api/request.js";
 
 const emit = defineEmits(['reload'])
 
@@ -117,9 +118,15 @@ const columns = [
         }
     },
     {
-        colKey: 'location',
-        title:  getString('storeLocation'),
+        colKey: 'name',
+        title:  getString('storeName'),
         align: 'center'
+    },
+    {
+        colKey: 'deductions',
+        title:  getString('deductions'),
+        align: 'center',
+        width: 120
     },
     {
         colKey: 'operate',
@@ -145,16 +152,9 @@ const confirmForm = async () => {
         }
     }
 
-    let response
-    if(visible.value === 'create') {
-        response = await createStore(form.value['id'], form.value['name'], form.value['brand'], form.value['location'])
-    }
-    if(visible.value === 'edit') {
-        response = await setStoreInfo(form.value['id'], form.value['name'], form.value['brand'], form.value['location'])
-    }
-
-    if(!response.result){
-        tips(response.error.message, 'error')
+    let response = await request('/shop/store', form.value, 'PUT')
+    if(response.status !== 'success'){
+        tips(response.error.msg, 'error')
         confirmLoading.value = false
     } else {
         tips('操作成功', 'success')
@@ -169,9 +169,9 @@ const confirmForm = async () => {
 const removeLoading = ref(null)
 const remove = async (id) => {
     removeLoading.value = id
-    let res = await removeStore(id)
-    if(!res.result){
-        tips(res.error.message, 'error')
+    let response = await request('/shop/store', { id }, 'DELETE')
+    if(response.status !== 'success'){
+        tips(res.error.msg, 'error')
     } else {
         tips('操作成功', 'success')
         emit('reload')

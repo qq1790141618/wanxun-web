@@ -342,5 +342,6 @@
     "changeUserShopPermissions": "Change User Shop Permissions",
     "storePermissions": "Store Permissions",
     "brandPermissions": "Brand Permissions",
-    "allowAllPermissions": "Allow All Permissions"
+    "allowAllPermissions": "Allow All Permissions",
+    "deductions": "Shopping Mall Deduction"
 }

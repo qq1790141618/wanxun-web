@@ -82,6 +82,7 @@ import service from "../../api/service.js"
 import {MessagePlugin} from "tdesign-vue-next"
 import {getString} from "../../i18n/index.js"
 import {tips} from "../../hooks/tips.js"
+import {request} from "../../api/request.js";
 
 const emit = defineEmits(['done'])
 const user = inject('user')
@@ -113,24 +114,27 @@ const confirm = async () => {
     loading.value = true
 
     let file = await cropper.getFile()
-    let fileUploaded = await service.api.user.imageUpload(file)
-    if(!fileUploaded.result){
+    let f = new FormData
+    f.append('name', file.name)
+    f.append('file', file)
+    let response = await request('/file/upload', f, 'POST', false)
+    if(response.status !== 'success'){
         loading.value = false
-        tips(fileUploaded.error.message, 'error')
+        tips(response.error.msg, 'error')
         return
     }
 
-    let res = await service.api.user.saveUserInform({
-        headsrc: fileUploaded.content.href
-    })
+    let res = await request('/user/inform', {
+        avatar: response.content
+    }, 'PUT')
 
-    if(res.result){
-        user.inform.headsrc = fileUploaded.content.href
+    if(response.status === 'success'){
+        user.inform.avatar = response.content
         visible.value = false
         emit('done')
         await MessagePlugin.success(getString('editSuccess'))
     } else {
-        tips(res.error.message, 'error')
+        tips(response.error.msg, 'error')
     }
 
     loading.value = false
