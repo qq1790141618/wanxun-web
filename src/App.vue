@@ -32,12 +32,10 @@
                 <component :is="Component" :key="$route.meta.key" v-if="!$route.meta.keepAlive"/>
             </router-view>
         </div>
-        <update-info />
     </t-config-provider>
 </template>
 
 <script setup>
-import UpdateInfo from './components/UpdateInfo.vue'
 import headerComponent from './components/header.vue'
 import merge from 'lodash/merge'
 import zhConfig from 'tdesign-vue-next/es/locale/zh_CN'

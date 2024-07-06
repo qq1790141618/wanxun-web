@@ -14,7 +14,7 @@
         <template #typeshow="{ row }">
             <span v-if="row.type === 'import'"><t-icon name="file-import"></t-icon> {{ getString('import') }}</span>
             <span v-if="row.type === 'export'"><t-icon name="file-export"></t-icon> {{ getString('export') }}</span>
-            <span v-if="row.type === 'analysis'"><t-icon name="bar-chart"></t-icon>&nbsp;{{ getString('analysis') }}</span>
+            <span v-if="row.type === 'analysis'"><t-icon name="bar-chart"></t-icon> {{ getString('analysis') }}</span>
         </template>
         <template #subtypeshow="{ row }">
             <span v-if="row.subType === 'SkuInfo'"><t-icon name="barcode"></t-icon>&nbsp;{{ getString('skuInformTable') }}</span>
@@ -90,12 +90,13 @@
 
 <script setup>
 import ErrorDialog from './ErrorDialog.vue'
-import service from "../../api/service.js"
-import {tips} from "../../hooks/tips.js"
-import {NotifyPlugin} from "tdesign-vue-next"
-import {getString, getStringAsync} from "../../i18n/index.js"
+import { tips } from "../../hooks/tips.js"
+import { NotifyPlugin } from "tdesign-vue-next"
+import { getString } from "../../i18n/index.js"
+import { request } from "../../api/request.js"
 
 const props = defineProps(['data', 'loading'])
+const emit = defineEmits(['reload'])
 const user = inject('user')
 
 const columns = [
@@ -136,6 +137,11 @@ const columns = [
         align: 'center'
     },
     {
+        title: getString('useTime') + '/s',
+        colKey: 'seconds',
+        align: 'center'
+    },
+    {
         title: getString('result'),
         colKey: 'resultshow',
         align: 'center'
@@ -167,7 +173,7 @@ const removeTask = async (row) => {
         return
     }
 
-    if(row.user !== user.inform.uid){
+    if(row.creator !== user.inform.uid){
         await NotifyPlugin.error({
             title: getString('removeFail'),
             content: getString('canNotRemoveTaskNotCreateBySelf')
@@ -175,17 +181,17 @@ const removeTask = async (row) => {
         return
     }
 
-    let res = await service.api.imports.remove(row.id)
-    if(res.result){
+    let res = await request('/import', { id: row.id }, 'DELETE')
+    if(res.status === 'success'){
+        emit('reload')
         tips('移除成功', 'success')
     } else {
-        tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+        tips(res.error.msg, 'error')
     }
 }
 
 const errorDialog = ref(null)
 const showError = (error) => {
-    var error = JSON.parse(error)
     errorDialog.value.open(error)
 }
 

@@ -19,10 +19,10 @@
             :indicator="false"
         >
             <t-row :gutter="20">
-                <t-col :span="7">
+                <t-col :span="6">
                     <StoreView @reload="getShopOption" />
                 </t-col>
-                <t-col :span="5">
+                <t-col :span="6">
                     <BrandView @reload="getShopOption" />
                 </t-col>
             </t-row>

@@ -20,15 +20,17 @@ const open = (error) => {
 const data = ref([])
 const columns = ref([
     {
-        colKey: 'reason',
-        title: getString('errorInform'),
-        width: 200
+        colKey: 'item',
+        title: getString('stackInform'),
+        width: 160
     },
     {
-        colKey: 'item',
-        title: getString('stackInform')
+        colKey: 'reason',
+        title: getString('errorInform')
     }
 ])
+
+defineExpose({ open })
 </script>
 
 <style>

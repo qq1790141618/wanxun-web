@@ -8,27 +8,31 @@
     >
         <t-form-item :label="getString('brandId')" name="id">
             <t-input-number
-            v-model="formData.id"
-            @change="$emit('update:form', formData)"
-            style="width: 270px;"
-            theme="normal"
-            :max="999999"
-            :disabled="type === 'edit'"
+                v-model="formData.id"
+                @change="$emit('update:form', formData)"
+                theme="normal"
+                :disabled="type === 'edit'"
             />
         </t-form-item>
         <t-form-item :label="getString('brandName')" name="name">
             <t-input
                 v-model="formData.name"
                 @change="$emit('update:form', formData)"
-                style="width: 270px;"
                 maxlength="50"
+            />
+        </t-form-item>
+        <t-form-item :label="getString('brandKeyword')" name="keyword" :help="getString('brandKeywordTip')">
+            <t-input
+                v-model="formData.keyword"
+                @change="$emit('update:form', formData)"
+                maxlength="5"
+                :show-limit-number="true"
             />
         </t-form-item>
         <t-form-item :label="getString('brandBarcodePrefix')" name="suffix">
             <t-input
                 v-model="formData.suffix"
                 @change="$emit('update:form', formData)"
-                style="width: 270px;"
                 maxlength="2"
                 :show-limit-number="true"
             />
@@ -76,6 +80,7 @@ const FORM_RULES = {
     id: [{ required: true, trigger: 'blur' }],
     name: [{ required: true, trigger: 'blur' }],
     suffix: [{ required: true, trigger: 'blur' }],
+    keyword: [{ required: true, trigger: 'blur' }],
     logo: [{ required: true, trigger: 'blur' }]
 }
 const confirm = async () => {

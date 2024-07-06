@@ -42,6 +42,7 @@ import {NotifyPlugin} from "tdesign-vue-next";
 import service from "../../api/service.js";
 import {tips} from "../../hooks/tips.js";
 import {getString} from "../../i18n/index.js";
+import {request} from "../../api/request.js";
 
 const show = ref(false)
 const dateFrom = ref(null)
@@ -57,11 +58,16 @@ const open = () => {
 
 const removeOrder = async () => {
     loading.value = true
-    let res = await service.api.imports.removeOrder(dateFrom.value)
-    if(res.result){
-        tips(`删除成功, 总计删除${ res.affected }个订单记录`, 'success')
+    let res = await request('/order', {
+        storeId: shop.store,
+        branId: shop.brand,
+        from: dateFrom.value,
+        to: dayjs().format('YYYY-MM-DD')
+    }, 'DELETE')
+    if(res.status === 'success'){
+        tips(`删除成功, 总计删除${ res.content.affect }个订单记录`, 'success')
     } else {
-        tips(res.message, 'error')
+        tips(res.error.msg, 'error')
     }
     loading.value = false
     show.value = false

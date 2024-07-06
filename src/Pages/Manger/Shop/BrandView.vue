@@ -103,6 +103,11 @@ const columns = [
         align: 'center'
     },
     {
+        colKey: 'keyword',
+        title:  getString('brandKeyword'),
+        align: 'center'
+    },
+    {
         colKey: 'suffix',
         title:  getString('brandBarcodePrefix'),
         align: 'center'

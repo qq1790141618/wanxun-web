@@ -138,7 +138,7 @@ const routes = [
         component: () => import('./Pages/Import/index.vue'),
         meta: {
             title: 'taskCenter',
-            icon: 'upload',
+            icon: 'task',
             avatar: 'https://cdn.fixeam.com/tw/colorful/import.png',
             key: '4',
             keepAlive: true,

@@ -357,5 +357,8 @@
     "done": "完成",
     "success": "成功",
     "fail": "失败",
-    "evenDown": "未完成"
+    "evenDown": "未完成",
+    "migration": "数据迁移",
+    "useTime": "执行总耗时",
+    "brandKeywordTip": "在商品信息中一定会出现的文字，用于匹配商品时使用"
 }

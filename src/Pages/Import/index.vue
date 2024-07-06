@@ -3,6 +3,7 @@
         <t-card :bordered="false">
             <div class="headbar">
                 <t-upload
+                    v-model:files="fList"
                     :accept="allowType.join(',')"
                     :size-limit="{
                         size: allowSize,
@@ -29,7 +30,7 @@
                 </t-button>
                 <t-dropdown
                     :options="[
-                        { content: getString('skuImportTemplate'), value: 'https://cdn.fixeam.com/tw/template/SKU信息导入模板.xlsx' }
+                        { content: getString('skuImportTemplate'), value: 'https://cdn.fixeam.com/tw/SKU信息导入模板.xlsx' }
                     ]"
                     trigger="hover"
                     @click="(context) => {
@@ -70,7 +71,11 @@
                 </t-popup>
             </div>
             <div id="content-table">
-                <list-display :data="data" :loading="loading" />
+                <list-display
+                    :data="data"
+                    :loading="loading"
+                    @reload="getData"
+                />
                 <t-pagination
                     size="small"
                     :disabled="loading"
@@ -112,6 +117,7 @@ const i18n = inject('i18n')
 const user = inject('user')
 const shop = inject('shop')
 const removeOrder = ref(null)
+const fList = ref([])
 
 const data = ref([])
 const loading = ref(false)
@@ -186,6 +192,7 @@ const create = async (files) => {
         resultDialog.value.show = true
     }
 
+    fList.value = []
     createLoading.value = false
 }
 
