@@ -3,13 +3,9 @@
         <t-space style="margin-bottom: 12px;">
             <t-button
             @click="() => {
-                if(!user.inform.needAuth || user.inform.permissions.indexOf('api/v1/manage/create_identity') >= 0){
-                    visible = 'create'
-                    createForm = {}
-                    editPermission = []
-                } else {
-                    tips('权限不足', 'error')
-                }
+                visible = 'create'
+                createForm = {}
+                editPermission = []
             }"
             >
                 <template #icon>

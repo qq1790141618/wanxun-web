@@ -1,7 +1,7 @@
 <template>
     <t-card :bordered="false">
         <template #title>
-            <img :src="shop.brandOptions.filter(item => item.value === shop.brand)[0].logo" height="20"  alt="">
+            <img :src="shop.brandOptions.filter(item => item.id === shop.brand)[0].logo" height="20"  alt="">
         </template>
         <template #actions>
             {{ dayjs().subtract(1, 'day').format('YYYY-MM-DD') }}

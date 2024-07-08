@@ -61,8 +61,8 @@ const removeOrder = async () => {
     let res = await request('/order', {
         storeId: shop.store,
         branId: shop.brand,
-        from: dateFrom.value,
-        to: dayjs().format('YYYY-MM-DD')
+        from: dateFrom.value + ' 00:00:00',
+        to: dayjs().format('YYYY-MM-DD') + ' 23:59:59'
     }, 'DELETE')
     if(res.status === 'success'){
         tips(`删除成功, 总计删除${ res.content.affect }个订单记录`, 'success')

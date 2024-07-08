@@ -360,5 +360,7 @@
     "evenDown": "未完成",
     "migration": "数据迁移",
     "useTime": "执行总耗时",
-    "brandKeywordTip": "在商品信息中一定会出现的文字，用于匹配商品时使用"
+    "brandKeywordTip": "在商品信息中一定会出现的文字，用于匹配商品时使用",
+    "skuImportTable": "SKU信息导入表",
+    "copyStyleNumber": "复制款号"
 }

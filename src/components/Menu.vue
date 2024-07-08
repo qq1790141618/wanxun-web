@@ -1,42 +1,42 @@
 <template>
     <t-head-menu v-model="activeMenu" expand-type="popup" v-if="$route.name !== 'login'" style="background-color: transparent; overflow-x: auto; overflow-y: hidden;">
         <template
-        v-for="item in $router.getRoutes()"
-        :key="item.name"
+            v-for="item in $router.getRoutes()"
+            :key="item.name"
         >
             <t-menu-item
-            v-if="(!item.children || item.children.length === 0 || item.meta['hideChild']) && item.meta['menuShow']"
-            :value="item.meta['key']"
-            @click="$router.push(item.path)"
+                v-if="(!item.children || item.children.length === 0 || item.meta['hideChild']) && item.meta['menuShow']"
+                :value="item.meta['key']"
+                @click="$router.push(item.path)"
             >
                 <template #icon>
                     <t-icon :name="item.meta['icon']" />
                 </template>
                 {{ getString(item.meta['title']) }}
-                <t-button
-                size="small"
-                variant="text"
-                shape="round"
-                @click.stop="collection(item, true)"
-                v-if="!collectionPath.map(obj => obj.meta.key).includes(item.meta['key']) && item.path !== '/'"
-                class="cl-button"
-                >
-                    <template #icon>
-                        <t-icon name="star" />
-                    </template>
-                </t-button>
-                <t-button
-                size="small"
-                variant="text"
-                shape="round"
-                @click.stop="collection(item, false)"
-                v-if="collectionPath.map(obj => obj.meta.key).includes(item.meta['key'])"
-                class="cl-button"
-                >
-                    <template #icon>
-                        <t-icon name="star-filled" />
-                    </template>
-                </t-button>
+<!--                <t-button-->
+<!--                    size="small"-->
+<!--                    variant="text"-->
+<!--                    shape="round"-->
+<!--                    @click.stop="collection(item, true)"-->
+<!--                    v-if="!collectionPath.map(obj => obj.meta.key).includes(item.meta['key']) && item.path !== '/'"-->
+<!--                    class="cl-button"-->
+<!--                >-->
+<!--                    <template #icon>-->
+<!--                        <t-icon name="star" />-->
+<!--                    </template>-->
+<!--                </t-button>-->
+<!--                <t-button-->
+<!--                    size="small"-->
+<!--                    variant="text"-->
+<!--                    shape="round"-->
+<!--                    @click.stop="collection(item, false)"-->
+<!--                    v-if="collectionPath.map(obj => obj.meta.key).includes(item.meta['key'])"-->
+<!--                    class="cl-button"-->
+<!--                >-->
+<!--                    <template #icon>-->
+<!--                        <t-icon name="star-filled" />-->
+<!--                    </template>-->
+<!--                </t-button>-->
             </t-menu-item>
             <t-submenu
             v-if="item.children && item.children.length > 0 && item.meta['menuShow'] && !item.meta['hideChild']"
@@ -61,30 +61,30 @@
                             <t-icon :name="subitem.meta['icon']" />
                         </template>
                         {{ getString(subitem.meta['title']) }}
-                        <t-button
-                        size="small"
-                        variant="text"
-                        shape="round"
-                        @click.stop="collection(subitem, true)"
-                        v-if="!collectionPath.map(obj => obj.meta.key).includes(subitem.meta['key'])"
-                        class="cl-button"
-                        >
-                            <template #icon>
-                                <t-icon name="star" />
-                            </template>
-                        </t-button>
-                        <t-button
-                        size="small"
-                        variant="text"
-                        shape="round"
-                        @click.stop="collection(subitem, false)"
-                        v-if="collectionPath.map(obj => obj.meta.key).includes(subitem.meta['key'])"
-                        class="cl-button"
-                        >
-                            <template #icon>
-                                <t-icon name="star-filled" />
-                            </template>
-                        </t-button>
+<!--                        <t-button-->
+<!--                            size="small"-->
+<!--                            variant="text"-->
+<!--                            shape="round"-->
+<!--                            @click.stop="collection(subitem, true)"-->
+<!--                            v-if="!collectionPath.map(obj => obj.meta.key).includes(subitem.meta['key'])"-->
+<!--                            class="cl-button"-->
+<!--                        >-->
+<!--                            <template #icon>-->
+<!--                                <t-icon name="star" />-->
+<!--                            </template>-->
+<!--                        </t-button>-->
+<!--                        <t-button-->
+<!--                            size="small"-->
+<!--                            variant="text"-->
+<!--                            shape="round"-->
+<!--                            @click.stop="collection(subitem, false)"-->
+<!--                            v-if="collectionPath.map(obj => obj.meta.key).includes(subitem.meta['key'])"-->
+<!--                            class="cl-button"-->
+<!--                        >-->
+<!--                            <template #icon>-->
+<!--                                <t-icon name="star-filled" />-->
+<!--                            </template>-->
+<!--                        </t-button>-->
                     </t-menu-item>
                 </template>
             </t-submenu>

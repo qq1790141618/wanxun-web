@@ -1,58 +1,53 @@
 <template>
     <div style="display: flex; position: relative;" id="goods-list">
         <ConditionBox
-        :condition="condition"
-        :loading="loading "
-        @confirm="() => {
-            pagination.current = 1
-            selectKey = []
-            getSearchGoods()
-        }"
-        @reset="condition = {
-            type: 'stylenumber',
-            content: null,
-            unUpload: [],
-            category: null,
-            supplier: null
-        }"
-        :categoryOptions="categoryOptions"
-        :supplierOptions="supplierOptions"
+            ref="conditionBox"
+            v-model:condition="condition"
+            :loading="loading "
+            @confirm="() => {
+                pagination.current = 1
+                selectKey = []
+                getSearchGoods()
+            }"
+            :categoryOptions="categoryOptions"
+            :supplierOptions="supplierOptions"
         />
         <div class="content-box">
             <OperateBar
-            :data="data"
-            :selectKey="selectKey"
-            :categoryOptions="categoryOptions"
-            :supplierOptions="supplierOptions"
-            @batchEdit="be.open()"
-            :loading="loading"
-            @costHightLightChange="(value) => { columns[11].className = 'goods-table-col ' + value }"
-            @supplierMap="spm.open()"
-            />
-            <div class="result-containter">
-                <t-table
-                size="small"
                 :data="data"
-                :columns="columns"
+                :selectKey="selectKey"
+                :categoryOptions="categoryOptions"
+                :supplierOptions="supplierOptions"
+                @batchEdit="be.open()"
                 :loading="loading"
-                :loading-props="{
-                    text: getString('loading')
-                }"
-                max-height="calc(100vh - 200px)"
-                row-key="stylenumber"
-                v-model:selected-row-keys="selectKey" >
+                @costHightLightChange="(value) => { columns[11].className = 'goods-table-col ' + value }"
+                @supplierMap="spm.open()"
+            />
+            <div class="result-container">
+                <t-table
+                    size="small"
+                    :data="data"
+                    :columns="columns"
+                    :loading="loading"
+                    :loading-props="{
+                        text: getString('loading')
+                    }"
+                    max-height="calc(100vh - 200px)"
+                    row-key="styleNumber"
+                    v-model:selected-row-keys="selectKey"
+                >
                     <template #image="{ row }">
                         <t-image-viewer
-                        v-if="row['main-image'] !== null"
-                        :images="JSON.parse(row['main-image'])"
-                        close-on-overlay
+                            v-if="row.image"
+                            :images="[row.image]"
+                            :close-on-overlay="true"
                         >
                             <template #trigger="{ open }">
                                 <t-image
-                                :src="JSON.parse(row['main-image'])[0] || false"
-                                style="width: 90px; margin: 0 auto;"
-                                @click.stop="open"
-                                shape="round"
+                                    :src="row.image"
+                                    style="width: 90px; margin: 0 auto;"
+                                    @click.stop="open"
+                                    shape="round"
                                 ></t-image>
                             </template>
                         </t-image-viewer>
@@ -60,40 +55,29 @@
                     <template #operate="{ row }">
                         <t-space break-line size="5px">
                             <t-button
-                            theme="primary"
-                            @click="() => {
-                                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/item/get') >= 0){
-                                    goodsEdit.open(row)
-                                } else {
-                                    tips('权限不足', 'error')
-                                }
-                            }"
+                                theme="primary"
+                                @click="goodsEdit.open(row)"
                             >
                                 {{ getString('edit') }}
                             </t-button>
                             <t-button
-                            variant="outline"
-                            v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
-                            @click="miaostreetGoodsLink(row)"
+                                variant="outline"
+                                v-if="row.id"
+                                @click="miaostreetGoodsLink(row)"
                             >
                                 {{ getString('viewMiaostreetLink') }}
                             </t-button>
+<!--                            <t-button-->
+<!--                                variant="outline"-->
+<!--                                @click="viewGoods.open(row)"-->
+<!--                            >-->
+<!--                                {{ getString('viewGoods') }}-->
+<!--                            </t-button>-->
                             <t-button
-                            variant="outline"
-                            @click="() => {
-                                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/item/get') >= 0){
-                                    viewGoods.open(row)
-                                } else {
-                                    tips('权限不足', 'error')
-                                }
-                            }">
-                                {{ getString('viewGoods') }}
-                            </t-button>
-                            <t-button
-                            variant="outline"
-                            theme="primary"
-                            v-if="row['miaostreet-id'] && row['miaostreet-id'] != null && row['miaostreet-id'] != ''"
-                            @click="copy(row['miaostreet-id'], i18n.language)"
+                                variant="outline"
+                                theme="primary"
+                                v-if="row.id"
+                                @click="copy(row.id, i18n.language)"
                             >
                                 {{ getString('copy') }}{{ getString('miaostreet-id') }}
                             </t-button>
@@ -102,48 +86,49 @@
                 </t-table>
             </div>
             <t-pagination
-            size="small"
-            :disabled="loading"
-            v-model:current="pagination.current"
-            v-model:page-size="pagination.pageSize"
-            :total="pagination.total"
-            :page-size-options="pagination.pageSizeOptions"
-            @current-change="getSearchGoods()"
-            @page-size-change="() => {
-                pagination.current = 1
-                getSearchGoods()
-            }"
-            style="position: sticky; bottom: 10px;"
+                size="small"
+                :disabled="loading"
+                v-model:current="pagination.current"
+                v-model:page-size="pagination.pageSize"
+                :total="pagination.total"
+                :page-size-options="pagination.pageSizeOptions"
+                @current-change="getSearchGoods()"
+                @page-size-change="() => {
+                    pagination.current = 1
+                    getSearchGoods()
+                }"
+                style="position: sticky; bottom: 10px;"
             />
         </div>
     </div>
-    <BatchEdit
-    ref="be"
-    :selectKey="selectKey"
-    :supplierOptions="supplierOptions"
-    :categoryOptions="categoryOptions"
-    @reload="getSearchGoods()"
-    />
+<!--    <BatchEdit-->
+<!--        ref="be"-->
+<!--        :selectKey="selectKey"-->
+<!--        :supplierOptions="supplierOptions"-->
+<!--        :categoryOptions="categoryOptions"-->
+<!--        @reload="getSearchGoods()"-->
+<!--    />-->
     <SupplierMap
-    ref="spm"
-    :supplierOptions="supplierOptions"
-    @reload="getSearchGoods()"
+        ref="spm"
+        :supplierOptions="supplierOptions"
+        @reload="getSearchGoods()"
     />
     <ViewGoods
     ref="viewGoods"
     />
     <EditGoods
-    ref="goodsEdit"
-    :categoryOptions="categoryOptions"
-    :supplierOptions="supplierOptions"
-    @reload="getSearchGoods()"
+        ref="goodsEdit"
+        :categoryOptions="categoryOptions"
+        :supplierOptions="supplierOptions"
+        @reload="getSearchGoods()"
     />
     <t-dialog
-    v-model:visible="exportDialogShow"
-    :close-on-esc-keydown="false"
-    :close-on-overlay-click="false"
-    :close-btn="false"
-    :footer="false">
+        v-model:visible="exportDialogShow"
+        :close-on-esc-keydown="false"
+        :close-on-overlay-click="false"
+        :close-btn="false"
+        :footer="false"
+    >
         <template #header>
             {{ getString('exportQueryGoods') }}
         </template>
@@ -172,50 +157,74 @@
 import { copy, miaostreetGoodsLink } from '../../hooks'
 import ConditionBox from './ConditionBox.vue'
 import OperateBar from './OperateBar.vue'
-import BatchEdit from './BatchEdit.vue'
+// import BatchEdit from './BatchEdit.vue'
 import SupplierMap from './SupplierMap.vue'
 import ViewGoods from './ViewGoods.vue'
 import EditGoods from './EditGoods.vue'
-import service from "../../api/service.js";
-import {tips} from "../../hooks/tips.js";
-import {getString} from "../../i18n/index.js";
-import {useRoute} from "vue-router";
+import {tips} from "../../hooks/tips.js"
+import {getString} from "../../i18n/index.js"
+import {request} from "../../api/request.js"
+import dayjs from "dayjs";
 
 const i18n = inject('i18n')
 const shop = inject('shop')
 const user = inject('user')
 
-const condition = ref({
-    type: 'stylenumber',
-    content: null,
-    unUpload: [],
-    category: null,
-    supplier: null
-})
-const frozenCondition = ref({})
+const conditionBox = ref()
+const condition = ref({})
+
 const categoryOptions = ref([])
 const supplierOptions = ref([])
-const conditionIsChanged = ref(true)
-watch(() => condition.value, () => {
-    conditionIsChanged.value = true
-})
 
 const getOptions = async () => {
-    let c = await service.api.goods.categoryOptions()
-    if(c.result){
-        categoryOptions.value = c.content
+    let c = await request('/product/categories')
+    if(c.status === 'success'){
+        initCategories(c.content)
     } else {
-        tips(c.error.message, 'error')
+        tips(c.error.msg, 'error')
     }
 
-    let s = await service.api.goods.supplierOptions()
-    if(s.result){
+    let s = await request('/product/suppliers', { brand: shop.brand })
+    if(s.status === 'success'){
         supplierOptions.value = s.content
     } else {
-        tips(s.error.message, 'error')
+        tips(s.error.msg, 'error')
     }
+}
 
-    supplierOptions.value.splice(0, 1)
+const initCategories = (list) => {
+    categoryOptions.value = []
+    for (let i = 0; i < list.length; i++) {
+        let first = categoryOptions.value.find(item => item.label === list[i].first)
+        if (!first) {
+            first = {
+                label: list[i].first,
+                value: list[i].first,
+                children: []
+            }
+            categoryOptions.value.push(first)
+        }
+
+        let second = first.children.find(item => item.label === list[i].second)
+        if (!second) {
+            second = {
+                label: list[i].second,
+                value: list[i].second,
+                children: []
+            }
+            first.children.push(second)
+        }
+
+        let third = second.children.find(item => item.label === list[i].third)
+        if (!third) {
+            third = {
+                label: list[i].third,
+                value: list[i].id,
+                isLeaf: true
+            }
+            second.children.push(third)
+        }
+    }
 }
 
 const costHighlight = ref('cost-col')
@@ -230,7 +239,7 @@ const columns = ref([
     },
     {
         title: getString('stylenumber'),
-        colKey: 'stylenumber',
+        colKey: 'styleNumber',
         width: 100,
         align: 'center',
         className: 'goods-table-col'
@@ -254,25 +263,28 @@ const columns = ref([
         colKey: 'tagprice',
         width: 70,
         align: 'center',
-        className: 'goods-table-col'
+        className: 'goods-table-col',
+        cell: (h, { row }) => {
+            return getPrice(row, 'tagPrice')
+        }
     },
     {
         title: getString('category'),
         colKey: 'category',
-        width: 180,
+        width: 90,
         align: 'center',
         className: 'goods-table-col'
     },
     {
         title: getString('miaostreet-id'),
-        colKey: 'miaostreet-id',
-        width: 120,
+        colKey: 'id',
+        width: 80,
         align: 'center',
         className: 'goods-table-col'
     },
     {
         title: getString('salesCount'),
-        colKey: 'sales-count',
+        colKey: 'salesCount',
         width: 90,
         align: 'center',
         className: 'goods-table-col'
@@ -286,7 +298,7 @@ const columns = ref([
     },
     {
         title: getString('supplier') + ' ' + getString('stylenumber'),
-        colKey: 'supplier-id',
+        colKey: 'supplierId',
         width: 110,
         align: 'center',
         className: 'goods-table-col'
@@ -296,14 +308,20 @@ const columns = ref([
         colKey: 'price',
         width: 90,
         align: 'center',
-        className: 'goods-table-col'
+        className: 'goods-table-col',
+        cell: (h, { row }) => {
+            return getPrice(row, 'price')
+        }
     },
     {
         title: getString('cost'),
         colKey: 'cost',
         width: 70,
         align: 'center',
-        className: 'goods-table-col ' + costHighlight.value
+        className: 'goods-table-col ' + costHighlight.value,
+        cell: (h, { row }) => {
+            return getPrice(row, 'cost')
+        }
     },
     {
         title: getString('operate'),
@@ -311,7 +329,7 @@ const columns = ref([
         width: 200,
         align: 'center',
         className: 'goods-table-col'
-    },
+    }
 ])
 const pagination = ref({
     total: 0,
@@ -323,71 +341,54 @@ const pagination = ref({
 const router = useRouter()
 
 const getSearchGoods = async () => {
-    let con = {}
-    let recon = condition.value
     loading.value = true
     pagination.value.loading = true
     data.value = []
 
-    if(recon.content != null && recon.content !== ''){
-        con[recon.type] = []
-        let content1 = recon.content.split(',')
-        for (let i = 0; i < content1.length; i++) {
-            let content2 = content1[i].split('\n')
-            con[recon.type] = con[recon.type].concat(content2)
-        }
-    }
-    if(recon.category != null && recon.category !== ''){
-        con['category-id'] = recon.category
-    }
-    if(recon.supplier != null && recon.supplier !== ''){
-        con.supplier = recon.supplier
-    }
-    if(recon.unUpload.length > 0){
-        for (let i = 0; i < recon.unUpload.length; i++) {
-            con[recon.unUpload[i]] = null
-        }
-    }
-
-    router.push({ query: { page: pagination.value.current } })
     let start = (pagination.value.current - 1) * pagination.value.pageSize
     let number = pagination.value.pageSize
-    let result = await service.api.goods.get(con, start, number)
+    let params = {
+        storeId: shop.store,
+        brandId: shop.brand,
+        skip: start,
+        limit: number,
+        category: condition.value.category,
+        supplier: condition.value.supplier,
+        neverUploaded: condition.value.unUpload
+    }
+    if (condition.value.content) {
+        params[condition.value.type] = condition.value.content.replace("\n", ",").split(",")
+    }
 
-    frozenCondition.value = JSON.parse(JSON.stringify(condition.value))
-    data.value = result.content
+    let result = await request('/product', params, 'POST')
+
+    data.value = result.content.data
+    pagination.value.total = result.content.total
 
     loading.value = false
     await getSalesCount()
-    if(conditionIsChanged.value){
-        await getGoodsTotal(con)
-    }
 }
 const getSalesCount = async () => {
-    let res = await service.api.goods.getSales(data.value.map(item => item['stylenumber']))
-    if(res.result){
+    let styleNumbers = data.value.map(item => item['styleNumber'])
+    let res = await request('/analysis/product', {
+        store: shop.store,
+        brand: shop.brand,
+        startTime: '2021-09-01 00:00:00',
+        endTime: dayjs().subtract(1, 'day').format('YYYY-MM-DD') + ' 23:59:59',
+        styleNumbers: styleNumbers.join(',')
+    })
+    if(res.status === 'success'){
         for (let i = 0; i < data.value.length; i++){
-            data.value[i]['sales-count'] = 0
+            data.value[i]['salesCount'] = 0
             for (let r = 0; r < res.content.length; r++){
-                if(data.value[i]['stylenumber'] === res.content[r]['stylenumber']){
-                    data.value[i]['sales-count'] = res.content[r]['sales-count']
+                if(data.value[i]['styleNumber'] === res.content[r]['styleNumber']){
+                    data.value[i]['salesCount'] = res.content[r]['salesCount']
                 }
             }
         }
     } else {
-        tips(res.error.message, 'error')
+        tips(res.error.msg, 'error')
     }
-}
-
-const getGoodsTotal = async (condition = {}) => {
-    let res = await service.api.goods.getTotal(condition)
-    if(res.result){
-        pagination.value.total = res.content.total
-        conditionIsChanged.value = false
-    } else {
-        tips(res.error.message, 'error')
-    }
-    pagination.value.loading = false
 }
 
 const exportDialogShow = ref(false)
@@ -401,42 +402,32 @@ const be = ref(null)
 const spm = ref(null)
 const viewGoods = ref(null)
 const goodsEdit = ref(null)
-const route = useRoute()
 
 let listenToShop = () => {
-    condition.value = {
-        type: 'stylenumber',
-        content: null,
-        unUpload: [],
-        category: null,
-        supplier: null
-    }
+    conditionBox.value.reset()
+    getOptions()
     getSearchGoods()
 }
 
-watch(() => route.query.stylenumber, async (newValue) => {
-    condition.value.type = 'stylenumber'
-    condition.value.content = newValue
-
-    await getSearchGoods()
-})
 watch(() => shop.store, () => { listenToShop() })
 watch(() => shop.brand, () => { listenToShop() })
 
-onMounted(() => {
-    getOptions()
+const getPrice = (product, property) => {
+    let min = 0
+    let max = 0
+    for (let i = 0; i < product.skus.length; i++) {
+        const item = product.skus[i]
+        if (min === 0 || item[property] < min) min = item[property]
+        if (max === 0 || item[property] > max) max = item[property]
+    }
+    if (max === min) {
+        return min
+    } else {
+        return min + "-" + max
+    }
+}
 
-    setTimeout(() => {
-        if(route.query.stylenumber){
-            condition.value.type = 'stylenumber'
-            condition.value.content = route.query.stylenumber
-        }
-        if(route.query.page){
-            pagination.value.current = route.query.page * 1
-        }
-        getSearchGoods()
-    }, 300)
-})
+onMounted(listenToShop)
 </script>
 
 <style>
@@ -447,18 +438,18 @@ onMounted(() => {
     margin-left: 0;
     box-sizing: border-box;
 }
-.result-containter{
+.result-container{
     margin: 10px 0;
 }
-.result-containter .t-table, .result-containter tr{
+.result-container .t-table, .result-container tr{
     background-color: transparent;
 }
-.result-containter .goods-table-col{
+.result-container .goods-table-col{
     background-color: #ffffff60;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
-.result-containter .cost-col{
+.result-container .cost-col{
     background-color: #FEFFE8;
 }
 </style>

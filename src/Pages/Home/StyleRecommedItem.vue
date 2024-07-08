@@ -7,7 +7,7 @@
     >
         <t-image
         class="next-good-item-image"
-        :src="item['main-image'] == null ? '' : JSON.parse(item['main-image'])[0]"
+        :src="item.image"
         lazy
         >
             <template #error>
@@ -16,13 +16,13 @@
         </t-image>
         <div class="next-good-item-info">
             <div class="prev-good-item-info-name" style="font-size: 14px; line-height: 15px;">
-                <t-tag
-                size="small"
-                theme="primary"
-                variant="light"
-                >
-                    {{ shop.storeOptions.filter(obj => obj.value === item['store-id'])[0].label }}
-                </t-tag>
+<!--                <t-tag-->
+<!--                size="small"-->
+<!--                theme="primary"-->
+<!--                variant="light"-->
+<!--                >-->
+<!--                    {{ shop.storeOptions.filter(obj => obj.value === item['store-id'])[0].label }}-->
+<!--                </t-tag>-->
                 <t-tooltip :content="item.name">
                     {{ item.name }}
                 </t-tooltip>
@@ -39,7 +39,7 @@
                 {{ getString('yuan') }}
             </div>
             <t-button
-            v-if="item['miaostreet-id'] != null"
+            v-if="item.id != null"
             size="small"
             shape="round"
             @click.stop="miaostreetGoodsLink(item)"

@@ -20,7 +20,7 @@
             <span v-if="row.subType === 'SkuInfo'"><t-icon name="barcode"></t-icon>&nbsp;{{ getString('skuInformTable') }}</span>
             <span v-if="row.subType === 'SpuInfo'"><t-icon name="system-2"></t-icon>&nbsp;{{ getString('spuInformTable') }}</span>
             <span v-if="row.subType === 'OrderInfo'"><t-icon name="assignment"></t-icon>&nbsp;{{ getString('ordersListTable') }}</span>
-            <span v-if="row.subType === 'SkuImport'"><t-icon name="article"></t-icon>&nbsp;{{ getString('ordersDetailTable') }}</span>
+            <span v-if="row.subType === 'SkuImport'"><t-icon name="article"></t-icon>&nbsp;{{ getString('skuImportTable') }}</span>
             <span v-if="row.subType === 'RefundInfo'"><t-icon name="browse-gallery"></t-icon>&nbsp;{{ getString('refundsInformTable') }}</span>
             <span v-if="row.subType === 'BalanceInfo'"><t-icon name="currency-exchange"></t-icon>&nbsp;{{ getString('orderBillsInformTable') }}</span>
         </template>

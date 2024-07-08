@@ -1,61 +1,51 @@
 <template>
     <t-drawer
-    v-model:visible="visible"
-    attach="#goods-list"
-    show-in-attached-element
-    size="600px"
-    :footer="false"
-    destroy-on-close
+        v-model:visible="visible"
+        attach="#goods-list"
+        size="600px"
+        :footer="false"
+        :show-in-attached-element="true"
+        :destroy-on-close="true"
     >
         <template #header>
             <t-icon name="edit" style="margin-right: 5px;" />
             {{ getString('edit') }}
         </template>
         <t-loading
-        v-if="loading"
-        style="width: 100%; min-height: 70vh;"
-        size="small"
-        :text="getString('loading')"
+            v-if="loading"
+            style="width: 100%; min-height: 70vh;"
+            size="small"
+            :text="getString('loading')"
         ></t-loading>
         <t-list
-        v-if="!loading"
-        :split="true"
-        size="small"
+            v-if="!loading"
+            :split="true"
+            size="small"
         >
             <t-list-item>
                 {{ getString('store') }}
                 <template #action>
-                    {{ shop.storeOptions.filter(item => item.value === sku[0]['store-id'])[0].label }}
-                    {{ sku[0]['store-id'] }}
+                    {{ shop.storeOptions.find(item => item.id === shop.store).name }}
+                    {{ shop.store }}
                 </template>
             </t-list-item>
             <t-list-item>
                 {{ getString('counter') }}
                 <template #action>
-                    {{ sku[0]['shoppe-id'] }}
+                    {{ product.shoppe }}
                 </template>
             </t-list-item>
             <t-list-item>
                 {{ getString('brand') }}
                 <template #action>
-                    {{ sku[0].brand }}
+                    {{ shop.brandOptions.find(item => item.id === shop.brand).name }}
+                    {{ shop.brand }}
                 </template>
             </t-list-item>
             <t-list-item>
                 {{ getString('stylenumber') }}
                 <template #action>
-                    <t-input
-                    v-model="sku[0].stylenumber"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj.stylenumber = value
-                            return obj
-                        })
-                    }"
-                    size="small"
-                    align="center"
-                    />
+                    {{ product.styleNumber }}
                 </template>
             </t-list-item>
             <t-list-item>
@@ -63,16 +53,9 @@
                 <template #action>
                     <div style="width: 320px;">
                         <t-textarea
-                        v-model="sku[0].name"
-                        @change="(value) => {
-                            sku = 
-                            sku.map(obj => {
-                                obj.name = value
-                                return obj
-                            })
-                        }"
-                        size="small"
-                        align="center"
+                            v-model="product.name"
+                            size="small"
+                            align="center"
                         />
                     </div>
                 </template>
@@ -82,42 +65,42 @@
                 <template #action>
                     <t-space size="3px" direction="vertical">
                         <t-input
-                        v-for="item, index in uniqueArray(sku, 'color')"
-                        :key="index"
-                        :default-value="item"
-                        size="small"
-                        align="center"
-                        @change="(value) => {
-                            sku = sku.map(obj => {
-                                if(obj.color === item){
-                                    obj.color = value
-                                }
-                                return obj
-                            })
-                        }"
+                            v-for="(item, index) in uniqueArray(product.skus, 'color')"
+                            :key="index"
+                            :default-value="item"
+                            size="small"
+                            align="center"
+                            @change="(value) => {
+                                product.skus = product.skus.map(obj => {
+                                    if(obj.color === item){
+                                        obj.color = value
+                                    }
+                                    return obj
+                                })
+                            }"
                         ></t-input>
                     </t-space>
                     <t-space
-                    size="3px"
-                    direction="vertical"
-                    style="width: 80px; margin-left: 3px;"
-                    v-if="uniqueArray(sku, 'colorid').length === uniqueArray(sku, 'color').length"
+                        size="3px"
+                        direction="vertical"
+                        style="width: 80px; margin-left: 3px;"
+                        v-if="uniqueArray(product.skus, 'colorId').length === uniqueArray(product.skus, 'color').length"
                     >
-                        <t-input
-                        v-for="item, index in uniqueArray(sku, 'colorid')"
-                        :key="index"
-                        :default-value="item"
-                        size="small"
-                        align="center"
-                        @change="(value) => {
-                            sku = sku.map(obj => {
-                                if(obj.colorid === item){
-                                    obj.colorid = value
-                                }
-                                return obj
-                            })
-                        }"
-                        ></t-input>
+<!--                        <t-input-->
+<!--                            v-for="(item, index)in uniqueArray(product.skus, 'colorId')"-->
+<!--                            :key="index"-->
+<!--                            :default-value="item"-->
+<!--                            size="small"-->
+<!--                            align="center"-->
+<!--                            @change="(value) => {-->
+<!--                                product.skus = product.skus.map(obj => {-->
+<!--                                    if(obj.colorId === item){-->
+<!--                                        obj.colorId = value-->
+<!--                                    }-->
+<!--                                    return obj-->
+<!--                                })-->
+<!--                            }"-->
+<!--                        ></t-input>-->
                     </t-space>
                 </template>
             </t-list-item>
@@ -126,42 +109,42 @@
                 <template #action>
                     <t-space size="3px" direction="vertical">
                         <t-input
-                        v-for="item, index in uniqueArray(sku, 'size')"
-                        :key="index"
-                        :default-value="item"
-                        size="small"
-                        align="center"
-                        @change="(value) => {
-                            sku = sku.map(obj => {
-                                if(obj.size === item){
-                                    obj.size = value
-                                }
-                                return obj
-                            })
-                        }"
+                            v-for="(item, index) in uniqueArray(product.skus, 'size')"
+                            :key="index"
+                            :default-value="item"
+                            size="small"
+                            align="center"
+                            @change="(value) => {
+                                product.skus = product.skus.map(obj => {
+                                    if(obj.size === item){
+                                        obj.size = value
+                                    }
+                                    return obj
+                                })
+                            }"
                         ></t-input>
                     </t-space>
                     <t-space
-                    size="3px"
-                    direction="vertical"
-                    style="width: 80px; margin-left: 3px;"
-                    v-if="uniqueArray(sku, 'sizeid').length === uniqueArray(sku, 'size').length"
+                        size="3px"
+                        direction="vertical"
+                        style="width: 80px; margin-left: 3px;"
+                        v-if="uniqueArray(product.skus, 'sizeId').length === uniqueArray(product.skus, 'size').length"
                     >
-                        <t-input
-                        v-for="item, index in uniqueArray(sku, 'sizeid')"
-                        :key="index"
-                        :default-value="item"
-                        size="small"
-                        align="center"
-                        @change="(value) => {
-                            sku = sku.map(obj => {
-                                if(obj.sizeid === item){
-                                    obj.sizeid = value
-                                }
-                                return obj
-                            })
-                        }"
-                        ></t-input>
+<!--                        <t-input-->
+<!--                            v-for="(item, index) in uniqueArray(product.skus, 'sizeId')"-->
+<!--                            :key="index"-->
+<!--                            :default-value="item"-->
+<!--                            size="small"-->
+<!--                            align="center"-->
+<!--                            @change="(value) => {-->
+<!--                                product.skus = product.skus.map(obj => {-->
+<!--                                    if(obj.sizeId === item){-->
+<!--                                        obj.sizeId = value-->
+<!--                                    }-->
+<!--                                    return obj-->
+<!--                                })-->
+<!--                            }"-->
+<!--                        ></t-input>-->
                     </t-space>
                 </template>
             </t-list-item>
@@ -169,8 +152,8 @@
                 {{ getString('barcode') }}
                 <t-popup placement="right" trigger="click">
                     <t-button
-                    variant="outline"
-                    size="small"
+                        variant="outline"
+                        size="small"
                     >
                         <template #icon>
                             <t-icon name="edit" />
@@ -200,7 +183,7 @@
                                 </template>
                             </t-list-item>
                             <t-list-item
-                            v-for="item, index in sku"
+                            v-for="(item, index) in product.skus"
                             :key="index"
                             >
                                 {{ item.color }}
@@ -221,16 +204,9 @@
                 {{ getString('miaostreet-id') }}
                 <template #action>
                     <t-input
-                    v-model="sku[0]['miaostreet-id']"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj['miaostreet-id'] = value
-                            return obj
-                        })
-                    }"
-                    size="small"
-                    align="center"
+                        v-model="product.id"
+                        size="small"
+                        align="center"
                     />
                 </template>
             </t-list-item>
@@ -238,43 +214,10 @@
                 {{ getString('category') }}
                 <template #action>
                     <t-cascader
-                    v-model="sku[0]['category-id']"
-                    @change="(value) => {
-                        let category
-                        categoryOptions.map(obj => {
-                            if(obj.children){
-                                if(obj.value == value){
-                                    category = [obj.label]
-                                }
-                                let array2 = obj.children
-
-                                array2.map(obj2 => {
-                                    if(obj2.children){
-                                        if(obj2.value == value){
-                                            category = [obj.label, obj2.label]
-                                        }
-
-                                        let array3 = obj2.children
-                                        array3.map(obj3 => {
-                                            if(obj3.value == value){
-                                                category = [obj.label, obj2.label, obj3.label]
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                        category = category.join('->')
-                        sku = 
-                        sku.map(obj => {
-                            obj['category-id'] = value
-                            obj.category = category
-                            return obj
-                        })
-                    }"
-                    :options="categoryOptions"
-                    size="small"
-                    align="center"
+                        v-model="product.category"
+                        :options="categoryOptions"
+                        size="small"
+                        align="center"
                     />
                 </template>
             </t-list-item>
@@ -282,19 +225,12 @@
                 {{ getString('supplier') }}
                 <template #action>
                     <t-auto-complete
-                    v-model="sku[0].supplier"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj.supplier = value
-                            return obj
-                        })
-                    }"
-                    :input-props="{
-                        align: 'center'
-                    }"
-                    :options="supplierOptions.map(obj => obj.value)"
-                    size="small"
+                        v-model="product.supplier"
+                        :input-props="{
+                            align: 'center'
+                        }"
+                        :options="supplierOptions"
+                        size="small"
                     />
                 </template>
             </t-list-item>
@@ -302,16 +238,9 @@
                 {{ getString('supplier') }}{{ getString('stylenumber') }}
                 <template #action>
                     <t-input
-                    v-model="sku[0]['supplier-id']"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj['supplier-id'] = value
-                            return obj
-                        })
-                    }"
-                    align="center"
-                    size="small"
+                        v-model="product.supplierId"
+                        align="center"
+                        size="small"
                     />
                 </template>
             </t-list-item>
@@ -319,16 +248,9 @@
                 SPU ID
                 <template #action>
                     <t-input
-                    v-model="sku[0]['spu-id']"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj['spu-id'] = value
-                            return obj
-                        })
-                    }"
-                    size="small"
-                    align="center"
+                        v-model="product.spu"
+                        size="small"
+                        align="center"
                     />
                 </template>
             </t-list-item>
@@ -336,53 +258,52 @@
                 {{ getString('cost') }}
                 <template #action>
                     <t-checkbox
-                    style="vertical-align: middle;"
-                    v-if="Math.min(...sku.map(obj => obj.cost)) !== Math.max(...sku.map(obj => obj.cost)) && !isNaN(Math.min(...sku.map(obj => obj.cost))) && !isNaN(Math.max(...sku.map(obj => obj.cost)))"
-                    @change="(checked) => {
-                        if(checked){
-                            let cost = sku[0].cost
-                            sku = 
-                            sku.map(obj => {
-                                obj.cost = cost
-                                return obj
-                            })
-                        }
-                    }"
+                        style="vertical-align: middle;"
+                        v-if="Math.min(...product.skus.map(obj => obj.cost)) !== Math.max(...product.skus.map(obj => obj.cost)) && !isNaN(Math.min(...product.skus.map(obj => obj.cost))) && !isNaN(Math.max(...product.skus.map(obj => obj.cost)))"
+                        @change="(checked) => {
+                            if(checked){
+                                let cost = product.skus[0].cost
+                                product.skus = product.skus.map(obj => {
+                                    obj.cost = cost
+                                    return obj
+                                })
+                            }
+                        }"
                     >{{ getString('unify') }}</t-checkbox>
                     <t-input-number
-                    v-if="Math.min(...sku.map(obj => obj.cost)) === Math.max(...sku.map(obj => obj.cost)) || isNaN(Math.min(...sku.map(obj => obj.cost))) || isNaN(Math.max(...sku.map(obj => obj.cost)))"
-                    v-model="sku[0].cost"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj.cost = value
-                            return obj
-                        })
-                    }"
-                    size="small"
-                    align="center"
-                    style="margin: 0 10px;"
+                        v-if="Math.min(...product.skus.map(obj => obj.cost)) === Math.max(...product.skus.map(obj => obj.cost)) || isNaN(Math.min(...product.skus.map(obj => obj.cost))) || isNaN(Math.max(...product.skus.map(obj => obj.cost)))"
+                        v-model="product.skus[0].cost"
+                        @change="(value) => {
+                            product.skus =
+                            product.skus.map(obj => {
+                                obj.cost = value
+                                return obj
+                            })
+                        }"
+                        size="small"
+                        align="center"
+                        style="margin: 0 10px;"
                     />
                     <span
-                    v-if="Math.min(...sku.map(obj => obj.cost)) !== Math.max(...sku.map(obj => obj.cost)) && !isNaN(Math.min(...sku.map(obj => obj.cost))) && !isNaN(Math.max(...sku.map(obj => obj.cost)))"
-                    style="margin: 0 10px;"
+                        v-if="Math.min(...product.skus.map(obj => obj.cost)) !== Math.max(...product.skus.map(obj => obj.cost)) && !isNaN(Math.min(...product.skus.map(obj => obj.cost))) && !isNaN(Math.max(...product.skus.map(obj => obj.cost)))"
+                        style="margin: 0 10px;"
                     >
-                        {{ Math.min(...sku.map(obj => obj.cost)) }}
+                        {{ Math.min(...product.skus.map(obj => obj.cost)) }}
                         ~
-                        {{ Math.max(...sku.map(obj => obj.cost)) }}
+                        {{ Math.max(...product.skus.map(obj => obj.cost)) }}
                     </span>
                     <t-popup placement="right" trigger="click">
                         <t-button
-                        variant="outline"
-                        size="small"
+                            variant="outline"
+                            size="small"
                         >
                             {{ getString('barcode') }}{{ getString('cost') }}
                         </t-button>
                         <template #content>
                             <t-list
-                            :split="true"
-                            size="small"
-                            style="width: 400px; max-height: 60vh; overflow-y: auto;"
+                                :split="true"
+                                size="small"
+                                style="width: 400px; max-height: 60vh; overflow-y: auto;"
                             >
                                 <t-list-item
                                 >
@@ -392,8 +313,8 @@
                                     </template>
                                 </t-list-item>
                                 <t-list-item
-                                v-for="item, index in sku"
-                                :key="index"
+                                    v-for="(item, index) in product.skus"
+                                    :key="index"
                                 >
                                     {{ item.barcode }}
                                     <template #action>
@@ -414,12 +335,12 @@
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
-                    v-if="Math.min(...sku.map(obj => obj.price)) !== Math.max(...sku.map(obj => obj.price)) && !isNaN(Math.min(...sku.map(obj => obj.price))) && !isNaN(Math.max(...sku.map(obj => obj.price)))"
+                    v-if="Math.min(...product.skus.map(obj => obj.price)) !== Math.max(...product.skus.map(obj => obj.price)) && !isNaN(Math.min(...product.skus.map(obj => obj.price))) && !isNaN(Math.max(...product.skus.map(obj => obj.price)))"
                     @change="(checked) => {
                         if(checked){
-                            let price = sku[0].price
-                            sku = 
-                            sku.map(obj => {
+                            let price = product.skus[0].price
+                            product.skus = 
+                            product.skus.map(obj => {
                                 obj.price = price
                                 return obj
                             })
@@ -427,11 +348,11 @@
                     }"
                     >{{ getString('unify') }}</t-checkbox>
                     <t-input-number
-                    v-if="Math.min(...sku.map(obj => obj.price)) === Math.max(...sku.map(obj => obj.price)) || isNaN(Math.min(...sku.map(obj => obj.price))) || isNaN(Math.max(...sku.map(obj => obj.price)))"
-                    v-model="sku[0].price"
+                    v-if="Math.min(...product.skus.map(obj => obj.price)) === Math.max(...product.skus.map(obj => obj.price)) || isNaN(Math.min(...product.skus.map(obj => obj.price))) || isNaN(Math.max(...product.skus.map(obj => obj.price)))"
+                    v-model="product.skus[0].price"
                     @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
+                        product.skus = 
+                        product.skus.map(obj => {
                             obj.price = value
                             return obj
                         })
@@ -441,12 +362,12 @@
                     style="margin: 0 10px;"
                     />
                     <span
-                    v-if="Math.min(...sku.map(obj => obj.price)) !== Math.max(...sku.map(obj => obj.price)) && !isNaN(Math.min(...sku.map(obj => obj.price))) && !isNaN(Math.max(...sku.map(obj => obj.price)))"
+                    v-if="Math.min(...product.skus.map(obj => obj.price)) !== Math.max(...product.skus.map(obj => obj.price)) && !isNaN(Math.min(...product.skus.map(obj => obj.price))) && !isNaN(Math.max(...product.skus.map(obj => obj.price)))"
                     style="margin: 0 10px;"
                     >
-                        {{ Math.min(...sku.map(obj => obj.price)) }}
+                        {{ Math.min(...product.skus.map(obj => obj.price)) }}
                         ~
-                        {{ Math.max(...sku.map(obj => obj.price)) }}
+                        {{ Math.max(...product.skus.map(obj => obj.price)) }}
                     </span>
                     <t-popup placement="right" trigger="click">
                         <t-button
@@ -469,7 +390,7 @@
                                     </template>
                                 </t-list-item>
                                 <t-list-item
-                                v-for="item, index in sku"
+                                v-for="item, index in product.skus"
                                 :key="index"
                                 >
                                     {{ item.barcode }}
@@ -491,25 +412,25 @@
                 <template #action>
                     <t-checkbox
                     style="vertical-align: middle;"
-                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice)) && !isNaN(Math.min(...sku.map(obj => obj.tagprice))) && !isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
+                    v-if="Math.min(...product.skus.map(obj => obj.tagPrice)) !== Math.max(...product.skus.map(obj => obj.tagPrice)) && !isNaN(Math.min(...product.skus.map(obj => obj.tagPrice))) && !isNaN(Math.max(...product.skus.map(obj => obj.tagPrice)))"
                     @change="(checked) => {
                         if(checked){
-                            let tagprice = sku[0].tagprice
-                            sku = 
-                            sku.map(obj => {
-                                obj.tagprice = tagprice
+                            let tagPrice = product.skus[0].tagPrice
+                            product.skus = 
+                            product.skus.map(obj => {
+                                obj.tagPrice = tagPrice
                                 return obj
                             })
                         }
                     }"
                     >{{ getString('unify') }}</t-checkbox>
                     <t-input-number
-                    v-if="Math.min(...sku.map(obj => obj.tagprice)) === Math.max(...sku.map(obj => obj.tagprice)) || isNaN(Math.min(...sku.map(obj => obj.tagprice))) || isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
-                    v-model="sku[0].tagprice"
+                    v-if="Math.min(...product.skus.map(obj => obj.tagPrice)) === Math.max(...product.skus.map(obj => obj.tagPrice)) || isNaN(Math.min(...product.skus.map(obj => obj.tagPrice))) || isNaN(Math.max(...product.skus.map(obj => obj.tagPrice)))"
+                    v-model="product.skus[0].tagPrice"
                     @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj.tagprice = value
+                        product.skus = 
+                        product.skus.map(obj => {
+                            obj.tagPrice = value
                             return obj
                         })
                     }"
@@ -518,12 +439,12 @@
                     style="margin: 0 10px;"
                     />
                     <span
-                    v-if="Math.min(...sku.map(obj => obj.tagprice)) !== Math.max(...sku.map(obj => obj.tagprice)) && !isNaN(Math.min(...sku.map(obj => obj.tagprice))) && !isNaN(Math.max(...sku.map(obj => obj.tagprice)))"
+                    v-if="Math.min(...product.skus.map(obj => obj.tagPrice)) !== Math.max(...product.skus.map(obj => obj.tagPrice)) && !isNaN(Math.min(...product.skus.map(obj => obj.tagPrice))) && !isNaN(Math.max(...product.skus.map(obj => obj.tagPrice)))"
                     style="margin: 0 10px;"
                     >
-                        {{ Math.min(...sku.map(obj => obj.tagprice)) }}
+                        {{ Math.min(...product.skus.map(obj => obj.tagPrice)) }}
                         ~
-                        {{ Math.max(...sku.map(obj => obj.tagprice)) }}
+                        {{ Math.max(...product.skus.map(obj => obj.tagPrice)) }}
                     </span>
                     <t-popup placement="right" trigger="click">
                         <t-button
@@ -546,13 +467,13 @@
                                     </template>
                                 </t-list-item>
                                 <t-list-item
-                                v-for="item, index in sku"
+                                v-for="(item, index) in product.skus"
                                 :key="index"
                                 >
                                     {{ item.barcode }}
                                     <template #action>
                                         <t-input
-                                        v-model="item.tagprice"
+                                        v-model="item.tagPrice"
                                         size="small"
                                         align="center"
                                         />
@@ -564,56 +485,10 @@
                 </template>
             </t-list-item>
             <t-list-item>
-                {{ getString('firstListingTime') }}
-                <template #action>
-                    <t-date-picker
-                    v-model="sku[0]['first-listing-time']"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj['first-listing-time'] = value
-                            return obj
-                        })
-                    }"
-                    :input-props="{
-                        align: 'center'
-                    }"
-                    size="small"
-                    />
-                </template>
-            </t-list-item>
-            <t-list-item>
                 {{ getString('inputTime') }}
                 <template #action>
                     <t-date-picker
-                    v-model="sku[0]['entry-time']"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj['entry-time'] = value
-                            return obj
-                        })
-                    }"
-                    :input-props="{
-                        align: 'center'
-                    }"
-                    enable-time-picker
-                    size="small"
-                    />
-                </template>
-            </t-list-item>
-            <t-list-item>
-                {{ getString('editTime') }}
-                <template #action>
-                    <t-date-picker
-                    v-model="sku[0]['update-time']"
-                    @change="(value) => {
-                        sku = 
-                        sku.map(obj => {
-                            obj['update-time'] = value
-                            return obj
-                        })
-                    }"
+                    v-model="product.created"
                     :input-props="{
                         align: 'center'
                     }"
@@ -634,113 +509,97 @@
     </t-drawer>
 </template>
 
-<script>
+<script setup>
 import { uniqueArray } from '../../hooks'
 import confirmBar from '../../components/confirmBar.vue'
-import {MessagePlugin} from "tdesign-vue-next";
-import service from "../../api/service.js";
-import {tips} from "../../hooks/tips.js";
-import {getString} from "../../i18n/index.js";
+import {tips} from "../../hooks/tips.js"
+import {getString} from "../../i18n/index.js"
+import {request} from "../../api/request.js"
 
-export default {
-    methods: {getString},
-    components: {
-        confirmBar
+const props = defineProps({
+    supplierOptions: {
+        type: Array,
+        default: []
     },
-    props: {
-        supplierOptions: {
-            type: Array,
-            default: []
-        },
-        categoryOptions: {
-            type: Array,
-            required: true,
-            default: []
-        }
-    },
-    emits: ['reload'],
-    setup(props, { emit }){
-        const i18n = inject('i18n')
-        const serve = inject('serve')
-        const shop = inject('shop')
+    categoryOptions: {
+        type: Array,
+        required: true,
+        default: []
+    }
+})
+const emit = defineEmits(['reload'])
 
-        const visible = ref(false)
-        const loading = ref(true)
-        const submit = ref(false)
-        const sku = ref([])
+const i18n = inject('i18n')
+const shop = inject('shop')
 
-        const autoMakeBarcode = () => {
-            for (let i = 0; i < sku.value.length; i++) {
-                let stylenumber = sku.value[i].stylenumber
-                let colorCode = sku.value[i].colorid
-                let size = sku.value[i].size
-                let sizeM1 = size.split('(')
-                let sizeM2 = size.split('/')
-                let sizeCode
+const visible = ref(false)
+const loading = ref(true)
+const submit = ref(false)
+const product = ref({})
 
-                if((sizeM1.length > 1 && sizeM2.length > 1) || sizeM1.length > 1){
-                    sizeCode = sizeM1[0]
-                } else {
-                    sizeCode = sizeM2[0]
-                }
+const autoMakeBarcode = () => {
+    for (let i = 0; i < product.skus.value.length; i++) {
+        let stylenumber = product.skus.value[i].stylenumber
+        let colorCode = product.skus.value[i].colorId
+        let size = product.skus.value[i].size
+        let sizeM1 = size.split('(')
+        let sizeM2 = size.split('/')
+        let sizeCode
 
-                sku.value[i].barcode = stylenumber + colorCode + sizeCode
-            }
-        }
-        const open = async (row) => {
-            visible.value = true
-            loading.value = true
-            sku.value = []
-
-            let res = await service.api.goods.getItem(row.stylenumber)
-            if(res.result){
-                for (let i = 0; i < res.data.length; i++) {
-                    res.data[i]['category-id'] = parseInt(res.data[i]['category-id'])
-                }
-                sku.value = res.data
-            } else {
-                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
-            }
-
-            loading.value = false
-        }
-        const set = async () => {
-            submit.value = true
-
-            let task = await service.api.imports.create('morifySku', sku.value)
-            if(!task.result){
-                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
-                submit.value = false
-                return
-            }
-
-            let res = await service.api.imports.start('sku', task.id)
-            if(res.result){
-                await MessagePlugin.success(getString('editSuccess'))
-            }
-            submit.value = false
-            visible.value = false
-            emit('reload')
-        }
-        const close = () => {
-            visible.value = false
+        if((sizeM1.length > 1 && sizeM2.length > 1) || sizeM1.length > 1){
+            sizeCode = sizeM1[0]
+        } else {
+            sizeCode = sizeM2[0]
         }
 
-        return {
-            i18n,
-            shop,
-            visible,
-            loading,
-            submit,
-            sku,
-            close,
-            open,
-            set,
-            autoMakeBarcode,
-            uniqueArray
-        }
+        product.skus.value[i].barcode = stylenumber + colorCode + sizeCode
     }
 }
+const open = async (row) => {
+    visible.value = true
+    loading.value = true
+
+    let res = await request('/product', {
+        storeId: shop.store,
+        brandId: shop.brand,
+        styleNumber: [
+            row.styleNumber
+        ]
+    }, 'POST')
+    if(res.status === 'success'){
+        product.value = res.content.data[0]
+        product.value.category = parseInt(product.value.category)
+    } else {
+        tips(res.error.msg, 'error')
+    }
+
+    loading.value = false
+}
+const set = async () => {
+    submit.value = true
+
+    let res = await request('/product', {
+        storeId: shop.store,
+        brandId: shop.brand,
+        goodItem: product.value
+    }, 'PUT')
+    if(res.status !== 'success'){
+        tips(res.error.msg, 'error')
+        submit.value = false
+        return
+    }
+
+    submit.value = false
+    visible.value = false
+    emit('reload')
+}
+const close = () => {
+    visible.value = false
+}
+
+defineExpose({
+    open
+})
 </script>
 
 <style>

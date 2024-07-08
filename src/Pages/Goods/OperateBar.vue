@@ -10,42 +10,42 @@
                     {{ i18n.selected(selectKey.length)[i18n.language] }}
                 </span>
             </span>
+<!--            <t-button-->
+<!--            variant="text"-->
+<!--            theme="primary"-->
+<!--            :disabled="selectKey.length === 0"-->
+<!--            :title="i18n.selected(selectKey.length)[i18n.language]"-->
+<!--            @click="$emit('batchEdit')">-->
+<!--                <template #icon>-->
+<!--                    <t-icon name="edit" />-->
+<!--                </template>-->
+<!--                {{ getString('batch') }}{{ getString('edit') }}-->
+<!--            </t-button>-->
             <t-button
-            variant="text"
-            theme="primary"
-            :disabled="selectKey.length === 0"
-            :title="i18n.selected(selectKey.length)[i18n.language]"
-            @click="() => {
-                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/batch-edit') >= 0){
-                    $emit('batchEdit')
-                } else {
-                    tips('权限不足', 'error')
-                }
-            }">
+                variant="text"
+                theme="primary"
+                :disabled="selectKey.length === 0"
+                @click="copy(selectKey.join('\n'), i18n.language)"
+            >
                 <template #icon>
-                    <t-icon name="edit" />
+                    <t-icon name="copy" />
                 </template>
-                {{ getString('batch') }}{{ getString('edit') }}
+                {{ getString('copyStyleNumber') }}
             </t-button>
             <t-button
-            variant="text"
-            theme="primary"
-            @click="() => {
-                if(!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/goods/supplier/map') >= 0){
-                    $emit('supplierMap')
-                } else {
-                    tips('权限不足', 'error')
-                }
-            }">
+                variant="text"
+                theme="primary"
+                @click="$emit('supplierMap')"
+            >
                 <template #icon>
                     <t-icon name="arrow-up-down-2" />
                 </template>
                 {{ getString('supplier') }}{{ getString('mapping') }}
             </t-button>
             <t-button
-            variant="text"
-            theme="primary"
-            @click="$router.push('/import')"
+                variant="text"
+                theme="primary"
+                @click="$router.push('/task')"
             >
                 <template #icon>
                     <t-icon name="upload" />
@@ -71,9 +71,10 @@
 <script>
 import {tips} from "../../hooks/tips.js";
 import {getString} from "../../i18n/index.js";
+import {copy} from "../../hooks/index.js";
 
 export default {
-    methods: {getString, tips},
+    methods: {copy, getString, tips},
     props: {
         data: {
             type: Array,

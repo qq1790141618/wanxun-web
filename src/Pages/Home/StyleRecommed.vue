@@ -6,26 +6,13 @@
                 {{ getString('recommend') }}
             </span>
         </template>
-        <t-tabs :default-value="shop.brand">
-            <t-tab-panel
-            v-for="(item, index) in shop.brandOptions"
-            :key="index"
-            :value="item.value"
-            >
-                <template #label>
-                    <span :title="item.label">
-                        {{ item.name.length > 8 ? item.name.substring(0, 8) + '...' : item.name}}
-                    </span>
-                </template>
-                <div class="home-goods-list">
-                    <StyleRecommedItem
-                    v-for="item in data[item.value]"
-                    :key="item.stylenumber"
-                    :item="item"
-                    />
-                </div>
-            </t-tab-panel>
-        </t-tabs>
+        <div class="home-goods-list">
+            <StyleRecommedItem
+                v-for="item in data"
+                :key="item.stylenumber"
+                :item="item"
+            />
+        </div>
     </t-card>
 </template>
 
