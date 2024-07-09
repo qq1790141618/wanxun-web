@@ -68,11 +68,11 @@ export default {
 
             for (let i = 0; i < props.data.length; i++) {
                 chartOptions.value.series[0].data.push({
-                    name: props.data[i].name,
+                    name: props.data[i].supplier,
                     value: props.data[i].salesCount
                 })
                 chartOptions.value.series[1].data.push({
-                    name: props.data[i].name,
+                    name: props.data[i].supplier,
                     value: props.data[i].salesAmount
                 })
             }

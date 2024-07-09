@@ -132,7 +132,6 @@ import {tips} from "../../hooks/tips.js"
 import {request} from "../../api/request.js";
 
 const user = inject('user')
-const serve = inject('serve')
 
 const visible = ref(false)
 const current = ref(0)

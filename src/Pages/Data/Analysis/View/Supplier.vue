@@ -53,7 +53,7 @@ export default {
         const columns = [
             {
                 title: getString('supplier'),
-                colKey: 'name',
+                colKey: 'supplier',
                 ellipsis: true,
                 tooltip: true,
                 width: 200
@@ -61,17 +61,6 @@ export default {
             {
                 title: getString('salesCount'),
                 colKey: 'salesCount',
-                sortType: 'all',
-                sorter: true
-            },
-            {
-                title: getString('ratio'),
-                colKey: 'proportion',
-                cell: (h, {row}) => {
-                    if(row.proportion){
-                        return Math.round(row.proportion * 10000) / 100 + '%'
-                    }
-                },
                 sortType: 'all',
                 sorter: true
             },
@@ -90,23 +79,6 @@ export default {
             {
                 title: getString('refundsAmount'),
                 colKey: 'refundsAmount',
-                sortType: 'all',
-                sorter: true
-            },
-            {
-                title: getString('afterSalesRatio'),
-                colKey: 'afterSalesRate',
-                cell: (h, {row}) => {
-                    if(row.afterSalesRate){
-                        return Math.round(row.afterSalesRate * 10000) / 100 + '%'
-                    }
-                },
-                sortType: 'all',
-                sorter: true
-            },
-            {
-                title: getString('CUP'),
-                colKey: 'CUP',
                 sortType: 'all',
                 sorter: true
             }
@@ -130,12 +102,6 @@ export default {
                             foo[key] += props.data[i][key] * 1
                         }
                         foo[key] = Math.round(foo[key])
-                    } else if(key === 'afterSalesRate'){
-                        foo[key] = Math.round(foo['refundsCount'] / foo['salesCount'] * 10000) / 100 + '%'
-                    } else if(key === 'CUP'){
-                        foo[key] = Math.round(foo['salesAmount'] / foo['salesCount'])
-                    } else if(key === 'proportion'){
-                        foo[key] = '100%'
                     }
                 }
             }

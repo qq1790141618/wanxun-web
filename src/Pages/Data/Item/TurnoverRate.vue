@@ -72,11 +72,11 @@ export default {
             let saled = 0
             let nosale = 0
             for (let i = 0; i < chartData.length; i++) {
-                if(!chartData[i]['already-saled-stylenumber']){
-                    chartData[i]['already-saled-stylenumber'] = 0
+                if(!chartData[i].turnover){
+                    chartData[i].turnover = 0
                 }
-                saled += chartData[i]['already-saled-stylenumber']
-                nosale += chartData[i]['stylenumber'] - chartData[i]['already-saled-stylenumber']
+                saled += chartData[i].turnover
+                nosale += chartData[i].count - chartData[i].turnover
             }
 
             chartOption.value.series[0].data.push({

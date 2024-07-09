@@ -1,84 +1,41 @@
 <template>
     <div style="padding: 12px; " class="opera-ana">
         <t-card
-        :bordered="false"
-        size="small"
-        header-bordered
-        style="height: calc(100vh - 115px);"
+            :bordered="false"
+            size="small"
+            :header-bordered="true"
+            style="height: calc(100vh - 115px);"
         >
             <template #header>
+                <span>
+                    {{ shop.storeOptions.find(item => item.id === shop.store).name }}
+                    {{ shop.store }}
+                    /
+                    {{ shop.brandOptions.find(item => item.id === shop.brand).name }}
+                    {{ shop.brand }}
+                </span>
                 <t-space size="6px" align="center">
                     <t-select
-                    size="small"
-                    :label="getString('store') + ': '"
-                    v-model="store"
-                    :options="shop.storeOptions"
-                    @change="initData"
-                    style="width: fit-content;"
-                    :disabled="loading"
-                    clearable
-                    />
-                    <t-select
-                    size="small"
-                    :label="getString('brand') + ': '"
-                    v-model="brand"
-                    :options="shop.brandOptions"
-                    @change="initData"
-                    style="width: fit-content;"
-                    :disabled="loading"
-                    />
-
-                    <t-select
-                    size="small"
-                    :options="modeOptions"
-                    v-model="mode"
-                    @change="initData"
-                    style="width: 90px;"
-                    :disabled="loading"
+                        size="small"
+                        :options="modeOptions"
+                        v-model="mode"
+                        @change="initData"
+                        style="width: 90px;"
+                        :disabled="loading"
                     />
                     <t-date-picker
-                    size="small"
-                    :mode="mode"
-                    v-model="date[mode]"
-                    @change="initData"
-                    style="width: 135px;"
-                    :disabled="loading"
+                        size="small"
+                        :mode="mode"
+                        v-model="date[mode]"
+                        @change="initData"
+                        style="width: 135px;"
+                        :disabled="loading"
                     />
-
-                    <t-input-number
-                    size="small"
-                    v-model="tagFee"
-                    :step="1"
-                    :label="getString('eahtc')"
-                    :suffix="getString('yuan')"
-                    style="width: fit-content;"
-                    @change="computerProfit"
-                    :disabled="loading"
-                    />
-                    <t-input-number
-                    size="small"
-                    v-model="platformServiceFee"
-                    :step="0.01"
-                    :label="getString('psfr')"
-                    style="width: fit-content;"
-                    @change="computerProfit"
-                    :disabled="loading"
-                    />
-                    <t-input-number
-                    size="small"
-                    v-model="tax"
-                    :step="0.01"
-                    :label="getString('tax') + getString('ratio')"
-                    style="width: fit-content;"
-                    @change="computerProfit"
-                    :disabled="loading"
-                    />
-
                     <t-button
-                    size="small"
-                    variant="outline"
-                    :loading="loading"
-                    @click="initData"
+                        size="small"
+                        variant="outline"
+                        :loading="loading"
+                        @click="initData"
                     >
                         <template #icon>
                             <t-icon name="refresh" />
@@ -88,40 +45,40 @@
                 </t-space>
             </template>
             <t-loading
-            v-if="loading"
-            style="width: 100%; min-height: 50vh;"
-            size="small"
-            :text="getString('loading')"
+                v-if="loading"
+                style="width: 100%; min-height: 50vh;"
+                size="small"
+                :text="getString('loading')"
             ></t-loading>
             <div
-            class="error-card-list"
-            v-if="!loading && JSON.stringify(errorInfo) !== '{}'"
+                class="error-card-list"
+                v-if="!loading && JSON.stringify(errorInfo) !== '{}'"
             >
                 <t-card
-                v-for="item, index in errorInfo"
+                v-for="(item, index) in errorInfo"
                 :key="index"
                 class="error-card"
                 >
                     <t-icon name="close-circle" style="color: red; margin-right: 2px;" />
                     {{ item.message }}
                     <t-textarea
-                    :value="item.data.join('\n')"
-                    name="description"
-                    :autosize="{ minRows: 3, maxRows: 5 }"
-                    readonly
+                        :value="item.data.join('\n')"
+                        name="description"
+                        :autosize="{ minRows: 3, maxRows: 5 }"
+                        :readonly="true"
                     />
                 </t-card>
             </div>
             <t-row
-            :gutter="[18, 12]"
-            style="width: 100%;"
-            v-if="!loading && JSON.stringify(errorInfo) === '{}'"
+                :gutter="[18, 12]"
+                style="width: 100%;"
+                v-if="!loading && JSON.stringify(errorInfo) === '{}'"
             >
                 <t-col :span="4">
-                    <OperationalContrust :data="data" />
+                    <ProfitRatio :list="data[time]" />
                 </t-col>
                 <t-col :span="4">
-                    <ProfitRatio :data="data" />
+                    <OperationalContrast :data="data" />
                 </t-col>
                 <t-col :span="4">
                     <GoodsProfitRanks :data="data" />
@@ -133,13 +90,11 @@
 
 <script setup>
 import dayjs from 'dayjs'
-import { translate, uniqueArray } from '../../../hooks'
 import GoodsProfitRanks from './GoodsProfitRanks.vue'
-import OperationalContrust from './OperationalContrust.vue'
+import OperationalContrast from './OperationalContrast.vue'
 import ProfitRatio from './ProfitRatio.vue'
-import service from "../../../api/service.js"
-import {tips} from "../../../hooks/tips.js"
-import {getString} from "../../../i18n/index.js"
+import { getString } from "../../../i18n/index.js"
+import { request } from "../../../api/request.js"
 
 const shop = inject('shop')
 const store = ref('')
@@ -152,7 +107,7 @@ const mode = ref('month')
 const modeOptions = [
     {
         label: getString('date'),
-        value: 'date',
+        value: 'time',
         format: 'YYYY-MM-DD',
         tag: 'day'
     },
@@ -169,105 +124,75 @@ const modeOptions = [
         tag: 'year'
     }
 ]
-const date = ref(null)
-date.value = {
-    date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+const date = ref({
+    day: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
     month: dayjs().format('YYYY-MM'),
     year: dayjs().format('YYYY')
-}
-
-const tax = ref(0.08)
-const platformServiceFee = ref(0.2)
-const tagFee = ref(0)
-const special = (brand) => {
-    if(brand === 'DR'){
-        platformServiceFee.value = 0.3
-    } else {
-        platformServiceFee.value = 0.2
-    }
-    if(brand === '兔皇'){
-        tagFee.value = 8
-    } else {
-        tagFee.value = 8
-    }
-}
-special(brand.value)
-watch(() => brand.value, (newVal) => {
-    special(newVal)
 })
 
-const data = ref({})
+const data = ref([])
+const time = ref('')
 const errorInfo = ref({})
 
 const loading = ref(false)
-const initData = async () => {
-    data.value = {}
+const initData = () => {
+    data.value = []
     errorInfo.value = {}
     loading.value = true
 
     let n = 5
+    let f = 'YYYY-MM'
     if(mode.value === 'year'){
         n = 2
+        f = 'YYYY'
     }
-    if(mode.value === 'date'){
+    if(mode.value === 'day'){
         n = 7
+        f = 'YYYY-MM-DD'
     }
-    let option = modeOptions.find(obj => obj.value === mode.value)
-    let format = option.format
-    let tag = option.tag
-    let results = {}
+
+    let isR = false
+    let count = 0
+    const addCount = () => {
+        count++
+        if (count >= n) {
+            if (isR) {
+                loading.value = false
+            } else {
+                computerProfit()
+            }
+        }
+    }
 
     for (let i = 0; i < n; i++) {
-        let matchTime = dayjs(date.value[mode.value]).subtract(i, tag).format(format)
-        let res = await service.api.analysis.operational(brand.value, mode.value, matchTime, store.value ?? "")
-        results[matchTime] = res
-
-        if(res.result){
-            continue
-        } else {
-            tips(res.error.message, 'error')
-        }
-
-        let ekey
-        if(results[matchTime].error && results[matchTime].error.message === '部分SKU在品牌的商品列表中未包含'){
-            ekey = 'nosku'
-        }
-        if(results[matchTime].error && results[matchTime].error.message === '部分SKU未上传运营价'){
-            ekey = 'nocost'
-        }
-
-        errorInfo.value[ekey] = errorInfo.value[ekey] ? errorInfo.value[ekey] : { message: '', data: [] }
-        errorInfo.value[ekey].message = (await translate(results[matchTime].error.message, i18n.language))['trans_result'][0]['dst']
-        errorInfo.value[ekey].data = errorInfo.value[ekey].data.concat(results[matchTime].content)
-        errorInfo.value[ekey].data = uniqueArray(errorInfo.value[ekey].data, arr => arr)
-    }
-
-    data.value = results
-    if(JSON.stringify(errorInfo.value) === '{}'){
-        computerProfit()
-    } else {
-        loading.value = false
+        let startTime = dayjs().subtract(i, mode.value).startOf(mode.value).format('YYYY-MM-DD') + ' 00:00:00'
+        let endTime = dayjs().subtract(i, mode.value).endOf(mode.value).format('YYYY-MM-DD') + ' 23:59:59'
+        let t = dayjs().subtract(i, mode.value).format(f)
+        if (i === 0) time.value = t
+        request('/analysis/operational', {
+            store: shop.store,
+            brand: shop.brand,
+            startTime,
+            endTime
+        }).then(res => {
+            if(res.status !== 'success'){
+                errorInfo.value.message = res.error.msg
+                errorInfo.value.data = res.content
+                isR = true
+            } else {
+                data.value[t] = res.content
+            }
+            addCount()
+        })
     }
 }
 const computerProfit = () => {
-    loading.value = true
-
     for (const key in data.value) {
-        let list = data.value[key].data
-
+        let list = data.value[key]
         for (let i = 0; i < list.length; i++) {
-            list[i].income = list[i].salesIncome - list[i].refundsIncome
-            list[i].income = Math.round(list[i].income * 100) / 100
-            list[i].actualSalesCount = list[i].salesCount - list[i].refundsCount
-            list[i].actualSalesAmount = list[i].salesAmount - list[i].refundsAmount
-            list[i].useCost = list[i].salesCost - list[i].refundsCost
-            list[i].profit = list[i].income * (1 - tax.value) - platformServiceFee.value * list[i].actualSalesAmount - list[i].useCost - tagFee.value * list[i].actualSalesCount
-            list[i].profit = Math.round(list[i].profit * 100) / 100
-            list[i].profitRatio = list[i].profit == 0 ? 0 : list[i].profit / list[i].actualSalesAmount
-            list[i].profitRatio = Math.round(list[i].profitRatio * 10000) / 10000
+            list[i].profitRatio = list[i].profit === 0 ? 0 : parseFloat((list[i].profit / list[i].realSaleAmount).toFixed(4))
         }
     }
-
     setTimeout(() => {
         loading.value = false
     }, 100)
@@ -291,7 +216,7 @@ onMounted(() => {
     display: flex;
     gap: 8px;
 }
-.opera-ana .chart{
+.opera-ana .chart {
     width: 100%;
     height: 40vh;
     margin: 15vh 0;

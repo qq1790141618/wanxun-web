@@ -1,13 +1,13 @@
 <template>
     <div
-    ref="chartEl"
-    style="width: 100%; height: calc(100vh - 310px);"
+        ref="chartEl"
+        style="width: 100%; height: calc(100vh - 310px);"
     ></div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
-import {getString} from "../../../i18n/index.js";
+import { getString } from "../../../i18n/index.js"
 
 export default {
     props: {
@@ -61,12 +61,12 @@ export default {
             let maxRadar = 6
 
             for (let i = 0; i < chartData.length; i++) {
-                let a = chartData[i].stylenumber
-                let b = chartData[i]['sales-count'] ? (chartData[i]['sales-count'] - chartData[i]['after-sale-count']) : 0
+                let a = chartData[i].count
+                let b = chartData[i].realSaleCount
 
                 if(i < maxRadar - 1){
                     chartOption.value.radar.indicator.push({
-                        name: chartData[i].category
+                        name: chartData[i].name + ' ' + chartData[i].category
                     })
                     chartOption.value.series[0].data[0].value.push(a)
                     chartOption.value.series[0].data[1].value.push(b)

@@ -71,37 +71,37 @@
                     </t-dropdown-menu>
                 </t-dropdown>
                 <t-image-viewer
-                v-if="user.status === 'loged'"
-                :images="[ user.inform.headsrc ]"
-                v-model:visible="user.avatarView"
+                    v-if="user.status === 'loged'"
+                    :images="[ user.inform.avatar ]"
+                    v-model:visible="user.avatarView"
                 >
                 </t-image-viewer>
             </t-space>
         </div>
     </header>
     <t-dialog
-    v-model:visible="settings"
-    :header="getString('setting')"
-    :footer="false"
-    :close-on-overlay-click="false"
+        v-model:visible="settings"
+        :header="getString('setting')"
+        :footer="false"
+        :close-on-overlay-click="false"
     >
         <t-space direction="vertical" style="width: 100%;">
             <t-select
-            label="Language: "
-            v-model="i18n.language"
-            :options="i18n.options"
-            @change="(value) => {
-                changeLanguage({ value })
-            }"
+                label="Language: "
+                v-model="i18n.language"
+                :options="i18n.options"
+                @change="(value) => {
+                    changeLanguage({ value })
+                }"
             >
                 <template #valueDisplay="{ value }">
                     {{ value ? getLanguageOptionItem(value) : '' }}
                 </template>
             </t-select>
             <t-select
-            :label="getString('store') + ': '"
-            v-model="shop.store"
-            @change="storeChange"
+                :label="getString('store') + ': '"
+                v-model="shop.store"
+                @change="storeChange"
             >
                 <t-option
                     v-for="(item, index) in shop.storeOptions"
@@ -111,20 +111,20 @@
                 ></t-option>
             </t-select>
             <t-select
-            :label="getString('brand') + ': '"
-            v-model="shop.brand"
-            @change="saveOptions"
+                :label="getString('brand') + ': '"
+                v-model="shop.brand"
+                @change="saveOptions"
             >
                 <t-option
-                    v-for="(item, index) in shop.brandOptions"
+                    v-for="(item, index) in brandOptions"
                     :key="index"
                     :value="item.id"
                     :label="item.name"
                 ></t-option>
             </t-select>
-            <t-space size="small" align="center">
-                <t-switch size="small" v-model="showBackground" @change="showBackgroundChange"></t-switch><div>显示背景/Show Background</div>
-            </t-space>
+<!--            <t-space size="small" align="center">-->
+<!--                <t-switch size="small" v-model="showBackground" @change="showBackgroundChange"></t-switch><div>显示背景/Show Background</div>-->
+<!--            </t-space>-->
         </t-space>
     </t-dialog>
 <!--    <SearchResult-->
@@ -141,8 +141,9 @@ import SearchResult from './SearchResult.vue'
 import {getString, getLanguageOptionItem} from "../i18n/index.js"
 import {tips} from "../hooks/tips.js"
 import service from "../api/service.js"
-import {getToken} from "../hooks/user.js"
+import { getToken } from "../hooks/user.js"
 import QRCodeVue3 from "qrcode-vue3"
+import { request } from "../api/request.js"
 
 const i18n = inject('i18n')
 const user = inject('user')
@@ -156,18 +157,13 @@ const searchResult = ref(null)
 const showBackground = ref(true)
 
 const saveOptions = () => {
-    localStorage.setItem('language', i18n.language)
-    localStorage.setItem('store', shop.store)
-    localStorage.setItem('brand', shop.brand)
-    if(getToken()){
-        service.api.user.saveUserInform({
-            setting: JSON.stringify({
-                store: shop.store,
-                brand: shop.brand,
-                language: i18n.language
-            })
-        })
-    }
+    request('/user/inform', {
+        setting: {
+            store: shop.store,
+            brand: shop.brand,
+            language: i18n.language
+        }
+    }, 'PUT')
 }
 
 const changeLanguage = ({ value }) => {
@@ -178,7 +174,7 @@ const changeLanguage = ({ value }) => {
 
 const brandOptions = ref([])
 const storeChange = (value) => {
-    let option = shop.storeOptions.find(item => item['value'] === value)
+    let option = shop.storeOptions.find(item => item.id === value)
     if(!option){
         return
     }
@@ -190,15 +186,14 @@ const storeChange = (value) => {
         if(supportBrand.indexOf(shop.brandOptions[i].id) >= 0){
             brandOptions.value.push(shop.brandOptions[i])
         }
-        if(shop.brandOptions[i].value === shop.brand){
+        if(shop.brandOptions[i].id === shop.brand){
             if(supportBrand.indexOf(shop.brandOptions[i].id) < 0){
                 resetBrand = true
             }
         }
     }
-
     if(resetBrand){
-        shop.brand = brandOptions.value[0].value
+        shop.brand = brandOptions.value[0].id
     }
 
     saveOptions()
@@ -218,26 +213,26 @@ const viewOnGithub = () => {
     window.open('https://github.com/qq1790141618/wanxun-web')
 }
 
-const showBackgroundChange = (value) => {
-    if(value){
-        localStorage.setItem('show-background', '1')
-        document.body.style.background = "transparent url(\"https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg\") center center / cover no-repeat"
-    } else {
-        localStorage.setItem('show-background', '0')
-        document.body.style.background = ''
-        document.body.style.backgroundColor = "#f2f3ff"
-    }
-}
+// const showBackgroundChange = (value) => {
+//     if(value){
+//         localStorage.setItem('show-background', '1')
+//         document.body.style.background = "transparent url(\"https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg\") center center / cover no-repeat"
+//     } else {
+//         localStorage.setItem('show-background', '0')
+//         document.body.style.background = ''
+//         document.body.style.backgroundColor = "#f2f3ff"
+//     }
+// }
 
 onMounted(() => {
     if(!localStorage.getItem('setting-button-attention')){
         COUNT.value = 'new'
     }
-    const background = localStorage.getItem('show-background')
-    if(background && background === '0'){
-        showBackground.value = false
-    }
-    showBackgroundChange(showBackground.value)
+    // const background = localStorage.getItem('show-background')
+    // if(background && background === '0'){
+    //     showBackground.value = false
+    // }
+    // showBackgroundChange(showBackground.value)
 })
 </script>
 

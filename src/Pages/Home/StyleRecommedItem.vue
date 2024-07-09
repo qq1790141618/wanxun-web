@@ -1,17 +1,17 @@
 <template>
     <t-card
-    v-if="item"
-    :bordered="false"
-    class="next-good-item"
-    shadow
+        class="next-good-item"
+        v-if="item"
+        :bordered="false"
+        :shadow="true"
     >
         <t-image
-        class="next-good-item-image"
-        :src="item.image"
-        lazy
+            class="next-good-item-image"
+            :src="item.image"
+            :lazy="true"
         >
             <template #error>
-                <img src="../../assets/loadfail.png" style="height: 70%; margin-bottom: 15%;">
+                <img src="../../assets/loadfail.png" style="height: 70%; margin-bottom: 12%;" alt="">
             </template>
         </t-image>
         <div class="next-good-item-info">
@@ -39,10 +39,10 @@
                 {{ getString('yuan') }}
             </div>
             <t-button
-            v-if="item.id != null"
-            size="small"
-            shape="round"
-            @click.stop="miaostreetGoodsLink(item)"
+                v-if="item.id != null"
+                size="small"
+                shape="round"
+                @click.stop="miaostreetGoodsLink(item)"
             >
                 <template #icon>
                     <t-icon name="browse"></t-icon>
@@ -90,8 +90,8 @@ export default {
     padding: 0;
 }
 .next-good-item-image{
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     flex-shrink: 0;
 }
 .next-good-item-info{

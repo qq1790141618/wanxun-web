@@ -16,19 +16,19 @@
             </t-tooltip>
         </template>
         <t-table
-        size="small"
-        :key="primaryData"
-        :data="primaryData"
-        :columns="columns"
-        :bordered="false"
-        @sort-change="(val) => {
-            sortValue = val
-            data = sort(val, primaryData, { sortBy: 'salesCount', descending: true })
-        }"
-        :sort="sortValue"
-        :show-sort-column-bg-color="true"
-        height="450px"
-        :row-key="colKey"
+            size="small"
+            :key="primaryData"
+            :data="primaryData"
+            :columns="columns"
+            :bordered="false"
+            @sort-change="(val) => {
+                sortValue = val
+                data = sort(val, primaryData, { sortBy: 'salesCount', descending: true })
+            }"
+            :sort="sortValue"
+            :show-sort-column-bg-color="true"
+            height="450px"
+            :row-key="colKey"
         ></t-table>
     </t-card>
 </template>

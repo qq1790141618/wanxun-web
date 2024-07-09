@@ -31,9 +31,38 @@
             <span v-if="row.status === 'done'">{{ getString('done') }}</span>
         </template>
         <template #resultshow="{ row }">
-            <span v-if="!row.result">{{ getString('evenDown') }}</span>
-            <span v-if="row.result === 'success'">{{ getString('success') }}</span>
-            <span v-if="row.result === 'fail'">{{ getString('fail') }}</span>
+            <t-tag
+                shape="round"
+                v-if="!row.result"
+                variant="light"
+            >
+                <template #icon>
+                    <t-icon name="ellipsis" />
+                </template>
+                {{ getString('evenDown') }}
+            </t-tag>
+            <t-tag
+                shape="round"
+                v-if="row.result === 'success'"
+                variant="light"
+                theme="success"
+            >
+                <template #icon>
+                    <t-icon name="check-circle" />
+                </template>
+                {{ getString('success') }}
+            </t-tag>
+            <t-tag
+                shape="round"
+                v-if="row.result === 'fail'"
+                variant="light"
+                theme="danger"
+            >
+                <template #icon>
+                    <t-icon name="close-circle" />
+                </template>
+                {{ getString('success') }}
+            </t-tag>
         </template>
         <template #progressshow="{ row }">
             <div style="padding: 0 12px;">
@@ -203,7 +232,7 @@ const downloadFile = (file) => {
 </script>
 
 <style>
-.task-display .t-icon {
+.task-display span>.t-icon {
     position: relative;
     top: -1.5px;
     left: -1.5px;

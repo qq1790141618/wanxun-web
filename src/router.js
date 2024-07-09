@@ -72,7 +72,7 @@ const routes = [
             {
                 path: '/datas/analysis',
                 name: 'datas-analysis',
-                component: () => import('./Pages/Data/Analysis/index.vue'),
+                component: () => import('./Pages/Data/Analysis/current.vue'),
                 meta: {
                     title: "data2",
                     icon: 'chart-bubble',

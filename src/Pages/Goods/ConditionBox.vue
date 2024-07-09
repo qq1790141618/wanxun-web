@@ -29,6 +29,10 @@
                             value: 'product'
                         },
                         {
+                            label: getString('barcode'),
+                            value: 'barcode'
+                        },
+                        {
                             label: 'SKU',
                             value: 'sku'
                         },

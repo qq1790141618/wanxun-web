@@ -22,12 +22,13 @@ body {
     color: var(--td-text-color-secondary);
     font: var(--td-font-body-medium);
     font-family: -apple-system, BlinkMacSystemFont, var(--td-font-family);
-    background: transparent url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg") center center / cover no-repeat;
-    -webkit-font-smoothing: antialiased;
+    /*background: transparent url("https://cdn.fixeam.com/tw/img1.wallspic.com-jian_yue-shou_shi-qi_ti-yuan_quan-dian_lan_se_de-7680x4320.jpg") center center / cover no-repeat;*/
+    /*-webkit-font-smoothing: antialiased;*/
+    background-color: #f7f7ff;
     padding: 0;
     margin: 0;
-    overflow-x: hidden;
-    min-height: 100vh;
+    /*overflow-x: hidden;*/
+    /*min-height: 100vh;*/
 }
 img, div, span{
     vertical-align: middle;

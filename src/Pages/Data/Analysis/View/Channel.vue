@@ -9,21 +9,21 @@
     class="cas-chart"
     ></div>
     <t-table
-    v-if="primaryData && primaryData.length > 0"
-    v-show="view === 'table'"
-    :bordered="false"
-    :data="primaryData"
-    :columns="columns"
-    :max-height="550"
-    style="width: 100%; margin: 20px auto;"
-    :sort="sortValue"
-    @sort-change="(val) => {
-        sortValue = val
-        primaryData = sort(val, primaryData, sortDefault)
-    }"
-    :show-sort-column-bg-color="true"
-    :foot-data="footData"
-    row-key="name"
+        v-if="primaryData && primaryData.length > 0"
+        v-show="view === 'table'"
+        :bordered="false"
+        :data="primaryData"
+        :columns="columns"
+        :max-height="550"
+        style="width: 100%; margin: 20px auto;"
+        :sort="sortValue"
+        @sort-change="(val) => {
+            sortValue = val
+            primaryData = sort(val, primaryData, sortDefault)
+        }"
+        :show-sort-column-bg-color="true"
+        :foot-data="footData"
+        row-key="name"
     ></t-table>
 </template>
 
@@ -42,7 +42,7 @@ const footData = ref([])
 const columns = [
     {
         title: getString('channel'),
-        colKey: 'name',
+        colKey: 'channel',
         ellipsis: true,
         tooltip: true,
         width: 200
@@ -50,17 +50,6 @@ const columns = [
     {
         title: getString('salesCount'),
         colKey: 'salesCount',
-        sortType: 'all',
-        sorter: true
-    },
-    {
-        title: getString('ratio'),
-        colKey: 'proportion',
-        cell: (h, {row}) => {
-            if(row['proportion']){
-                return Math.round(row['proportion'] * 10000) / 100 + '%'
-            }
-        },
         sortType: 'all',
         sorter: true
     },
@@ -79,23 +68,6 @@ const columns = [
     {
         title: getString('refundsAmount'),
         colKey: 'refundsAmount',
-        sortType: 'all',
-        sorter: true
-    },
-    {
-        title: getString('afterSalesRatio'),
-        colKey: 'afterSalesRate',
-        cell: (h, {row}) => {
-            if(row['afterSalesRate']){
-                return Math.round(row['afterSalesRate'] * 10000) / 100 + '%'
-            }
-        },
-        sortType: 'all',
-        sorter: true
-    },
-    {
-        title: getString('CUP'),
-        colKey: 'CUP',
         sortType: 'all',
         sorter: true
     }
@@ -150,24 +122,18 @@ const initChart = async () => {
 
     for (let i = 0; i < props.data.length; i++) {
         chartOptions.value.series[0].data.push({
-            name: props.data[i].name,
+            name: props.data[i].channel,
             value: props.data[i].salesCount
         })
 
         for (const key in props.data[i]) {
-            if(typeof(props.data[i][key] * 1) === 'number' && !isNaN(props.data[i][key] * 1) && key !== 'name' && key !== 'afterSalesRate' && key !== 'proportion' && key !== 'CUP'){
+            if(typeof(props.data[i][key] * 1) === 'number' && !isNaN(props.data[i][key] * 1) && key !== 'name' && key !== 'afterSaleRatio' && key !== 'ratio' && key !== 'customerUnitPrice'){
                 if(!foo[key]){
                     foo[key] = props.data[i][key] * 1
                 } else {
                     foo[key] += props.data[i][key] * 1
                 }
                 foo[key] = Math.round(foo[key])
-            } else if(key === 'afterSalesRate'){
-                foo[key] = Math.round(foo['refundsCount'] / foo['salesCount'] * 10000) / 100 + '%'
-            } else if(key === 'CUP'){
-                foo[key] = Math.round(foo['salesAmount'] / foo['salesCount'])
-            } else if(key === 'proportion'){
-                foo[key] = '100%'
             }
         }
     }

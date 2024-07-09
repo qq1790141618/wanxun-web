@@ -362,5 +362,7 @@
     "useTime": "执行总耗时",
     "brandKeywordTip": "在商品信息中一定会出现的文字，用于匹配商品时使用",
     "skuImportTable": "SKU信息导入表",
-    "copyStyleNumber": "复制款号"
+    "copyStyleNumber": "复制款号",
+    "tagFee": "吊牌费",
+    "packFee": "包装费"
 }

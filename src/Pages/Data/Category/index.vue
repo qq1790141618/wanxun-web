@@ -1,42 +1,54 @@
 <template>
     <t-card
-    :bordered="false"
-    style="margin: 15px;"
-    header-bordered
-    size="small"
+        :bordered="false"
+        :header-bordered="true"
+        size="small"
+        style="margin: 15px;"
     >
         <template #header>
             <span>
-                <t-icon name="castle-3" style="margin-right: 3px;" />
-                {{ shop.storeOptions.filter(item => item.value === shop.store)[0].label }}
+                {{ shop.storeOptions.find(item => item.id === shop.store).name }}
+                {{ shop.store }}
                 /
+                {{ shop.brandOptions.find(item => item.id === shop.brand).name }}
                 {{ shop.brand }}
             </span>
             <span>
                 <span style="margin-right: 6px;">
-                    <t-icon name="calendar" style="margin-right: 3px;" />
                     {{ getString('choose') }}{{ getString('time') }}:
                 </span>
                 <t-date-range-picker
-                size="small"
-                v-model="date"
-                :presets="quickDateRangePicker"
-                @change="initData"
+                    size="small"
+                    v-model="date"
+                    :presets="quickDateRangePicker"
+                    @change="initData"
                 ></t-date-range-picker>
+                <t-button
+                    size="small"
+                    variant="outline"
+                    :loading="loading"
+                    @click="initData"
+                    style="margin-left: 6px;"
+                >
+                    <template #icon>
+                        <t-icon name="refresh" />
+                    </template>
+                    {{ getString('refresh') }}
+                </t-button>
             </span>
         </template>
         <t-loading
-        v-if="loading"
-        style="width: 100%; height: 100%; min-height: 50vh;"
-        size="small"
-        :text="getString('loading')"
+            v-if="loading"
+            style="width: 100%; height: 100%; min-height: 50vh;"
+            size="small"
+            :text="getString('loading')"
         ></t-loading>
         <div v-if="!loading">
             <t-radio-group
-            size="small"
-            v-model="view"
-            variant="default-filled"
-            style="margin-bottom: 10px;"
+                size="small"
+                v-model="view"
+                variant="default-filled"
+                style="margin-bottom: 10px;"
             >
                 <t-radio-button value="charts">
                     <t-icon name="chart-radial"></t-icon>
@@ -47,7 +59,7 @@
                     {{ getString('table') }}
                 </t-radio-button>
             </t-radio-group>
-            <t-row v-if="view == 'charts'">
+            <t-row v-if="view === 'charts'">
                 <t-col :span="6">
                     <div style="padding: 50px; box-sizing: border-box;">
                         <MainChart :data="data" />
@@ -59,89 +71,83 @@
                     </div>
                 </t-col>
             </t-row>
-            <div v-if="view == 'table'" style="padding: 50px; box-sizing: border-box">
+            <div v-if="view === 'table'" style="padding: 50px; box-sizing: border-box">
                 <CategoryDataTable :data="data" />
             </div>
         </div>
     </t-card>
 </template>
 
-<script>
+<script setup>
 import dayjs from 'dayjs'
-import { getQuickDateRangePicker } from '../../../hooks'
 import MainChart from './MainChart.vue'
 import ElseChart from './ElseChart.vue'
 import CategoryDataTable from './CategoryDataTable.vue'
-import service from "../../../api/service.js";
-import {tips} from "../../../hooks/tips.js";
-import {getString} from "../../../i18n/index.js";
+import { getQuickDateRangePicker } from '../../../hooks'
+import { tips } from "../../../hooks/tips.js"
+import { getString } from "../../../i18n/index.js"
+import { request } from "../../../api/request.js"
 
-export default {
-    methods: {getString},
-    components: {
-        MainChart,
-        ElseChart,
-        CategoryDataTable
-    },
-    setup() {
-        const i18n = inject('i18n')
-        const shop = inject('shop')
+const i18n = inject('i18n')
+const shop = inject('shop')
 
-        const date = ref([
-            dayjs().subtract(97, 'day').format('YYYY-MM-DD'),
-            dayjs().subtract(7, 'day').format('YYYY-MM-DD')
-        ])
-        const view = ref('charts')
-        const loading = ref(false)
-        const data = ref([])
+const date = ref([
+    dayjs().startOf('month').format('YYYY-MM-DD'),
+    dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+])
+const view = ref('charts')
+const loading = ref(false)
+const data = ref([])
 
-        const matchData = async () => {
-            loading.value = true
+const matchData = async () => {
+    loading.value = true
 
-            let res = await service.api.analysis.categoryInform(date.value[0], date.value[1])
-            if(res.result){
-                data.value = res.data
-            } else {
-                tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
+    let res = await request('/analysis/categories', {
+        store: shop.store,
+        brand: shop.brand,
+        startTime: date.value[0] + ' 00:00:00',
+        endTime: date.value[1] + ' 23:59:59'
+    })
+    if(res.status === 'success'){
+        res.content.sort((a, b) => {
+            let per = 'salesCount'
+            if (a[per] < b[per]) {
+                return 1
             }
-
-            loading.value = false
-        }
-        let timer
-        const initData = () => {
-            clearTimeout(timer)
-            timer = setTimeout(() => {
-                matchData()
-            }, 500)
-        }
-
-        const quickDateRangePicker = ref({})
-        watch(() => i18n.language,  async (newValue) => {
-            quickDateRangePicker.value = await getQuickDateRangePicker(newValue)
+            if (a[per] > b[per]) {
+                return -1
+            }
+            return 0
         })
-        watch(() => shop.store, () => {
-            matchData()
-        })
-        watch(() => shop.brand, () => {
-            matchData()
-        })
-        onMounted(async () => {
-            await matchData()
-            quickDateRangePicker.value = await getQuickDateRangePicker(i18n.language)
-        })
-
-        return {
-            i18n,
-            quickDateRangePicker,
-            date,
-            view,
-            shop,
-            loading,
-            data,
-            initData
-        }
+        data.value = res.content
+    } else {
+        tips(res.error.msg, 'error')
     }
+
+    loading.value = false
 }
+let timer
+const initData = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+        matchData()
+    }, 100)
+}
+
+const quickDateRangePicker = ref({})
+watch(() => i18n.language,  async (newValue) => {
+    quickDateRangePicker.value = await getQuickDateRangePicker(newValue)
+})
+watch(() => shop.store, () => {
+    matchData()
+})
+watch(() => shop.brand, () => {
+    matchData()
+})
+onMounted(async () => {
+    await matchData()
+    quickDateRangePicker.value = await getQuickDateRangePicker(i18n.language)
+})
 </script>
 
 <style>

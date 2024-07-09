@@ -86,7 +86,6 @@ import {request} from "../../api/request.js";
 
 const emit = defineEmits(['done'])
 const user = inject('user')
-const serve = inject('serve')
 
 const visible = ref(false)
 const resource = ref(null)
@@ -128,13 +127,13 @@ const confirm = async () => {
         avatar: response.content
     }, 'PUT')
 
-    if(response.status === 'success'){
+    if(res.status === 'success'){
         user.inform.avatar = response.content
         visible.value = false
         emit('done')
         await MessagePlugin.success(getString('editSuccess'))
     } else {
-        tips(response.error.msg, 'error')
+        tips(res.error.msg, 'error')
     }
 
     loading.value = false

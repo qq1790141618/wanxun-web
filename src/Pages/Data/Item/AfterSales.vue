@@ -1,10 +1,10 @@
 <template>
     <t-radio-group
-    size="small"
-    v-model="mode"
-    variant="default-filled"
-    style="margin-bottom: 10px;"
-    @change="initData"
+        size="small"
+        v-model="mode"
+        variant="default-filled"
+        style="margin-bottom: 10px;"
+        @change="initData"
     >
         <t-radio-button value="refundsCount">
             {{ getString('refundsCount') }}
@@ -17,10 +17,10 @@
         </t-radio-button>
     </t-radio-group>
     <t-table
-    size="small"
-    :data="primaryData"
-    :columns="columns"
-    max-height="calc(64vh - 260px)"
+        size="small"
+        :data="primaryData"
+        :columns="columns"
+        max-height="calc(64vh - 260px)"
     >
         <template #stylenumber="{ row }">
             <t-link @click="miaostreetGoodsLink(row)" theme="primary" style="font-size: 13px;">{{ row.stylenumber }}</t-link>

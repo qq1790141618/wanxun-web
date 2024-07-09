@@ -44,7 +44,7 @@ export default {
         const columns = [
             {
                 title: getString('sex'),
-                colKey: 'name',
+                colKey: 'sex',
                 ellipsis: true,
                 tooltip: true,
                 width: 200
@@ -52,17 +52,6 @@ export default {
             {
                 title: getString('salesCount'),
                 colKey: 'salesCount',
-                sortType: 'all',
-                sorter: true
-            },
-            {
-                title: getString('ratio'),
-                colKey: 'proportion',
-                cell: (h, {row}) => {
-                    if(row.proportion){
-                        return Math.round(row.proportion * 10000) / 100 + '%'
-                    }
-                },
                 sortType: 'all',
                 sorter: true
             },
@@ -81,23 +70,6 @@ export default {
             {
                 title: getString('refundsAmount'),
                 colKey: 'refundsAmount',
-                sortType: 'all',
-                sorter: true
-            },
-            {
-                title: getString('afterSalesRatio'),
-                colKey: 'afterSalesRate',
-                cell: (h, {row}) => {
-                    if(row.afterSalesRate){
-                        return Math.round(row.afterSalesRate * 10000) / 100 + '%'
-                    }
-                },
-                sortType: 'all',
-                sorter: true
-            },
-            {
-                title: getString('CUP'),
-                colKey: 'CUP',
                 sortType: 'all',
                 sorter: true
             }
@@ -152,7 +124,7 @@ export default {
 
             for (let i = 0; i < props.data.length; i++) {
                 chartOptions.value.series[0].data.push({
-                    name: props.data[i].name,
+                    name: props.data[i].sex,
                     value: props.data[i].salesCount
                 })
 

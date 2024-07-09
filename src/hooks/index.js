@@ -58,29 +58,6 @@ export async function miaostreetGoodsLink(item) {
         return
     }
     window.open('https://www.miaostreet.com/clmj/hybrid/miaojieWeex?pageName=goods-detail&wx_navbar_transparent=true&wh_weex=true&itemId=' + item.id, "newwindow","height=800, width=420, top=120, left=685, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
-
-    // let res = await service.api.user.inform()
-    // let history = res.content.user.web_history
-    // if(!history.goods){
-    //     history.goods = []
-    // }
-    //
-    // for (let i = 0; i < history.goods.length; i++) {
-    //     if(history.goods[i].stylenumber === item.stylenumber){
-    //         history.goods.splice(i, 1)
-    //         history.goods.unshift(item)
-    //         localStorage.setItem('history', JSON.stringify(history))
-    //         return
-    //     }
-    // }
-    //
-    // history.goods.unshift(item)
-    // localStorage.setItem('history', JSON.stringify(history))
-    // await service.api.user.saveUserInform({
-    //     web_history: history
-    // })
-    // const channel = new BroadcastChannel('fixeam_work')
-    // channel.postMessage('HistoryChange')
 }
 
 export function getQuickDateRangePicker(language = 'zh'){

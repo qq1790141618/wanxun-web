@@ -6,20 +6,29 @@
         <template #actions>
             {{ dayjs().subtract(1, 'day').format('YYYY-MM-DD') }}
         </template>
-        <t-alert v-if="data['salesCount'] === 0 && data['refundsCount'] === 0" :message="getString('salesDataOfYetNotUpload')" >
+        <t-alert
+            v-if="data['salesCount'] === 0 && data['refundsCount'] === 0"
+            :message="getString('salesDataOfYetNotUpload')"
+            style="padding: 10px 15px;"
+        >
             <template #operation>
-                <span @click="$router.push('/import')">{{ getString('upload') }}</span>
+                <span
+                    @click="$router.push('/task')"
+                    style="position: relative; top: -2px;"
+                >
+                    {{ getString('upload') }}
+                </span>
             </template>
         </t-alert>
         <div class="day-sales" v-if="data['salesCount'] !== 0 || data['refundsCount'] !== 0">
             <t-statistic
-            v-for="(item, index) in matchData"
-            :key="index"
-            :animation-start="true"
-            :animation="{ duration: 2, valueFrom: 0 }"
-            :title="item.title"
-            :value="item.value"
-            :unit="item.unit"
+                v-for="(item, index) in matchData"
+                :key="index"
+                :animation-start="true"
+                :animation="{ duration: 2, valueFrom: 0 }"
+                :title="item.title"
+                :value="item.value"
+                :unit="item.unit"
             />
         </div>
     </t-card>

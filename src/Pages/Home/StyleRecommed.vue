@@ -1,5 +1,5 @@
 <template>
-    <t-card :bordered="false" style="margin-top: 12px;">
+    <t-card :bordered="false">
         <template #title>
             <t-icon name="shop"></t-icon>
             <span style="vertical-align: middle; margin-left: 8px;">
@@ -45,11 +45,11 @@ export default {
 
 <style>
 .home-goods-list{
-    padding: 10px 3px;
+    padding: 0 3px;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 10px;
-    max-height: 500px;
+    max-height: 70vh;
     overflow-y: auto;
 }
 </style>
