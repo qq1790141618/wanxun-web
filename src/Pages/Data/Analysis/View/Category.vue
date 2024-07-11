@@ -14,8 +14,8 @@
         :bordered="false"
         :data="primaryData"
         :columns="columns"
-        :max-height="550"
-        style="width: 100%; margin: 20px auto;"
+        class="cas-table"
+        max-height="calc(100vh - 360px)"
         :sort="sortValue"
         @sort-change="(val) => {
             sortValue = val
@@ -42,9 +42,13 @@ const footData = ref([])
 const columns = [
     {
         title: getString('category'),
-        colKey: 'name',
-        ellipsis: true,
-        tooltip: true,
+        colKey: 'shortName',
+        width: 200,
+        align: 'center'
+    },
+    {
+        title: 'ID',
+        colKey: 'category',
         width: 200,
         align: 'center'
     },
@@ -111,14 +115,26 @@ const chartOptions = ref({
     series: [
         {
             type: 'sunburst',
-            label: {
-                show: false
-            },
-            radius: [0, '90%'],
+            radius: [0, '95%'],
             itemStyle: {
                 borderRadius: 10,
                 borderColor: '#fff',
                 borderWidth: 1
+            },
+            label: {
+                alignTo: 'edge',
+                color: '#fff',
+                formatter: '{name|{b}}\n{count|{c} 件}',
+                minMargin: 5,
+                edgeDistance: 10,
+                lineHeight: 15,
+                rich: {
+                    count: {
+                        fontSize: 10,
+                        color: '#fff'
+                    }
+                },
+                show: true
             },
             data: []
         }
@@ -227,11 +243,11 @@ const initChart = async () => {
                 }
                 foo[key] = Math.round(foo[key])
             } else if(key === 'afterSaleRatio'){
-                foo[key] = Math.round(foo['refundsCount'] / foo['salesCount'] * 10000) / 100 + '%'
+                foo[key] = Math.round(foo['refundsCount'] / foo['salesCount'] * 10000) / 100
             } else if(key === 'customerUnitPrice'){
                 foo[key] = Math.round(foo['salesAmount'] / foo['salesCount'])
             } else if(key === 'ratio'){
-                foo[key] = '100%'
+                foo[key] = 1
             }
         }
     }
@@ -243,6 +259,7 @@ const initChart = async () => {
     footData.value = [
         foo
     ]
+    console.log(footData.value)
 
     primaryData.value = props.data
 

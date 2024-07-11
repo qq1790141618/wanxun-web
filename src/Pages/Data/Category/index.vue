@@ -60,12 +60,12 @@
                 </t-radio-button>
             </t-radio-group>
             <t-row v-if="view === 'charts'">
-                <t-col :span="6">
+                <t-col :span="4">
                     <div style="padding: 50px; box-sizing: border-box;">
                         <MainChart :data="data" />
                     </div>
                 </t-col>
-                <t-col :span="6">
+                <t-col :span="8">
                     <div style="padding: 50px; box-sizing: border-box">
                         <ElseChart :data="data" />
                     </div>

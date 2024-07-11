@@ -33,7 +33,7 @@ const footData = ref([])
 const columns = ref([
     {
         title: getString('category'),
-        colKey: 'name',
+        colKey: 'shortName',
         ellipsis: true,
         tooltip: true,
         width: 150

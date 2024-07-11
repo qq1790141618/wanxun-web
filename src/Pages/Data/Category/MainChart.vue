@@ -1,7 +1,7 @@
 <template>
     <div
         ref="chartEl"
-        style="width: 100%; height: calc(100vh - 310px);"
+        style="width: 100%; height: calc(100vh - 330px);"
     ></div>
 </template>
 
@@ -66,7 +66,7 @@ export default {
 
                 if(i < maxRadar - 1){
                     chartOption.value.radar.indicator.push({
-                        name: chartData[i].name + ' ' + chartData[i].category
+                        name: chartData[i].shortName.split("/").join('\n') + '\n' + chartData[i].category
                     })
                     chartOption.value.series[0].data[0].value.push(a)
                     chartOption.value.series[0].data[1].value.push(b)

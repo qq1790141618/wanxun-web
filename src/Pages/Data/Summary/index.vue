@@ -9,7 +9,7 @@
         </template>
         <t-table
             :bordered="false"
-            :data="data[useMonth]"
+            :data="data[shop.store + shop.brand + useMonth]"
             :columns="columns"
             :loading="loading"
             :loading-props="{
@@ -19,7 +19,7 @@
             @sort-change="sortConfig.done"
             :sort="sortConfig.value"
             :foot-data="footData"
-            show-sort-column-bg-color
+            :show-sort-column-bg-color="true"
             row-key="date"
         >
         </t-table>
@@ -41,7 +41,7 @@
                     format="YYYY-MM"
                     @change="initData()"
                     :disableDate="(current) => dayjs(current).isBefore(dayjs('2021-11-01')) || dayjs(current).isAfter(dayjs().subtract(1, 'day'))"
-                    allow-input
+                    :allow-input="true"
                     style="margin: 0 10px; width: 200px;"
                 >
                 </t-date-picker>
@@ -129,8 +129,8 @@ const columns = [
         sorter: true
     }
 ]
-const useMonth = ref(null)
-useMonth.value = dayjs().format('YYYY-MM')
+
+const useMonth = ref(dayjs().format('YYYY-MM'))
 const footData = ref([])
 const sortConfig = ref({
     value: null,
@@ -162,8 +162,9 @@ const computeFootData = (data) => {
     ]
 }
 const initData = async () => {
-    if(data.value[useMonth.value]){
-        footData.value = computeFootData(data.value[useMonth.value])
+    const propertyName = shop.store + shop.brand+ useMonth.value
+    if(data.value[propertyName]){
+        footData.value = computeFootData(data.value[propertyName])
         return
     }
     loading.value = true
@@ -176,7 +177,7 @@ const initData = async () => {
         endTime: dayjs(useMonth.value).endOf('month').format('YYYY-MM-DD') + ' 23:59:59'
     })
     if(res.status === 'success'){
-        data.value[useMonth.value] = res.content
+        data.value[propertyName] = res.content
         footData.value = computeFootData(res.content)
     } else {
         tips(typeof res.error === 'string' ? res.error : res.error.message, 'error')
@@ -209,9 +210,6 @@ const onKeyDown = (event) => {
     }
 }
 
-onMounted(() => {
-    initData()
-})
 onActivated(() => {
     cantChangeMonth.value = false
     window.addEventListener('keydown', onKeyDown)
@@ -220,6 +218,8 @@ onDeactivated(() => {
     cantChangeMonth.value = true
     window.removeEventListener('keydown', onKeyDown)
 })
+
+onMounted(initData)
 watch(() => shop.store, initData)
 watch(() => shop.brand, initData)
 watch(() => useMonth.value, initData)

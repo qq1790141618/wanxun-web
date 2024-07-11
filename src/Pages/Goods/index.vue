@@ -362,6 +362,7 @@ const getSearchGoods = async () => {
 
     let result = await request('/product', params, 'POST')
 
+    console.log(result.content)
     data.value = result.content.data
     pagination.value.total = result.content.total
 

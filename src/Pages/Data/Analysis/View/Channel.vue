@@ -14,8 +14,8 @@
         :bordered="false"
         :data="primaryData"
         :columns="columns"
-        :max-height="550"
-        style="width: 100%; margin: 20px auto;"
+        class="cas-table"
+        max-height="calc(100vh - 360px)"
         :sort="sortValue"
         @sort-change="(val) => {
             sortValue = val
@@ -54,6 +54,15 @@ const columns = [
         sorter: true
     },
     {
+        title: getString('ratio'),
+        colKey: 'proportion',
+        cell: (h, {row}) => {
+            return Math.round(row['ratio'] * 10000) / 100 + '%'
+        },
+        sortType: 'all',
+        sorter: true
+    },
+    {
         title: getString('salesAmount'),
         colKey: 'salesAmount',
         sortType: 'all',
@@ -68,6 +77,21 @@ const columns = [
     {
         title: getString('refundsAmount'),
         colKey: 'refundsAmount',
+        sortType: 'all',
+        sorter: true
+    },
+    {
+        title: getString('afterSalesRatio'),
+        colKey: 'afterSalesRate',
+        cell: (h, {row}) => {
+            return Math.round(row['afterSaleRatio'] * 10000) / 100 + '%'
+        },
+        sortType: 'all',
+        sorter: true
+    },
+    {
+        title: getString('CUP'),
+        colKey: 'customerUnitPrice',
         sortType: 'all',
         sorter: true
     }
@@ -85,7 +109,7 @@ const chartOptions = ref({
     series: [
         {
             type: 'pie',
-            radius: ['50%', '90%'],
+            radius: ['45%', '80%'],
             avoidLabelOverlap: false,
             itemStyle: {
                 borderRadius: 10,
@@ -93,18 +117,26 @@ const chartOptions = ref({
                 borderWidth: 2
             },
             label: {
-                show: false,
-                position: 'center'
+                formatter: '{name|{b}}\n{count|{c} 件}',
+                lineHeight: 15,
+                rich: {
+                    name: {
+                        fontSize: 14,
+                    },
+                    count: {
+                        fontSize: 13,
+                        color: '#999'
+                    }
+                },
+                show: true
             },
             emphasis: {
-                label: {
-                    show: true,
-                    fontSize: 16,
-                    fontWeight: 700
-                }
+                scale: false
             },
             labelLine: {
-                show: false
+                length: 30,
+                length2: 120,
+                show: true
             },
             data: []
         }
@@ -134,6 +166,12 @@ const initChart = async () => {
                     foo[key] += props.data[i][key] * 1
                 }
                 foo[key] = Math.round(foo[key])
+            } else if(key === 'afterSaleRatio'){
+                foo[key] = Math.round(foo['refundsCount'] / foo['salesCount'] * 10000) / 100
+            } else if(key === 'customerUnitPrice'){
+                foo[key] = Math.round(foo['salesAmount'] / foo['salesCount'])
+            } else if(key === 'ratio'){
+                foo[key] = 1
             }
         }
     }

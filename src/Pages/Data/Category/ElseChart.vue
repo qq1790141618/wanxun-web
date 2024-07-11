@@ -106,7 +106,7 @@ const initChart = () => {
     for (let i = 0; i < chartData.length; i++) {
         let a = chartData[i].count
         let b = chartData[i].realSaleCount
-        chartOption.value.xAxis[0].data.push(chartData[i].name + '\n' + chartData[i].category)
+        chartOption.value.xAxis[0].data.push(chartData[i].shortName + '\n' + chartData[i].category)
         chartOption.value.series[0].data.push(a)
         chartOption.value.series[1].data.push(b)
     }

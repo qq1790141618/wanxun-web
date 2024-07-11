@@ -1,5 +1,5 @@
 <template>
-    <t-list :split="true" v-if="data">
+    <t-list :split="true" v-if="data" class="refunds-freight">
         <t-list-item>
             <span>{{ getString('reverseFreight') }}</span>
         </t-list-item>
@@ -34,5 +34,8 @@ const props = defineProps({
 </script>
 
 <style>
-
+.refunds-freight .t-list__inner li:first-child {
+    background-color: var(--td-bg-color-secondarycontainer);
+    border-radius: 5px;
+}
 </style>

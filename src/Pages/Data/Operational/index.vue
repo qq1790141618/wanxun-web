@@ -25,7 +25,7 @@
                     />
                     <t-date-picker
                         size="small"
-                        :mode="mode"
+                        :mode="mode === 'time' ? 'date': mode"
                         v-model="date[mode]"
                         @change="initData"
                         style="width: 135px;"
@@ -74,13 +74,13 @@
                 style="width: 100%;"
                 v-if="!loading && JSON.stringify(errorInfo) === '{}'"
             >
-                <t-col :span="4">
+                <t-col :span="3">
                     <ProfitRatio :list="data[time]" />
                 </t-col>
                 <t-col :span="4">
                     <OperationalContrast :data="data" />
                 </t-col>
-                <t-col :span="4">
+                <t-col :span="5">
                     <GoodsProfitRanks :data="data" />
                 </t-col>
             </t-row>
@@ -125,7 +125,7 @@ const modeOptions = [
     }
 ]
 const date = ref({
-    day: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+    time: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
     month: dayjs().format('YYYY-MM'),
     year: dayjs().format('YYYY')
 })

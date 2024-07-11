@@ -55,6 +55,7 @@
                 v-model="tabId"
                 class="analysis-tab"
                 v-if="!loading"
+                placement="left"
             >
                 <t-tab-panel
                     :value="1"
@@ -160,9 +161,11 @@ const loading = ref(false)
 const data = ref({})
 
 const quickDateRangePicker = ref({})
-watch(() => i18n.language,  async (newValue) => {
+const initQuickDate = async (newValue) => {
     quickDateRangePicker.value = await getQuickDateRangePicker(newValue)
-})
+}
+watch(() => i18n.language,  initQuickDate)
+initQuickDate()
 
 const errorInfo = ref([])
 const addError = (error) => {
@@ -320,6 +323,9 @@ const initData = async () => {
 }
 
 onMounted(initData)
+watch(() => shop.store, initData)
+watch(() => shop.brand, initData)
+watch(() => date.value, initData)
 </script>
 
 <style>
@@ -329,16 +335,25 @@ onMounted(initData)
     --chart-cas-margin-top-bottom: 50px;
 }
 .analysis-tab .t-tab-panel {
-    padding-top: 10px;
+    padding: 10px;
 }
 .analysis-tab svg {
     position: relative;
     top: -2px;
 }
+.analysis-tab .cas-table,
 .analysis-tab .cas-chart {
-    height: calc(100vh - 360px);
-    margin: var(--chart-cas-margin-top-bottom) 0;
     width: 100%;
+    max-width: 1350px;
+    height: 500px;
+    max-height: calc(100vh - 360px);
+    margin: var(--chart-cas-margin-top-bottom) auto;
+}
+.analysis-tab .t-tabs__header,
+.analysis-tab .t-tabs__nav,
+.analysis-tab .t-tabs__nav-container,
+.analysis-tab .t-tabs__nav-scroll {
+    height: 100%;
 }
 .item-ana .t-card__body {
     padding: 0 10px;

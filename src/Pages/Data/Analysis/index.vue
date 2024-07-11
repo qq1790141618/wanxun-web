@@ -181,15 +181,15 @@ watch(() => i18n.language,  async (newValue) => {
 </script>
 
 <style>
-.datas-analysis{
+.datas-analysis {
     width: 100%;
     height: 60vh;
 }
-.create-analysis{
+.create-analysis {
     width: 520px;
     text-align: center;
 }
-.create-analysis-input{
+.create-analysis-input {
     width: 100%;
     padding: 5px;
 }

@@ -1,9 +1,9 @@
 <template>
-    <t-row :gutter="[20, 20]">
+    <t-row :gutter="[20, 20]" style="padding: 30px;">
         <t-col
-        v-for="(item, index) in group"
-        :key="index"
-        :span="4"
+            v-for="(item, index) in group"
+            :key="index"
+            :span="4"
         >
             <ContrustItem :yet="yet" :base="base" :color="item.color" :dkey="item.key" :title="item.title" />
         </t-col>
@@ -42,7 +42,7 @@ export default {
             },
             {
                 color: '#E13EDB',
-                key: 'realSalesAmount',
+                key: 'realSaleAmount',
                 title: 'actualSalesAmount'
             },
             {

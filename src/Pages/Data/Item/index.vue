@@ -1,9 +1,9 @@
 <template>
     <div style="padding: 12px;" class="item-ana">
         <t-card
-        :bordered="false"
-        size="small"
-        header-bordered
+            :bordered="false"
+            size="small"
+            :header-bordered="true"
         >
             <template #header>
                 <span>
@@ -77,7 +77,6 @@ import { getQuickDateRangePicker } from '../../../hooks'
 import ItemStructure from './ItemStructure.vue'
 import PriceRange from './PriceRange.vue'
 import TurnoverRateVue from './TurnoverRate.vue'
-import AfterSales from './AfterSales.vue'
 import Sales from './Sales.vue'
 import RefundsReverseFreight from './RefundsReverseFreight.vue'
 import {tips} from "../../../hooks/tips.js"
@@ -100,9 +99,7 @@ const data = ref({
     category: []
 })
 
-const matchData = async () => {
-    loading.value = true
-
+const getProduct = async () => {
     let d = await request('/analysis/product', {
         store: shop.store,
         brand: shop.brand,
@@ -114,7 +111,8 @@ const matchData = async () => {
     } else {
         tips(d.error.msg, 'error')
     }
-
+}
+const getFreight = async () => {
     let f = await request('/analysis/freight', {
         store: shop.store,
         brand: shop.brand,
@@ -126,7 +124,8 @@ const matchData = async () => {
     } else {
         tips(f.error.msg, 'error')
     }
-
+}
+const getCategories = async () => {
     let res = await request('/analysis/categories', {
         store: shop.store,
         brand: shop.brand,
@@ -138,9 +137,21 @@ const matchData = async () => {
     } else {
         tips(res.error.msg, 'error')
     }
-
-    loading.value = false
 }
+const matchData = () => {
+    loading.value = true
+    let count = 0
+    const addCount = () => {
+        count++
+        if (count >= 3) {
+            loading.value = false
+        }
+    }
+    getProduct().then(addCount)
+    getCategories().then(addCount)
+    getFreight().then(addCount)
+}
+
 let timer
 const initData = () => {
     clearTimeout(timer)
@@ -150,15 +161,15 @@ const initData = () => {
 }
 
 const quickDateRangePicker = ref({})
-watch(() => i18n.language,  async (newValue) => {
+const initQuickDate = async (newValue) => {
     quickDateRangePicker.value = await getQuickDateRangePicker(newValue)
-})
+}
+watch(() => i18n.language,  initQuickDate)
+initQuickDate()
+
 watch(() => shop.store, matchData)
 watch(() => shop.brand, matchData)
-onMounted(async () => {
-    await matchData()
-    quickDateRangePicker.value = await getQuickDateRangePicker(i18n.language)
-})
+onMounted(matchData)
 </script>
 
 <style>

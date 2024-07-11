@@ -18,6 +18,7 @@
         :bordered="false"
         :data="primaryData"
         :columns="columns"
+        class="cas-table"
         max-height="calc(100vh - 360px)"
         :sort="sortValue"
         @sort-change="(val) => {

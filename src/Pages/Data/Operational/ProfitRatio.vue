@@ -31,24 +31,21 @@ const chartOption = ref({
     series: [
         {
             type: 'pie',
-            radius: ['36%', '70%'],
+            radius: ['40%', '75%'],
             avoidLabelOverlap: false,
             itemStyle: {
                 borderWidth: 0
             },
             label: {
                 show: true,
+                position: 'center',
                 formatter(param) {
                     if(param.name === getString('profit') + getString('ratio'))
                         return param.name + ' (' + param.percent + '%)'
                 }
             },
             emphasis: {
-                label: {
-                    show: true,
-                    fontSize: 16,
-                    fontWeight: 700
-                }
+                scale: false
             },
             labelLine: {
                 show: false

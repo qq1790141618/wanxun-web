@@ -5,29 +5,29 @@
         <t-radio-button value="table"><t-icon name="table"></t-icon></t-radio-button>
     </t-radio-group>
     <SupplierTreeMap
-    :data="data"
-    v-if="view == 'chart-tree'"
+        :data="data"
+        v-if="view === 'chart-tree'"
     />
     <SupplierRing
-    :data="data"
-    v-if="view == 'chart-pie'"
+        :data="data"
+        v-if="view === 'chart-pie'"
     />
     <t-table
-    v-if="primaryData && primaryData.length > 0"
-    v-show="view == 'table'"
-    :bordered="false"
-    :data="primaryData"
-    :columns="columns"
-    :max-height="550"
-    style="width: 100%; margin: 20px auto;"
-    :sort="sortValue"
-    @sort-change="(val) => {
-        sortValue = val
-        primaryData = sort(val, primaryData, sortDefault)
-    }"
-    show-sort-column-bg-color
-    :foot-data="footData"
-    row-key="name"
+        class="cas-table"
+        max-height="calc(100vh - 360px)"
+        v-if="primaryData && primaryData.length > 0"
+        v-show="view === 'table'"
+        :bordered="false"
+        :data="primaryData"
+        :columns="columns"
+        :sort="sortValue"
+        @sort-change="(val) => {
+            sortValue = val
+            primaryData = sort(val, primaryData, sortDefault)
+        }"
+        :show-sort-column-bg-color="true"
+        :foot-data="footData"
+        row-key="name"
     ></t-table>
 </template>
 
@@ -65,6 +65,15 @@ export default {
                 sorter: true
             },
             {
+                title: getString('ratio'),
+                colKey: 'proportion',
+                cell: (h, {row}) => {
+                    return Math.round(row['ratio'] * 10000) / 100 + '%'
+                },
+                sortType: 'all',
+                sorter: true
+            },
+            {
                 title: getString('salesAmount'),
                 colKey: 'salesAmount',
                 sortType: 'all',
@@ -81,6 +90,21 @@ export default {
                 colKey: 'refundsAmount',
                 sortType: 'all',
                 sorter: true
+            },
+            {
+                title: getString('afterSalesRatio'),
+                colKey: 'afterSalesRate',
+                cell: (h, {row}) => {
+                    return Math.round(row['afterSaleRatio'] * 10000) / 100 + '%'
+                },
+                sortType: 'all',
+                sorter: true
+            },
+            {
+                title: getString('CUP'),
+                colKey: 'customerUnitPrice',
+                sortType: 'all',
+                sorter: true
             }
         ]
         const initChart = async () => {
@@ -95,13 +119,19 @@ export default {
 
             for (let i = 0; i < props.data.length; i++) {
                 for (const key in props.data[i]) {
-                    if(typeof(props.data[i][key] * 1) === 'number' && !isNaN(props.data[i][key] * 1) && key !== 'name' && key !== 'afterSalesRate' && key !== 'proportion' && key !== 'CUP'){
+                    if(typeof(props.data[i][key] * 1) === 'number' && !isNaN(props.data[i][key] * 1) && key !== 'name' && key !== 'afterSaleRatio' && key !== 'ratio' && key !== 'customerUnitPrice'){
                         if(!foo[key]){
                             foo[key] = props.data[i][key] * 1
                         } else {
                             foo[key] += props.data[i][key] * 1
                         }
                         foo[key] = Math.round(foo[key])
+                    } else if(key === 'afterSaleRatio'){
+                        foo[key] = Math.round(foo['refundsCount'] / foo['salesCount'] * 10000) / 100
+                    } else if(key === 'customerUnitPrice'){
+                        foo[key] = Math.round(foo['salesAmount'] / foo['salesCount'])
+                    } else if(key === 'ratio'){
+                        foo[key] = 1
                     }
                 }
             }

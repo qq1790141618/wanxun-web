@@ -61,7 +61,7 @@
                 <template #icon>
                     <t-icon name="close-circle" />
                 </template>
-                {{ getString('success') }}
+                {{ getString('fail') }}
             </t-tag>
         </template>
         <template #progressshow="{ row }">
