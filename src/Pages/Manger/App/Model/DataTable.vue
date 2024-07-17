@@ -1,23 +1,22 @@
 <template>
     <t-table
-    size="small"
-    :data="data"
-    :columns="columns"
-    max-height="calc(100vh - 250px)"
-    :pagination="pagination"
-    table-layout="auto"
-    :loading="loading"
-    :loading-props="{
-        indicator: false,
-        text: getString('loading')
-    }"
+        size="small"
+        :data="data"
+        :columns="columns"
+        max-height="calc(100vh - 230px)"
+        table-layout="auto"
+        :loading="loading"
+        :loading-props="{
+            indicator: false,
+            text: getString('loading')
+        }"
     >
         <template #operate="scope">
             <t-space size="5px">
                 <t-button
-                @click="openUrl(scope.row.package_resource)"
-                variant="outline"
-                size="small"
+                    @click="openUrl(scope.row.resource)"
+                    variant="outline"
+                    size="small"
                 >
                     <template #icon>
                         <t-icon name="download" />
@@ -25,25 +24,38 @@
                     {{ getString('downloadPackage') }}
                 </t-button>
                 <t-button
-                v-if="!user.inform['need_auth'] || user.inform['api_p'].indexOf('api/v1/app/version/publish') >= 0"
-                @click="$emit('edit', scope.rowIndex)"
-                size="small"
+                    @click="$emit('edit', JSON.parse(JSON.stringify(scope.rowIndex)))"
+                    size="small"
                 >
                     <template #icon>
                         <t-icon name="edit" />
                     </template>
                     {{ getString('editPackage') }}
                 </t-button>
+                <t-popconfirm
+                    theme="danger"
+                    :content="getString('removePackageTip')"
+                    @confirm="$emit('delete', scope.row.id)"
+                >
+                    <t-button
+                        theme="danger"
+                        size="small"
+                    >
+                        <template #icon>
+                            <t-icon name="delete" />
+                        </template>
+                        {{ getString('removePackage') }}
+                    </t-button>
+                </t-popconfirm>
             </t-space>
         </template>
     </t-table>
 </template>
 
 <script setup>
-import { Icon } from 'tdesign-vue-next'
 import Controller from '../Controller.js'
-import {getString} from "../../../../i18n/index.js";
-import {tips} from "../../../../hooks/tips.js";
+import { Icon } from 'tdesign-vue-next'
+import { getString } from "../../../../i18n/index.js"
 
 const user = inject('user')
 const props = defineProps({
@@ -56,10 +68,10 @@ const props = defineProps({
         default: false
     }
 })
-const emits = defineEmits(['edit'])
+const emits = defineEmits(['edit', 'delete'])
 const columns = [
     {
-        colKey: 'package_id',
+        colKey: 'id',
         title: getString('packageId'),
         align: 'center'
     },
@@ -68,17 +80,18 @@ const columns = [
         title: getString('platform'),
         align: 'center',
         cell: (_, { row }) => {
-            var platform = Controller.platformOptions.find(item => item.value === row.platform)
-            
-            return h('div', [
-                h(Icon, {
-                    name: platform.icon,
-                    style: {
-                        paddingRight: '5px'
-                    }
-                }),
-                h('span', platform.label)
-            ])
+            const platform = Controller.platformOptions.find(item => item.value === row.platform)
+            if (platform) {
+                return h('div', [
+                    h(Icon, {
+                        name: platform.icon,
+                        style: {
+                            paddingRight: '5px'
+                        }
+                    }),
+                    h('span', platform.label)
+                ])
+            }
         }
     },
     {
@@ -87,7 +100,7 @@ const columns = [
         align: 'center'
     },
     {
-        colKey: 'version_id',
+        colKey: 'versionId',
         title: getString('versionId'),
         align: 'center'
     },
@@ -96,8 +109,8 @@ const columns = [
         title: getString('versionType'),
         align: 'center',
         cell: (_, { row }) => {
-            const versionType = Controller.versionTypeOptions.find(item => item.value === row.version_type);
-            return h('span', versionType.label)
+            const versionType = Controller.versionTypeOptions.find(item => item.value === row.type)
+            if (versionType) return h('span', versionType.label)
         }
     },
     {
@@ -105,7 +118,13 @@ const columns = [
         title: getString('packageSize'),
         align: 'center',
         cell: (_, { row }) => {
-            return h('span', row.package_size + ' Byte')
+            if (row.size < 1024) {
+                return row.size + ' Byte'
+            } else if (row.size < 1024 * 1024) {
+                return (row.size / 1024).toFixed(2) + ' KB'
+            } else {
+                return (row.size / 1024 / 1024).toFixed(2) + ' MB'
+            }
         }
     },
     {
@@ -114,7 +133,7 @@ const columns = [
         align: 'center'
     },
     {
-        colKey: 'package_update_information',
+        colKey: 'info',
         title: getString('updateInfo'),
         align: 'center'
     },
@@ -124,13 +143,6 @@ const columns = [
         align: 'center'
     }
 ]
-const pagination = {
-    size: 'small',
-    defaultPageSize: 10,
-    showSizePicker: true,
-    pageSizes: [5, 10, 15, 20],
-    total: props.data.length,
-}
 const openUrl = (url) => {
     window.open(url, '_blank')
 }

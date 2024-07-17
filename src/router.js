@@ -208,18 +208,18 @@ const routes = [
                     keepAlive: true
                 }
             },
-            // {
-            //     path: '/manger/app',
-            //     name: 'app-manager',
-            //     component: () => import('./Pages/Manger/App/index.vue'),
-            //     meta: {
-            //         title: "appManage",
-            //         icon: 'app',
-            //         avatar: 'https://cdn.fixeam.com/tw/colorful/menu.png',
-            //         key: '7-3',
-            //         keepAlive: true
-            //     }
-            // },
+            {
+                path: '/manger/app',
+                name: 'app-manager',
+                component: () => import('./Pages/Manger/App/index.vue'),
+                meta: {
+                    title: "appManage",
+                    icon: 'app',
+                    avatar: 'https://cdn.fixeam.com/tw/colorful/menu.png',
+                    key: '7-3',
+                    keepAlive: true
+                }
+            },
             {
                 path: '/manger/shop',
                 name: 'shop-manager',
