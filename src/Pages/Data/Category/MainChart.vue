@@ -1,7 +1,7 @@
 <template>
     <div
         ref="chartEl"
-        style="width: 100%; height: calc(100vh - 330px);"
+        style="width: 100%; height: calc(100vh - 320px);"
     ></div>
 </template>
 

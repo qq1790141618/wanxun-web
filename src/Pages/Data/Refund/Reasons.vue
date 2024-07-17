@@ -11,17 +11,21 @@ import * as echarts from 'echarts'
 import { getString } from "../../../i18n/index.js"
 
 const props = defineProps({
-    list: {
-        type: Array,
+    data: {
+        type: Object,
         required: true
     }
 })
 
 const chartEl = ref(null)
+let chart
 const chartOption = ref({
     title: {
         left: 'center',
-        text: getString('profit') + getString('ratio')
+        text: getString('bReasonRatio')
+    },
+    tooltip: {
+        trigger: 'item'
     },
     legend: {
         show: false,
@@ -31,57 +35,43 @@ const chartOption = ref({
     series: [
         {
             type: 'pie',
-            radius: ['40%', '75%'],
+            radius: [0, '80%'],
             avoidLabelOverlap: false,
             itemStyle: {
+                borderRadius: 0,
                 borderWidth: 0
             },
             label: {
-                show: true,
-                formatter(param) {
-                    if(param.name === getString('profit') + getString('ratio'))
-                        return param.name + ' (' + param.percent + '%)'
-                }
+                rich: {
+                    count: {
+                        fontSize: 10,
+                        color: '#999'
+                    }
+                },
+                show: true
             },
             emphasis: {
                 scale: false
+            },
+            labelLine: {
+                show: true,
             },
             data: []
         }
     ]
 })
-let chart
-
 const initChart = () => {
-    if(!props.list){
+    if(!props.data){
         return
     }
 
-    let profit = 0, realSaleAmount = 0
-    let list = props.list
-    for (let i = 0; i < list.length; i++) {
-        profit += list[i].profit
-        realSaleAmount += list[i].realSaleAmount
+    chartOption.value.series[0].data = []
+    for (let i = 0; i < props.data.length; i++) {
+        chartOption.value.series[0].data.push({
+            name: props.data[i].name,
+            value: props.data[i].count
+        })
     }
-
-    profit = Math.round(profit * 100) / 100
-    realSaleAmount = Math.round(realSaleAmount * 100) / 100
-    let t = Math.round((realSaleAmount - profit) * 100) / 100
-
-    chartOption.value.series[0].data.push({
-        name: getString('profit') + getString('ratio'),
-        itemStyle: {
-            color: '#37A2DA'
-        },
-        value: profit
-    })
-    chartOption.value.series[0].data.push({
-        name: '',
-        itemStyle: {
-            color: '#dedede'
-        },
-        value: t
-    })
 
     chart = echarts.init(chartEl.value)
     chartEl.value.removeAttribute('_echarts_instance_')

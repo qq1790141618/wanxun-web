@@ -1,7 +1,7 @@
 <template>
     <div
-    ref="chartEl"
-    style="width: 100%; height: calc(100vh - 320px);"
+        ref="chartEl"
+        class="chart"
     ></div> 
 </template>
 
@@ -17,6 +17,10 @@ const props = defineProps({
 })
 const chartEl = ref(null)
 const chartOption = ref({
+    title: {
+        left: 'center',
+        text: getString('reasonTagCharts')
+    },
     tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -27,13 +31,6 @@ const chartOption = ref({
         }
     },
     calculable: true,
-    legend: {
-        data: [
-            getString('styleCount'),
-            getString('actualSalesCount')
-        ],
-        itemGap: 5
-    },
     grid: {
         top: '12%',
         left: '1%',
@@ -51,43 +48,15 @@ const chartOption = ref({
             type: 'value',
         }
     ],
-    dataZoom: [
-        {
-            show: true,
-            show: true,
-            start: 0,
-            end: 100
-        },
-        {
-            type: 'inside',
-            start: 0,
-            end: 100
-        },
-        {
-            show: true,
-            yAxisIndex: 0,
-            filterMode: 'empty',
-            width: 30,
-            height: '80%',
-            showDataShadow: false,
-            left: '93%'
-        }
-    ],
     series: [
         {
-            name: getString('styleCount'),
-            type: 'bar',
-            itemStyle: {
-                borderRadius: 5,
-                borderColor: '#fff'
+            label: {
+                show: true,
+                position: 'top'
             },
-            data: []
-        },
-        {
-            name: getString('actualSalesCount'),
             type: 'bar',
             itemStyle: {
-                borderRadius: 5,
+                borderRadius: 7,
                 borderColor: '#fff'
             },
             data: []
@@ -101,14 +70,10 @@ const initChart = () => {
         return
     }
 
-    let chartData = props.data
 
-    for (let i = 0; i < chartData.length; i++) {
-        let a = chartData[i].count
-        let b = chartData[i].realSaleCount
-        chartOption.value.xAxis[0].data.push(chartData[i].shortName + '\n' + chartData[i].category)
-        chartOption.value.series[0].data.push(a)
-        chartOption.value.series[1].data.push(b)
+    for (let i = 0; i < props.data.length; i++) {
+        chartOption.value.xAxis[0].data.push(props.data[i].tag)
+        chartOption.value.series[0].data.push(props.data[i].count)
     }
 
     chart = echarts.init(chartEl.value)

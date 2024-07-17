@@ -363,5 +363,22 @@
     "skuImportTable": "SKU信息导入表",
     "copyStyleNumber": "复制款号",
     "tagFee": "吊牌费",
-    "packFee": "包装费"
+    "packFee": "包装费",
+    "timeDensity": "时间密度",
+    "auto": "自动",
+    "day": "日",
+    "hour": "小时",
+    "minute": "分钟",
+    "timeLine": "时间线",
+    "refundReasonAnalysis": "售后原因分析",
+    "bReasonRatio": "B端原因占比",
+    "refundReasonRatio": "售后原因占比",
+    "reasonTagCharts": "原因标签表",
+    "customerNote": "用户备注",
+
+
+    "exportGoods": "导出商品",
+    "exportCreateSuccess": "导出任务创建成功",
+    "exportCreateSuccessTip": "创建成功, 可在任务列表中查看导出信息, 和下载导出的文件",
+    "neverUploadGoods": "未上传的商品"
 }

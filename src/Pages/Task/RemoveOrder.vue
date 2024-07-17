@@ -8,9 +8,9 @@
     :close-btn="!loading"
     >
         <t-date-picker
-        v-model="dateFrom"
-        allow-input
-        style="width: 100%;"
+            v-model="dateFrom"
+            :allow-input="true"
+            style="width: 100%;"
         ></t-date-picker>
         <t-space size="8px" style="margin: 8px 0;">
             <t-popconfirm
@@ -38,11 +38,9 @@
 
 <script setup>
 import dayjs from 'dayjs'
-import {NotifyPlugin} from "tdesign-vue-next";
-import service from "../../api/service.js";
-import {tips} from "../../hooks/tips.js";
-import {getString} from "../../i18n/index.js";
-import {request} from "../../api/request.js";
+import {tips} from "../../hooks/tips.js"
+import {getString} from "../../i18n/index.js"
+import {request} from "../../api/request.js"
 
 const show = ref(false)
 const dateFrom = ref(null)
@@ -60,7 +58,7 @@ const removeOrder = async () => {
     loading.value = true
     let res = await request('/order', {
         storeId: shop.store,
-        branId: shop.brand,
+        brandId: shop.brand,
         from: dateFrom.value + ' 00:00:00',
         to: dayjs().format('YYYY-MM-DD') + ' 23:59:59'
     }, 'DELETE')

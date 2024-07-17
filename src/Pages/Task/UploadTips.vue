@@ -107,7 +107,7 @@
 <!--        </div>-->
 <!--        <div v-if="i18n.language !== 'zh'">-->
 <!--            <t-icon name="numbers-1-1"></t-icon>-->
-<!--            <span>Import order for each category</span>-->
+<!--            <span>Task order for each category</span>-->
 <!--            <span>Strict order from top to bottom</span>-->
 <!--            <span>Pour in one by one, ensuring that the previous item has been successfully imported when importing the next item, for example:</span>-->
 <!--            <span>Order List/Order Details</span>-->

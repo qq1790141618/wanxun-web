@@ -254,6 +254,93 @@
                     />
                 </template>
             </t-list-item>
+            <t-list-item>
+                {{ getString('season') }}
+                <template #action>
+                    <t-select
+                        v-model="product.season"
+                        size="small"
+                        :options="[
+                            {
+                                label: '春季',
+                                value: '春季'
+                            },
+                            {
+                                label: '夏季',
+                                value: '夏季'
+                            },
+                            {
+                                label: '秋季',
+                                value: '秋季'
+                            },{
+                                label: '冬季',
+                                value: '冬季'
+                            },
+                            {
+                                label: '春夏',
+                                value: '春夏'
+                            },
+                            {
+                                label: '春夏秋',
+                                value: '春夏秋'
+                            },
+                            {
+                                label: '春秋',
+                                value: '春秋'
+                            },
+                            {
+                                label: '秋冬',
+                                value: '秋冬'
+                            },
+                            {
+                                label: '春夏秋冬',
+                                value: '春夏秋冬'
+                            },
+                            {
+                                label: '四季',
+                                value: '四季'
+                            }
+                        ]"
+                        :input-props="{
+                            align: 'center'
+                        }"
+                    ></t-select>
+                </template>
+            </t-list-item>
+            <t-list-item>
+                {{ getString('sex') }}
+                <template #action>
+                    <t-select
+                        v-model="product.sex"
+                        size="small"
+                        :options="[
+                            {
+                                label: '男性',
+                                value: '男性'
+                            },
+                            {
+                                label: '女性',
+                                value: '女性'
+                            },
+                            {
+                                label: '男女/中性',
+                                value: '男女/中性'
+                            },
+                            {
+                                label: '男女同款',
+                                value: '男女同款'
+                            },
+                            {
+                                label: '儿童',
+                                value: '儿童'
+                            }
+                        ]"
+                        :input-props="{
+                            align: 'center'
+                        }"
+                    ></t-select>
+                </template>
+            </t-list-item>
             <sku-property property="cost" :name="getString('cost')" v-model:skus="product.skus" />
             <sku-property property="price" :name="getString('price')" v-model:skus="product.skus" />
             <sku-property property="tagPrice" :name="getString('tagPrice')" v-model:skus="product.skus" />

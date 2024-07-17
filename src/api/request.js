@@ -22,7 +22,7 @@ export const request = (path, body = {}, method = 'GET', contentType = 'applicat
             }
         }
         let secret = await apiKey()
-        let sign = await apiSign(path)
+        let sign = await apiSign(secret, path)
         path += `?api_secret=${secret}&api_sign=${sign}`
         if(method !== 'GET' && method !== 'HEAD' && method !== 'DELETE'){
             options.body = contentType === 'application/json' ? JSON.stringify(body) : body
@@ -112,9 +112,9 @@ export const apiKey = () => {
     })
 }
 
-export const apiSign = (apiRoute) => {
+export const apiSign = (key, apiRoute) => {
     return new Promise(async (resolve) => {
-        const str = dayjs().format('YYYYMMDD') + apiRoute + await apiKey()
+        const str = dayjs().format('YYYYMMDD') + apiRoute + key
         resolve(md5(str))
     })
 }

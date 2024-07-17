@@ -3,9 +3,9 @@
         <template #icon><div></div></template>
         <t-space size="12px">
             <span style="line-height: 30px;">
-                <t-icon name="check-rectangle" v-if="data.length > 0 && selectKey.length == data.length" />
+                <t-icon name="check-rectangle" v-if="data.length > 0 && selectKey.length === data.length" />
                 <t-icon name="minus-rectangle" v-if="selectKey.length > 0 && selectKey.length < data.length" />
-                <t-icon name="close-rectangle" v-if="selectKey.length == 0" />
+                <t-icon name="close-rectangle" v-if="selectKey.length === 0" />
                 <span style="vertical-align: middle; margin-left: 3px;">
                     {{ i18n.selected(selectKey.length)[i18n.language] }}
                 </span>
@@ -21,6 +21,28 @@
 <!--                </template>-->
 <!--                {{ getString('batch') }}{{ getString('edit') }}-->
 <!--            </t-button>-->
+            <t-button
+                variant="text"
+                theme="primary"
+                @click="$emit('exportSearchGoods')"
+                :loading="exportCreateLoading"
+            >
+                <template #icon>
+                    <t-icon name="file-export" />
+                </template>
+                {{ getString('exportQueryGoods') }}
+            </t-button>
+            <t-button
+                variant="text"
+                theme="primary"
+                @click="$emit('neverUploadGoods')"
+                :loading="neverUploadGoodsLoading"
+            >
+                <template #icon>
+                    <t-icon name="data-error" />
+                </template>
+                {{ getString('neverUploadGoods') }}
+            </t-button>
             <t-button
                 variant="text"
                 theme="primary"
@@ -100,9 +122,17 @@ export default {
         exportLoading: {
             type: Boolean,
             default: false
+        },
+        exportCreateLoading: {
+            type: Boolean,
+            default: false
+        },
+        neverUploadGoodsLoading: {
+            type: Boolean,
+            default: false
         }
     },
-    emits: ['batchEdit', 'supplierMap', 'costHightLightChange'],
+    emits: ['batchEdit', 'supplierMap', 'costHightLightChange', 'exportSearchGoods', 'neverUploadGoods'],
     setup(props, { emit }){
         const i18n = inject('i18n')
         const user = inject('user')

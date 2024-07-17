@@ -88,7 +88,7 @@ const initA = async () => {
     let ao = await request('/analysis/summary', {
         store: shop.store,
         brand: shop.brand,
-        startTime: dayjs().subtract(8, 'day').format('YYYY-MM-DD') + ' 00:00:00',
+        startTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD') + ' 00:00:00',
         endTime: dayjs().subtract(1, 'day').format('YYYY-MM-DD') + ' 23:59:59'
     })
 

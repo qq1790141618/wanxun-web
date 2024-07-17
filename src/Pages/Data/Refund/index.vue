@@ -48,23 +48,13 @@
                 style="width: 100%;"
                 v-if="!loading"
             >
-                <t-col :span="6">
-                    <ItemStructure :data="data.category" />
+                <t-col :span="5">
+                    <Reasons :data="data.reasons" />
+                    <AppReasons :data="data.appReasons" />
                 </t-col>
-                <t-col :span="3">
-                    <PriceRange :data="data.goods" />
-                </t-col>
-                <t-col :span="3">
-                    <TurnoverRateVue :data="data.category" />
-                </t-col>
-                <t-col :span="10">
-                    <Sales :data="data.goods" />
-                </t-col>
-<!--                <t-col :span="6">-->
-<!--                    <AfterSales :data="data.goods" />-->
-<!--                </t-col>-->
-                <t-col :span="2">
-                    <RefundsReverseFreight :data="data.freight" />
+                <t-col :span="7">
+                    <Tags :data="data.tags" />
+                    <Notes :data="data.appReasons" />
                 </t-col>
             </t-row>
         </t-card>
@@ -74,14 +64,13 @@
 <script setup>
 import dayjs from 'dayjs'
 import { getQuickDateRangePicker } from '../../../hooks'
-import ItemStructure from './ItemStructure.vue'
-import PriceRange from './PriceRange.vue'
-import TurnoverRateVue from './TurnoverRate.vue'
-import Sales from './Sales.vue'
-import RefundsReverseFreight from './RefundsReverseFreight.vue'
-import {tips} from "../../../hooks/tips.js"
-import {getString} from "../../../i18n/index.js"
-import {request} from "../../../api/request.js"
+import { tips } from "../../../hooks/tips.js"
+import { getString } from "../../../i18n/index.js"
+import { request } from "../../../api/request.js"
+import Reasons from "./Reasons.vue"
+import Tags from "./Tags.vue"
+import AppReasons from "./AppReasons.vue"
+import Notes from "./Notes.vue"
 
 const i18n = inject('i18n')
 const shop = inject('shop')
@@ -90,66 +79,29 @@ const date = ref([
     dayjs().startOf('month').format('YYYY-MM-DD'),
     dayjs().subtract(1, 'day').format('YYYY-MM-DD')
 ])
-const loading = ref(false)
+const loading = ref(true)
 const data = ref({
-    goods: [],
-    freight: {
-
-    },
-    category: []
+    appReasons: [],
+    reasons: [],
+    tags: []
 })
 
-const getProduct = async () => {
-    let d = await request('/analysis/product', {
+const matchData = async () => {
+    loading.value = true
+
+    let d = await request('/analysis/refund-reason', {
         store: shop.store,
         brand: shop.brand,
         startTime: date.value[0] + ' 00:00:00',
         endTime: date.value[1] + ' 23:59:59'
     })
     if(d.status === 'success'){
-        data.value.goods = d.content
+        data.value = d.content
     } else {
         tips(d.error.msg, 'error')
     }
-}
-const getFreight = async () => {
-    let f = await request('/analysis/freight', {
-        store: shop.store,
-        brand: shop.brand,
-        startTime: date.value[0] + ' 00:00:00',
-        endTime: date.value[1] + ' 23:59:59'
-    })
-    if(f.status === 'success'){
-        data.value.freight = f.content
-    } else {
-        tips(f.error.msg, 'error')
-    }
-}
-const getCategories = async () => {
-    let res = await request('/analysis/categories', {
-        store: shop.store,
-        brand: shop.brand,
-        startTime: date.value[0] + ' 00:00:00',
-        endTime: date.value[1] + ' 23:59:59'
-    })
-    if(res.status === 'success'){
-        data.value.category = res.content
-    } else {
-        tips(res.error.msg, 'error')
-    }
-}
-const matchData = () => {
-    loading.value = true
-    let count = 0
-    const addCount = () => {
-        count++
-        if (count >= 3) {
-            loading.value = false
-        }
-    }
-    getProduct().then(addCount)
-    getCategories().then(addCount)
-    getFreight().then(addCount)
+
+    loading.value = false
 }
 
 const quickDateRangePicker = ref({})

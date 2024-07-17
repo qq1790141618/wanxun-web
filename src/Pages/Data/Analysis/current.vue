@@ -7,11 +7,15 @@
         >
             <template #header>
                 <span>
-                    {{ shop.storeOptions.find(item => item.id === shop.store).name }}
-                    {{ shop.store }}
-                    /
-                    {{ shop.brandOptions.find(item => item.id === shop.brand).name }}
-                    {{ shop.brand }}
+                    <t-tag theme="primary" variant="light">
+                        {{ shop.storeOptions.find(item => item.id === shop.store).name }}
+                        {{ shop.store }}
+                    </t-tag>
+                    <br />
+                    <t-tag theme="success" variant="light">
+                        {{ shop.brandOptions.find(item => item.id === shop.brand).name }}
+                        {{ shop.brand }}
+                    </t-tag>
                 </span>
                 <span>
                     <span style="margin-right: 6px;">
@@ -35,6 +39,39 @@
                         </template>
                         {{ getString('refresh') }}
                     </t-button>
+                    <t-select
+                        v-model="density"
+                        :label="getString('timeDensity') + '：'"
+                        :options="[
+                            {
+                                label: getString('auto'),
+                                value: 'auto'
+                            },
+                            {
+                                label: getString('day'),
+                                value: 'DATE'
+                            },
+                            {
+                                label: getString('month'),
+                                value: 'MONTH'
+                            },
+                            {
+                                label: getString('year'),
+                                value: 'YEAR'
+                            },
+                            {
+                                label: getString('hour'),
+                                value: 'HOUR'
+                            },
+                            {
+                                label: getString('minute'),
+                                value: 'MINUTE'
+                            }
+                        ]"
+                        @change="densityChange"
+                        size="small"
+                        style="margin-top: 6px;"
+                    />
                 </span>
             </template>
             <t-loading
@@ -58,8 +95,17 @@
                 placement="left"
             >
                 <t-tab-panel
-                    :value="1"
+                    :value="0"
                     :label="getString('summary')"
+                    :destroy-on-hide="true"
+                >
+                    <div class="analysis-view-item">
+                        <SumVeri :data="data.summary" />
+                    </div>
+                </t-tab-panel>
+                <t-tab-panel
+                    :value="1"
+                    :label="getString('timeLine')"
                     :destroy-on-hide="true"
                 >
                     <div class="analysis-view-item">
@@ -138,16 +184,16 @@
 import dayjs from 'dayjs'
 import { getQuickDateRangePicker } from '../../../hooks'
 import { getString } from "../../../i18n/index.js"
-import { tips } from "../../../hooks/tips.js"
 import { request } from "../../../api/request.js"
 import Summary from "./View/Summary.vue"
-import TimePoint from "./View/TimePoint.vue";
-import Contrust from "./View/Contrust.vue";
-import Category from "./View/Category.vue";
-import Channel from "./View/Channel.vue";
-import Season from "./View/Season.vue";
-import Sex from "./View/Sex.vue";
-import Supplier from "./View/Supplier.vue";
+import TimePoint from "./View/TimePoint.vue"
+import Contrust from "./View/Contrust.vue"
+import Category from "./View/Category.vue"
+import Channel from "./View/Channel.vue"
+import Season from "./View/Season.vue"
+import Sex from "./View/Sex.vue"
+import Supplier from "./View/Supplier.vue"
+import SumVeri from "./SumVeri.vue"
 
 const i18n = inject('i18n')
 const shop = inject('shop')
@@ -159,6 +205,21 @@ const date = ref([
 const tabId = ref(1)
 const loading = ref(false)
 const data = ref({})
+const density = ref('auto')
+
+const densityChange = (value) => {
+    density.value = value
+    loading.value = true
+    let count = 0
+    const addCount = () => {
+        count++
+        if (count >= 2) {
+            loading.value = false
+        }
+    }
+    getLineSale().then(addCount)
+    getContrast().then(addCount)
+}
 
 const quickDateRangePicker = ref({})
 const initQuickDate = async (newValue) => {
@@ -171,12 +232,23 @@ const errorInfo = ref([])
 const addError = (error) => {
     errorInfo.value.push(error)
 }
+const calculateDensity = () => {
+    if (density.value !== 'auto') return density.value
+    let timeFrom = dayjs(date.value[0]).unix()
+    let timeTo = dayjs(date.value[1]).unix()
+    if(timeTo - timeFrom < 60 * 60) return 'MINUTE'
+    if(timeTo - timeFrom < 24 * 60 * 60) return 'HOUR'
+    if(timeTo - timeFrom < 31 * 24 * 60 * 60) return 'DATE'
+    if(timeTo - timeFrom < 365 * 24 * 60 * 60) return 'MONTH'
+    return 'YEAR'
+}
 const getLineSale = async () => {
     let res = await request('/analysis/summary', {
         store: shop.store,
         brand: shop.brand,
         startTime: date.value[0] + ' 00:00:00',
-        endTime: date.value[1] + ' 23:59:59'
+        endTime: date.value[1] + ' 23:59:59',
+        density: calculateDensity()
     })
     if(res.status !== 'success'){
         addError(res.error)
@@ -228,7 +300,8 @@ const getContrast = async () => {
         store: shop.store,
         brand: shop.brand,
         startTime: dayjs(date.value[0]).subtract(1, 'year').format('YYYY-MM-DD') + ' 00:00:00',
-        endTime: dayjs(date.value[1]).subtract(1, 'year').format('YYYY-MM-DD') + ' 23:59:59'
+        endTime: dayjs(date.value[1]).subtract(1, 'year').format('YYYY-MM-DD') + ' 23:59:59',
+        density: calculateDensity()
     })
     if(res.status !== 'success'){
         addError(res.error)
@@ -331,7 +404,7 @@ watch(() => date.value, initData)
 <style>
 .analysis-tab {
     border-radius: 10px;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 190px);
     --chart-cas-margin-top-bottom: 50px;
 }
 .analysis-tab .t-tab-panel {
@@ -355,7 +428,14 @@ watch(() => date.value, initData)
 .analysis-tab .t-tabs__nav-scroll {
     height: 100%;
 }
+.analysis-tab .t-tabs__nav-item,
+.analysis-tab .t-tabs__nav-item-wrapper {
+    width: 100px;
+}
+.analysis-tab .t-tabs__nav-item-text-wrapper {
+    margin: 0 auto;
+}
 .item-ana .t-card__body {
-    padding: 0 10px;
+    padding: 0;
 }
 </style>

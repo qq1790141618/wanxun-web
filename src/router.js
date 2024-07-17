@@ -106,6 +106,18 @@ const routes = [
                 }
             },
             {
+                path: '/datas/refunds',
+                name: 'refunds-ana',
+                component: () => import('./Pages/Data/Refund/index.vue'),
+                meta: {
+                    title: "refundReasonAnalysis",
+                    icon: 'wealth',
+                    avatar: 'https://cdn.fixeam.com/tw/colorful/bar_chart.png',
+                    key: '3-3-1',
+                    keepAlive: true
+                }
+            },
+            {
                 path: '/datas/operational',
                 name: 'datas-operational',
                 component: () => import('./Pages/Data/Operational/index.vue'),
@@ -135,7 +147,7 @@ const routes = [
     {
         path: '/task',
         name: 'task',
-        component: () => import('./Pages/Import/index.vue'),
+        component: () => import('./Pages/Task/index.vue'),
         meta: {
             title: 'taskCenter',
             icon: 'task',

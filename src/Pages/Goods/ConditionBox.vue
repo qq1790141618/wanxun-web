@@ -98,6 +98,14 @@
                             {
                                 label: getString('cost'),
                                 value: 'cost'
+                            },
+                            {
+                                label: getString('season'),
+                                value: 'season'
+                            },
+                            {
+                                label: getString('sex'),
+                                value: 'sex'
                             }
                         ]"
                         :checked-props="{

@@ -78,15 +78,13 @@ const options = ref({
             xAxisIndex: 1,
             type: 'line',
             data: [],
-            showSymbol: false,
-            smooth: true
+            showSymbol: false
         },
         {
             xAxisIndex: 0,
             type: 'line',
             data: [],
-            showSymbol: false,
-            smooth: true
+            showSymbol: false
         }
     ]
 })

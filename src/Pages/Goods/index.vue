@@ -22,6 +22,10 @@
                 :loading="loading"
                 @costHightLightChange="(value) => { columns[11].className = 'goods-table-col ' + value }"
                 @supplierMap="spm.open()"
+                :never-upload-goods-loading="neverUploadGoodsLoading"
+                @never-upload-goods="getNeverUploadGoods"
+                :export-create-loading="exportCreateLoading"
+                @export-search-goods="exportSearchGoods"
             />
             <div class="result-container">
                 <t-table
@@ -151,6 +155,36 @@
             </t-button>
         </t-space>
     </t-dialog>
+    <t-dialog
+        v-model:visible="neverUploadGoodsShow"
+        :close-on-esc-keydown="false"
+        :close-on-overlay-click="false"
+        :footer="false"
+    >
+        <template #header>
+            {{ getString('neverUploadGoods') }}
+        </template>
+        {{ getString('barcode') }}
+        <t-button
+            size="small"
+            variant="outline"
+            @click="copy(neverUploadGoods.join('\n'), i18n.language)"
+        >
+            <template #icon>
+                <t-icon name="copy" />
+            </template>
+        </t-button>:
+        <t-textarea
+            :readonly="true"
+            :modelValue="neverUploadGoods.join('\n')"
+            :autosize="{
+                minRows: 3,
+                maxRows: 10
+            }"
+            style="margin-top: 5px;"
+        >
+        </t-textarea>
+    </t-dialog>
 </template>
 
 <script setup>
@@ -165,6 +199,7 @@ import {tips} from "../../hooks/tips.js"
 import {getString} from "../../i18n/index.js"
 import {request} from "../../api/request.js"
 import dayjs from "dayjs";
+import {Dialog, DialogPlugin} from "tdesign-vue-next";
 
 const i18n = inject('i18n')
 const shop = inject('shop')
@@ -340,11 +375,7 @@ const pagination = ref({
 })
 const router = useRouter()
 
-const getSearchGoods = async () => {
-    loading.value = true
-    pagination.value.loading = true
-    data.value = []
-
+const initSearchParams = () => {
     let start = (pagination.value.current - 1) * pagination.value.pageSize
     let number = pagination.value.pageSize
     let params = {
@@ -359,15 +390,35 @@ const getSearchGoods = async () => {
     if (condition.value.content) {
         params[condition.value.type] = condition.value.content.replace("\n", ",").split(",")
     }
+    return params
+}
+const getSearchGoods = async () => {
+    loading.value = true
+    pagination.value.loading = true
+    data.value = []
 
+    let params = initSearchParams()
     let result = await request('/product', params, 'POST')
 
-    console.log(result.content)
     data.value = result.content.data
     pagination.value.total = result.content.total
 
     loading.value = false
     await getSalesCount()
+}
+const exportCreateLoading = ref(false)
+const exportSearchGoods = async () => {
+    exportCreateLoading.value = true
+
+    let params = initSearchParams()
+    await request('/product/export', params, 'POST')
+    DialogPlugin({
+        header: getString('exportCreateSuccess'),
+        body: getString('exportCreateSuccessTip'),
+        footer: false
+    })
+
+    exportCreateLoading.value = false
 }
 const getSalesCount = async () => {
     let styleNumbers = data.value.map(item => item['styleNumber'])
@@ -392,8 +443,22 @@ const getSalesCount = async () => {
     }
 }
 
-const exportDialogShow = ref(false)
-const exportFileUrl = ref(null)
+const neverUploadGoods = ref([])
+const neverUploadGoodsShow = ref(false)
+const neverUploadGoodsLoading = ref(false)
+const getNeverUploadGoods = async () => {
+    neverUploadGoodsLoading.value = true
+
+    let res = await request('/product/unload', {
+        storeId: shop.store,
+        brandId: shop.brand
+    })
+    neverUploadGoods.value = res.content
+    neverUploadGoodsShow.value = true
+
+    neverUploadGoodsLoading.value = false
+}
+
 const openUrl = (url) => {
     window.open(url)
 }

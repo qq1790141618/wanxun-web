@@ -47,7 +47,7 @@ import { DialogPlugin, MessagePlugin } from "tdesign-vue-next"
 import { getString } from "./i18n/index.js"
 import { useRoute, useRouter } from "vue-router"
 import { tips } from "./hooks/tips.js"
-import { request } from "./api/request.js"
+import {apiKey, request} from "./api/request.js"
 import Splash from "./Pages/splash.vue"
 
 const i18n = inject('i18n')
@@ -217,6 +217,7 @@ const checkForUpdate = async () => {
 
 onMounted(async () => {
     let load = await MessagePlugin.loading('正在获取门店和品牌信息', 0)
+    await apiKey()
     await getShopOption()
     load.close()
     load = await MessagePlugin.loading('正在验证用户信息', 0)

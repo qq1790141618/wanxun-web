@@ -1,12 +1,14 @@
 <template>
-    <t-radio-group
-        v-model="view"
-        variant="default-filled"
-        style="margin-bottom: 10px;"
-    >
-        <t-radio-button value="chart"><t-icon name="chart-line-data-1"></t-icon></t-radio-button>
-        <t-radio-button value="table"><t-icon name="table"></t-icon></t-radio-button>
-    </t-radio-group>
+    <t-space>
+        <t-radio-group
+            v-model="view"
+            variant="default-filled"
+            style="margin-bottom: 10px;"
+        >
+            <t-radio-button value="chart"><t-icon name="chart-line-data-1"></t-icon></t-radio-button>
+            <t-radio-button value="table"><t-icon name="table"></t-icon></t-radio-button>
+        </t-radio-group>
+    </t-space>
     <div
         ref="primaryChart"
         v-show="view === 'chart'"
@@ -41,6 +43,7 @@ const props = defineProps({
         required: true
     }
 })
+
 const primaryData = ref([])
 const view = ref('chart')
 const sortValue = ref(null)
@@ -83,6 +86,7 @@ const columns = [
         sorter: true
     }
 ]
+
 let chart
 const primaryChart = ref(null)
 const chartOptions = ref({
@@ -111,7 +115,6 @@ const chartOptions = ref({
             name: getString('salesAmount'),
             data: [],
             showSymbol: false,
-            smooth: true,
             color: '#F98981'
         },
         {
@@ -119,7 +122,6 @@ const chartOptions = ref({
             name: getString('refundsAmount'),
             data: [],
             showSymbol: false,
-            smooth: true,
             color: '#7BE188',
             sortType: 'all',
             sorter: true
@@ -128,9 +130,18 @@ const chartOptions = ref({
             type: 'line',
             name: getString('income'),
             data: [],
+            color: '#ffeb98',
             showSymbol: false,
-            smooth: true,
-            color: '#FADC6D',
+            markPoint: {
+                data: [
+                    {
+                        type: 'max',
+                        name: 'Max',
+                        symbol: 'circle',
+                        symbolSize: 60
+                    }
+                ]
+            },
             sortType: 'all',
             sorter: true
         }

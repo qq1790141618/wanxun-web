@@ -12,9 +12,9 @@
     class="task-display"
     >
         <template #typeshow="{ row }">
-            <span v-if="row.type === 'import'"><t-icon name="file-import"></t-icon> {{ getString('import') }}</span>
-            <span v-if="row.type === 'export'"><t-icon name="file-export"></t-icon> {{ getString('export') }}</span>
-            <span v-if="row.type === 'analysis'"><t-icon name="bar-chart"></t-icon> {{ getString('analysis') }}</span>
+            <span v-if="row.type === 'IMPORT'"><t-icon name="file-import"></t-icon> {{ getString('import') }}</span>
+            <span v-if="row.type === 'EXPORT'"><t-icon name="file-export"></t-icon> {{ getString('export') }}</span>
+            <span v-if="row.type === 'ANALYSIS'"><t-icon name="bar-chart"></t-icon> {{ getString('analysis') }}</span>
         </template>
         <template #subtypeshow="{ row }">
             <span v-if="row.subType === 'SkuInfo'"><t-icon name="barcode"></t-icon>&nbsp;{{ getString('skuInformTable') }}</span>
@@ -23,12 +23,13 @@
             <span v-if="row.subType === 'SkuImport'"><t-icon name="article"></t-icon>&nbsp;{{ getString('skuImportTable') }}</span>
             <span v-if="row.subType === 'RefundInfo'"><t-icon name="browse-gallery"></t-icon>&nbsp;{{ getString('refundsInformTable') }}</span>
             <span v-if="row.subType === 'BalanceInfo'"><t-icon name="currency-exchange"></t-icon>&nbsp;{{ getString('orderBillsInformTable') }}</span>
+            <span v-if="row.subType === 'GoodExport'"><t-icon name="barcode"></t-icon>&nbsp;{{ getString('exportGoods') }}</span>
         </template>
         <template #statusshow="{ row }">
-            <span v-if="row.status === 'wait'">{{ getString('wait') }}</span>
-            <span v-if="row.status === 'handle'">{{ getString('handle') }}</span>
-            <span v-if="row.status === 'error'">{{ getString('error') }}</span>
-            <span v-if="row.status === 'done'">{{ getString('done') }}</span>
+            <span v-if="row.status === 'WAIT'">{{ getString('wait') }}</span>
+            <span v-if="row.status === 'HANDLE'">{{ getString('handle') }}</span>
+            <span v-if="row.status === 'ERROR'">{{ getString('error') }}</span>
+            <span v-if="row.status === 'DONE'">{{ getString('done') }}</span>
         </template>
         <template #resultshow="{ row }">
             <t-tag
@@ -43,7 +44,7 @@
             </t-tag>
             <t-tag
                 shape="round"
-                v-if="row.result === 'success'"
+                v-if="row.result === 'SUCCESS'"
                 variant="light"
                 theme="success"
             >
@@ -54,7 +55,7 @@
             </t-tag>
             <t-tag
                 shape="round"
-                v-if="row.result === 'fail'"
+                v-if="row.result === 'FAIL'"
                 variant="light"
                 theme="danger"
             >
