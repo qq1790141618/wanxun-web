@@ -13,6 +13,17 @@
             </div>
         </t-col>
         <t-col :span="9">
+            <t-alert
+                :close="true"
+                v-if="updateShow"
+                theme="success"
+                :message="updateContent"
+                style="padding: 10px 15px; margin-bottom: 12px;"
+            >
+                <template #icon>
+                    <t-icon name="notification" />
+                </template>
+            </t-alert>
             <FastView :data="data.day" />
             <RecentData :data="data.week" />
             <t-row :gutter="[12, 12]" style="margin-top: 12px;">
@@ -46,10 +57,13 @@ import StyleRecommed from './StyleRecommed.vue'
 import {tips} from "../../hooks/tips.js"
 import {getString, getStringAsync} from "../../i18n/index.js"
 import {request} from "../../api/request.js"
+import {as} from "../../../dist/assets/zrender-CKMklBXB.js";
 
 const loading = ref(true)
 const shop = inject('shop')
 const i18n = inject('i18n')
+const updateShow = ref(false)
+const updateContent = ref("新增履约退货单（RMA）的导入功能，支持导入其他渠道的退货单。")
 
 const data = ref({
     famousWord: '',
@@ -163,7 +177,15 @@ const initData = () => {
     initF().then(addCount)
 }
 
-onMounted(initData)
+onMounted(async () => {
+    initData()
+    if (updateContent.value) {
+        if (i18n.language !== 'zh') {
+            updateContent.value = await getStringAsync(updateContent.value)
+        }
+        updateShow.value = true
+    }
+})
 watch(() => shop.store, initData)
 watch(() => shop.brand, initData)
 watch(() => i18n.language, initF)

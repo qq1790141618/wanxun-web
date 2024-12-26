@@ -374,5 +374,13 @@
     "bReasonRatio": "Proportion de causes B",
     "refundReasonRatio": "Raisons après - vente proportion",
     "reasonTagCharts": "Tableau des étiquettes de cause",
-    "customerNote": "Remarques de l'utilisateur"
+    "customerNote": "Remarques de l'utilisateur",
+    "exportGoods": "Exporter des marchandises",
+    "exportCreateSuccess": "Exporter la tâche créée avec succès",
+    "exportCreateSuccessTip": "Créé avec succès pour afficher les informations d'exportation dans la liste des tâches et télécharger le fichier exporté",
+    "neverUploadGoods": "Produits non téléchargés",
+    "removePackage": "Supprimer un paquet",
+    "removePackageTip": "La récupération ne sera pas possible après la suppression du paquet, confirmez - vous la suppression du paquet?",
+    "updateContent": "Mettre à jour le contenu",
+    "performanceReturnDetails": "Détails des retours de performance"
 }

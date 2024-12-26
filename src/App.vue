@@ -177,7 +177,7 @@ initSet()
 const frameLessPage = ['login', 'datas-analysis-view']
 const queryVersion = () => {
     return new Promise((resolve, reject) => {
-        fetch(`index.html?ver=${ (new Date()).getTime() }`)
+        fetch(`${ location.href }/static/index.html?ver=${ (new Date()).getTime() }`)
             .then(response => {
                 resolve(response.text())
             })
@@ -216,15 +216,18 @@ const checkForUpdate = async () => {
 }
 
 onMounted(async () => {
-    let load = await MessagePlugin.loading('正在获取门店和品牌信息', 0)
+    document.title = '正在获取门店和品牌信息'
+    let load = await MessagePlugin.loading(document.title, 0)
     await apiKey()
     await getShopOption()
     load.close()
-    load = await MessagePlugin.loading('正在验证用户信息', 0)
+    document.title = '正在验证用户信息'
+    load = await MessagePlugin.loading(document.title, 0)
     await loginVerify()
     load.close()
     loading.value = false
     if (user.status === 'loged') await MessagePlugin.success(getString('welcomeBack') + '！' + user.inform['realName'])
+    document.title = '数据整理汇总与分析-银泰喵街-万寻'
 
     i18n.checkEmpty()
     if (import.meta.env.DEV) return

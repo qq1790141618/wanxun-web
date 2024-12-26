@@ -374,5 +374,13 @@
     "bReasonRatio": "B단 원인 비율",
     "refundReasonRatio": "판매 후 원인 비율",
     "reasonTagCharts": "원인 탭 테이블",
-    "customerNote": "사용자 설명"
+    "customerNote": "사용자 설명",
+    "exportGoods": "상품 내보내기",
+    "exportCreateSuccess": "내보내기 작업이 성공적으로 작성되었습니다.",
+    "exportCreateSuccessTip": "작업 목록에서 내보내기 정보를 보고 내보낸 파일을 다운로드할 수 있는 생성 성공",
+    "neverUploadGoods": "업로드되지 않은 상품",
+    "removePackage": "패키지 제거",
+    "removePackageTip": "패키지를 삭제하면 복구할 수 없습니다. 패키지를 삭제하시겠습니까?",
+    "updateContent": "업데이트 내용",
+    "performanceReturnDetails": "계약 이행 반품 내역"
 }

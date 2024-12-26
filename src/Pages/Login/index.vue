@@ -168,7 +168,7 @@ const login = async () => {
 const loginThen = (response) => {
     if(response.status === 'success'){
         MessagePlugin.success(getString('loged'))
-        location.href = location.origin
+        location.href = location.origin + '/interface/#/'
     } else {
         tips(response.error.msg, 'error')
     }

@@ -1,7 +1,7 @@
 {
   "name": "wanxun-web",
   "private": true,
-  "version": "5.7.1.00",
+  "version": "5.7.3.00",
   "type": "module",
   "scripts": {
     "dev": "vite",

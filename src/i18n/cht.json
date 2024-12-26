@@ -355,5 +355,13 @@
     "bReasonRatio": "B端原因占比",
     "refundReasonRatio": "售後原因占比",
     "reasonTagCharts": "原因標籤錶",
-    "customerNote": "用戶備註"
+    "customerNote": "用戶備註",
+    "exportGoods": "匯出商品",
+    "exportCreateSuccess": "匯出任務創建成功",
+    "exportCreateSuccessTip": "創建成功，可在任務清單中查看匯出資訊，和下載匯出的檔案",
+    "neverUploadGoods": "未上傳的商品",
+    "removePackage": "删除套裝軟體",
+    "removePackageTip": "删除套裝軟體後將無法恢復，確認删除套裝軟體嗎？",
+    "updateContent": "更新內容",
+    "performanceReturnDetails": "履約退貨明細"
 }

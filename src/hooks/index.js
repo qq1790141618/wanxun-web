@@ -9,12 +9,30 @@ export function translate(text, lang){
     return new Promise((resolve, reject) => {
         text = text.replace(/_/g, " ")
         let salt = (new Date()).getTime()
-        let sign = md5('20230411001636877' + text + salt + 'L4hHUCkB24zQnWGgdZrr')
-        let url = 'https://fanyi-api.baidu.com/api/trans/vip/translate/?q=' + text + '&from=auto&to=' + lang + '&appid=20230411001636877&salt=' + salt + '&sign=' + sign
+        let appId = '20230411001636877';
+        let sign = md5(appId + text + salt + 'L4hHUCkB24zQnWGgdZrr')
+        let url = 'https://fanyi-api.baidu.com/api/trans/vip/translate/?q=' + text + '&from=auto&to=' + lang + '&appid=' + appId + '&salt=' + salt + '&sign=' + sign
 
         fetchJSONP(url)
-        .then(res => {
-            return resolve(res.json())
+        .then(async res => {
+            let data = await res.json()
+            try {
+                return resolve({
+                    trans_result: [
+                        {
+                            dst: data.trans_result[0].dst
+                        }
+                    ]
+                })
+            } catch (e) {
+                return resolve({
+                    trans_result: [
+                        {
+                            dst: text
+                        }
+                    ]
+                })
+            }
         })
         .catch(() => reject())
     })

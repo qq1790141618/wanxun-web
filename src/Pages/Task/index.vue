@@ -146,9 +146,11 @@ const initData = async () => {
 }
 let timerRefresh = null
 const autoFresh = () => {
-    timerRefresh = setInterval(async () => {
-        await getData()
-    }, 2000)
+    if (import.meta.env.PROD) {
+        timerRefresh = setInterval(async () => {
+            await getData()
+        }, 2000)
+    }
 }
 const clearFresh = () => {
     clearInterval(timerRefresh)

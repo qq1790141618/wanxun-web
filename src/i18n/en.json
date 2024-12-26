@@ -374,5 +374,13 @@
     "bReasonRatio": "Proportion of B-end reasons",
     "refundReasonRatio": "Proportion of after-sales reasons",
     "reasonTagCharts": "Reason Label Table",
-    "customerNote": "User remarks"
+    "customerNote": "User remarks",
+    "exportGoods": "Export products",
+    "exportCreateSuccess": "Export task created successfully",
+    "exportCreateSuccessTip": "Successfully created, you can view the exported information and download the exported file in the task list",
+    "neverUploadGoods": "Unuploaded products",
+    "removePackage": "Delete software package",
+    "removePackageTip": "After deleting the software package, it cannot be restored. Are you sure to delete the software package?",
+    "updateContent": "Update content",
+    "performanceReturnDetails": "Performance Return Details"
 }

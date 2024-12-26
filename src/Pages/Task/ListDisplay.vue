@@ -22,6 +22,7 @@
             <span v-if="row.subType === 'OrderInfo'"><t-icon name="assignment"></t-icon>&nbsp;{{ getString('ordersListTable') }}</span>
             <span v-if="row.subType === 'SkuImport'"><t-icon name="article"></t-icon>&nbsp;{{ getString('skuImportTable') }}</span>
             <span v-if="row.subType === 'RefundInfo'"><t-icon name="browse-gallery"></t-icon>&nbsp;{{ getString('refundsInformTable') }}</span>
+            <span v-if="row.subType === 'RefundOtherChannel'"><t-icon name="browse-gallery"></t-icon>&nbsp;{{ getString('performanceReturnDetails') }}</span>
             <span v-if="row.subType === 'BalanceInfo'"><t-icon name="currency-exchange"></t-icon>&nbsp;{{ getString('orderBillsInformTable') }}</span>
             <span v-if="row.subType === 'GoodExport'"><t-icon name="barcode"></t-icon>&nbsp;{{ getString('exportGoods') }}</span>
         </template>

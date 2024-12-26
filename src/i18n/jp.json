@@ -374,5 +374,13 @@
     "bReasonRatio": "B端原因占有率",
     "refundReasonRatio": "アフターサービス原因の割合",
     "reasonTagCharts": "理由ラベル表",
-    "customerNote": "ユーザーコメント"
+    "customerNote": "ユーザーコメント",
+    "exportGoods": "商品のエクスポート",
+    "exportCreateSuccess": "エクスポートタスクの作成に成功しました",
+    "exportCreateSuccessTip": "作成に成功しました。タスク・リストにエクスポート情報を表示したり、エクスポートされたファイルをダウンロードしたりできます。",
+    "neverUploadGoods": "アップロードされていない商品",
+    "removePackage": "パッケージの削除",
+    "removePackageTip": "パッケージを削除すると復元できなくなりますが、パッケージの削除を確認しますか？",
+    "updateContent": "コンテンツの更新",
+    "performanceReturnDetails": "契約履行返品明細"
 }

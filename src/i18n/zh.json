@@ -375,11 +375,12 @@
     "refundReasonRatio": "售后原因占比",
     "reasonTagCharts": "原因标签表",
     "customerNote": "用户备注",
-
     "exportGoods": "导出商品",
     "exportCreateSuccess": "导出任务创建成功",
     "exportCreateSuccessTip": "创建成功, 可在任务列表中查看导出信息, 和下载导出的文件",
     "neverUploadGoods": "未上传的商品",
     "removePackage": "删除软件包",
-    "removePackageTip": "删除软件包后将无法恢复, 确认删除软件包吗?"
+    "removePackageTip": "删除软件包后将无法恢复, 确认删除软件包吗?",
+    "updateContent": "更新内容",
+    "performanceReturnDetails": "履约退货明细"
 }
